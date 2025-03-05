@@ -1,3 +1,4 @@
+package com.healthmanage.app;
 
 public class Main {
 
