@@ -1,5 +1,4 @@
 package com.healthmanage.app;
-
 import com.healthmanage.config.EnvConfig;
 
 public class Main {
