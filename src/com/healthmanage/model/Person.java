@@ -10,4 +10,22 @@ public class Person {
 		this.userId = userId;
 		this.password = password;
 	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String toString() {
+		return "[ userId=" + userId + ", name=" + name + ", password=" + password + "]";
+	}
+	
 }
