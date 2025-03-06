@@ -6,7 +6,8 @@ import java.util.Map;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
 
-class memberManage{
+
+public class AdminService {
 	
 	public void memberList() { //회원 전체조회
 
@@ -31,8 +32,25 @@ class memberManage{
 	public void memberDelete(String memberNum) { //삭제
 		Gym.users.remove(memberNum);
 	}
+
+	private CouponService couponservice;
+	public AdminService() {
+		this.couponservice = CouponService.getInstance();
+	}
 	
-}
-public class AdminService {
 	
+	
+	
+	public void findAllCoupon() {
+		couponservice.findAllCoupons();
+	}
+	
+	public void addCoupon(String number, int coinAmount) {
+		couponservice.createCoupon(number, coinAmount);
+	}
+	public void findCoupon(String number) {
+		couponservice.findCoupon(number);
+		
+	}
+
 }
