@@ -1,9 +1,23 @@
 package com.healthmanage.service;
 
 import com.healthmanage.model.Gym;
-import com.healthmanage.model.Person;
+
+import com.healthmanage.model.User;
 
 public class UserService {
+	
+	public boolean checkId(String userId) {
+		if(Gym.users.containsKey(userId)) {
+			return false;
+		}
+		return true;
+	}
+	
+	public void addUser(String name, String password, String userId) {
+
+		Gym.users.put(userId, new User(name, password, userId));
+	}
+
 	public boolean userLogin(String userId, String pw) {
 		if (!Gym.users.containsKey(userId)) {
 			System.out.println("없는 아이디입니다.");
@@ -17,7 +31,7 @@ public class UserService {
 				return true;
 			}
 		}
-	}
+	
 	
 	
 }
