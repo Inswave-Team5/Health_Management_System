@@ -4,7 +4,7 @@ public class User extends Person {
 	private int coin;
 	private int remainTime;
 	
-	public User(String name, String password, String userId) {
+	public User(String userId, String password, String name) {
 		super(name, password, userId);
 		this.coin = 0;
 		this.remainTime = 0;
