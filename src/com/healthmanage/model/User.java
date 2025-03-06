@@ -7,7 +7,8 @@ public class User extends Person {
 	public User(String name, String password, String userId) {
 		super(name, password, userId);
 		this.coin = 0;
-		this.remainTime =0;
+		this.remainTime = 0;
 	}
+	
 
 }
