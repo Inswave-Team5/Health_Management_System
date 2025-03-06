@@ -34,7 +34,7 @@ public class UserController {
             String userId;
             while (true) {
                 // 🔹 View에서 아이디 입력 받기
-                userId = userView.getUserInput("ID 입력: ");
+                userId = userView.getInput("ID 입력: ");
 
                 // 🔹 아이디 중복 검사
                 if (userService.checkId(userId)) {
@@ -44,8 +44,8 @@ public class UserController {
             }
 
             // 나머지 회원 정보 입력
-            String name = userView.getUserInput("이름 입력: ");
-            String password = userView.getUserInput("비밀번호 입력: ");
+            String name = userView.getInput("이름 입력: ");
+            String password = userView.getInput("비밀번호 입력: ");
 
             // DTO 생성 및 회원가입 진행
             UserSignUpDTO userDTO = new UserSignUpDTO(userId, name, password);
@@ -54,8 +54,8 @@ public class UserController {
         }
 	
 	public void loginUser() {
-        String userId = userView.getUserInput("ID 입력: ");
-        String password = userView.getUserInput("비밀번호 입력: ");
+        String userId = userView.getInput("ID 입력: ");
+        String password = userView.getInput("비밀번호 입력: ");
         boolean loginSuccess = userService.userLogin(userId, password);
         if (loginSuccess) {
             userView.showMessage("로그인 성공!");
