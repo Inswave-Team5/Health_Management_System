@@ -6,7 +6,7 @@ import com.healthmanage.view.UserView;
 
 public class UserController {
 	private UserService userService;
-	
+
 	private UserView userView;
 
 	public UserController() {
@@ -65,12 +65,10 @@ public class UserController {
         }
     }
 	
+
 	public void couponUser() {
 		String couponNumber = userView.getInput("쿠폰번호 입력: ");
-//		String couponSuccess = couponService.useCoupon(couponNumber);
-		
 		userView.showMessage(userService.useCoupon(couponNumber));
-		
+
 	}
-		
 }
