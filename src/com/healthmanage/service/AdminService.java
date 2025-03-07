@@ -1,6 +1,8 @@
 package com.healthmanage.service;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
@@ -59,7 +61,7 @@ public class AdminService {
 		}
 	}
 	
-	public Map<String, Coupon> findAllCoupon() {
+	public Collection<Coupon> findAllCoupon() {
 		return couponservice.findAllCoupons();
 	}
 	
