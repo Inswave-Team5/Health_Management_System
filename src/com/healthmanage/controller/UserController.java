@@ -55,20 +55,20 @@ public class UserController {
 	}
 
 	public void loginUser() {
-		String userId = userView.getInput("ID 입력: ");
-		String password = userView.getInput("비밀번호 입력: ");
-		boolean loginSuccess = userService.userLogin(userId, password);
-		if (loginSuccess) {
-			userView.showMessage("로그인 성공!");
-		} else {
-			userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
-		}
-	}
+        String userId = userView.getInput("ID 입력: ");
+        String password = userView.getInput("비밀번호 입력: ");
+        boolean loginSuccess = userService.userLogin(userId, password);
+        if (loginSuccess) {
+            userView.showMessage("로그인 성공!");
+        } else {
+            userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
+        }
+    }
+	
 
 	public void couponUser() {
 		String couponNumber = userView.getInput("쿠폰번호 입력: ");
 		userView.showMessage(userService.useCoupon(couponNumber));
 
 	}
-
 }
