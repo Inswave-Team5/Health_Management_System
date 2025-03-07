@@ -75,7 +75,7 @@ public class UserController {
 		String couponNumber = userView.getInput("쿠폰번호 입력: ");
 //		String couponSuccess = couponService.useCoupon(couponNumber);
 
-		userView.showMessage(userService.useCoupon(couponNumber));
+		userView.showMessage(userService.useCoupon(couponNumber, loginUser()));
 
 	}
 
