@@ -1,5 +1,6 @@
 package com.healthmanage.service;
 
+import com.healthmanage.app.LoginUser;
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
@@ -31,6 +32,8 @@ public class UserService {
 
 	public boolean userLogin(String userId, String pw) {
 		if (Gym.users.containsKey(userId) && Gym.users.get(userId).getPassword().equals(pw)) {
+			//로그인 성공시 userid 전달
+			LoginUser.setLoginUserId(userId);
 			return true;
 		} else {
 			return false;

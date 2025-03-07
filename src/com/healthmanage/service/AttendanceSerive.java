@@ -59,16 +59,28 @@ public class AttendanceSerive {
         // Calendar를 사용하여 차이를 시간과 분으로 계산
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(durationMillis);
-        int workOutHours = cal.get(Calendar.HOUR_OF_DAY); // 차이 시간 (시)
+        int workOutHours = cal.get(Calendar.HOUR_OF_DAY); // 차이 시간
         int workOutMinutes = cal.get(Calendar.MINUTE); // 차이 분
         String workOutTime = String.format("%02d:%02d", workOutHours, workOutMinutes);
 
         lastAttendance.setWorkOutTime(workOutTime);
     }
 
-    public List<Attendance> listAttendance(){
+    public void listAttendance(){
         String userId = LoginUser.getLoginUserId();
+        List<Attendance> userAttendanceList = attendanceList.get(userId);
+        for(Attendance attendance : userAttendanceList){
+            System.out.println(attendance.toString());
+        }
+    }
 
-        return null;
+    public String getWorkOutTotalTime(){
+        String totalTime = "";
+        String userId = LoginUser.getLoginUserId();
+        List<Attendance> userAttendanceList = attendanceList.get(userId);
+        for(Attendance attendance : userAttendanceList){
+            attendance.getWorkOutTime();
+        }
+        return totalTime;
     }
 }

@@ -47,4 +47,9 @@ public class Attendance {
     public void setWorkOutTime(String workOutTime) {
         this.workOutTime = workOutTime;
     }
+
+    @Override
+    public String toString() {
+        return "[날짜] " + date + "\t[운동시간] " + workOutTime;
+    }
 }
