@@ -9,7 +9,6 @@ public class CouponService {
 	private static CouponService instance;
 	
 	private CouponService() {
-		
 	}
 	
 	public static CouponService getInstance() {
