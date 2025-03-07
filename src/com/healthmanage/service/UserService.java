@@ -6,9 +6,9 @@ import com.healthmanage.model.User;
 
 public class UserService {
 	private static UserService instance;
-
+	private CouponService couponService;
 	private UserService() {
-
+		this.couponService = CouponService.getInstance();
 	}
 
 	public static UserService getInstance() {
@@ -36,5 +36,10 @@ public class UserService {
 			return false;
 		}
 
+
+	}
+	
+	public String useCoupon(String couponNumber) {
+		return couponService.useCoupon(couponNumber);
 	}
 }

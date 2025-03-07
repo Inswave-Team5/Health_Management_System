@@ -15,4 +15,38 @@ public class Coupon {
 	public String toString() {
 		return "Coupon [쿠폰번호=" + number + ", 사용여부=" + isUsed + ", 보상코인=" + coinAmount + "]";
 	}
+
+
+	public String getNumber() {
+		return number;
+	}
+
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+
+	public boolean isUsed() {
+		return isUsed;
+	}
+
+
+	public void setUsed(boolean isUsed) {
+		this.isUsed = isUsed;
+	}
+
+
+	public int getCoinAmount() {
+		return coinAmount;
+	}
+
+
+	public void setCoinAmount(int coinAmount) {
+		this.coinAmount = coinAmount;
+	}
+
+
+
+	
 }

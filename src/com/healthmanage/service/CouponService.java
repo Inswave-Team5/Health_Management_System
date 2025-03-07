@@ -39,5 +39,54 @@ public class CouponService {
 		Gym.coupons.put(number, coupon);
 		return true;
 	}
+	
+//	public boolean useCoupon(String number) {
+//		Coupon coupon = findCoupon(number);
+//		if (coupon == null) {
+//			System.out.println("존재하지 않는 쿠폰입니다.");
+//			return false;
+//		}
+//		else if (!coupon.isUsed()) {
+//			coupon.setUsed(true);
+//			// 고객 코인 += coinAmount;
+//			return true;
+//		}
+//		else {
+//			System.out.println("이미 사용된 쿠폰입니다.");
+//			return false;
+//		}
+	public String useCoupon(String number) {
+		Coupon coupon = findCoupon(number);
+		if (coupon == null) {
+			return "존재하지 않는 쿠폰입니다.";
+		}
+		else if (!coupon.isUsed()) {
+			coupon.setUsed(true);
+			// 고객 코인 += coinAmount;
+			return "쿠폰 사용 성공";
+		}
+		else {
+			return "이미 사용된 쿠폰입니다.";
+		}
+		
+		
+		
+		
+//		for (Coupon coupon : Gym.coupons.values()) {
+//			if (coupon.getNumber().equals(number) && !coupon.isUsed()) {
+//				coupon.setUsed(true);
+//				// 고객 코인 += coinAmount;
+//				return true;
+//			}
+//			else if (coupon.getNumber().equals(number) && coupon.isUsed()) {
+//				System.out.println("이미 사용된 쿠폰입니다.");
+//				return true;
+//			}
+//			else {
+//				System.out.println("쿠폰 번호를 다시 확인해주세요.");
+//			}
+//		}
+//		return false;
+	}
 
 }
