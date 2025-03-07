@@ -14,8 +14,11 @@ import java.util.Set;
 import com.healthmanage.model.Gym;
 
 public class UserDAO {
+	private static final String USER_FILE = "C:\\Temp\\infousers.txt";
+	private static final String ADMIN_FILE = "C:\\Temp\\infoadmins.txt";
+	private static final String COUPON_FILE = "C:\\Temp\\infocoupons.txt";
 
-	public void userInfoSave(Object obj, String filePath) {
+	public void infoSave(Object obj, String filePath) {
 		File file = new File(filePath);
 
 		FileOutputStream fos = null;
@@ -43,7 +46,7 @@ public class UserDAO {
 		}
 	}
 
-	Object userInfoLoad(String filePath) {
+	Object infoLoad(String filePath) {
 		File file = new File(filePath);
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -69,4 +72,28 @@ public class UserDAO {
 			}
 		}
 	}
+	
+	 public void saveUsers() {
+	        infoSave(Gym.users, USER_FILE);
+	    }
+	 
+	 public void saveAdmins() {
+	        infoSave(Gym.admins, ADMIN_FILE);
+	    }
+	 
+	 public void saveCoupons() {
+	        infoSave(Gym.coupons, COUPON_FILE);
+	    }
+	 
+	 public void loadUsers() {
+		 infoLoad(USER_FILE);
+	    }
+	 
+	 public void loadAdmins() {
+		 infoLoad(ADMIN_FILE);
+	    }
+	 
+	 public void loadCoupons() {
+		 infoLoad(COUPON_FILE);
+	    }
 }
