@@ -1,21 +1,33 @@
 package com.healthmanage.service;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
 
 
 public class AdminService {
+	private CouponService couponservice;
+	private static AdminService instance;
+	
+	private AdminService() {
+		this.couponservice = CouponService.getInstance();
+		
+	}
+	
+	public static AdminService getInstance() {
+		if (instance == null) {
+			instance = new AdminService();
+		}
+		return instance;
+	}
 	
 	public void memberList() { //회원 전체조회
-
 		for (Person member : Gym.users.values()) {
 			System.out.println(member);
 		}
 	}
-	
 	
 	public String memberSearch(String memberNum) {  //회원 검색조회
 		if(Gym.users.containsKey(memberNum)) {
@@ -32,8 +44,6 @@ public class AdminService {
 	public void memberDelete(String memberNum) { //삭제
 		Gym.users.remove(memberNum);
 	}
-
-	
 	public boolean adminLogin(String adminId, String pw) {
 		if (!Gym.admins.containsKey(adminId)) {
 			System.out.println("없는 아이디입니다.");
@@ -49,25 +59,21 @@ public class AdminService {
 		}
 	}
 	
-	
-	private CouponService couponservice;
-	public AdminService() {
-		this.couponservice = CouponService.getInstance();
-	}
-	
-	
-	
-	
-	public void findAllCoupon() {
-		couponservice.findAllCoupons();
+	public Map<String, Coupon> findAllCoupon() {
+		return couponservice.findAllCoupons();
 	}
 	
 	public void addCoupon(String number, int coinAmount) {
 		couponservice.createCoupon(number, coinAmount);
 	}
-	public void findCoupon(String number) {
-		couponservice.findCoupon(number);
-		
+	
+	
+	public String deleteCoupon(String number) {
+		Coupon coupon = couponservice.deleteCoupon(number);
+		if ( coupon == null) {
+			return "삭제 실패 - 없는 쿠폰번호 입니다.";
+		}
+		return coupon.toString()+"삭제";
 	}
 
 }
