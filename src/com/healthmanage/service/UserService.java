@@ -7,8 +7,11 @@ import com.healthmanage.model.User;
 public class UserService {
 	private static UserService instance;
 	private CouponService couponService;
+	private CoinService coinService;
 	private UserService() {
 		this.couponService = CouponService.getInstance();
+		this.coinService = CoinService.getInstance();
+		
 	}
 
 	public static UserService getInstance() {
@@ -29,11 +32,11 @@ public class UserService {
 		Gym.users.put(userDTO.getUserId(), new User(userDTO.getUserId(), userDTO.getPassword(), userDTO.getName()));
 	}
 
-	public boolean userLogin(String userId, String pw) {
+	public User userLogin(String userId, String pw) {
 		if (Gym.users.containsKey(userId) && Gym.users.get(userId).getPassword().equals(pw)) {
-			return true;
+			return Gym.users.get(userId);
 		} else {
-			return false;
+			return null;
 		}
 
 
@@ -41,5 +44,9 @@ public class UserService {
 	
 	public String useCoupon(String couponNumber) {
 		return couponService.useCoupon(couponNumber);
+	}
+	
+	public String addCoin(String money, User user) {
+		return coinService.addCoin(money, user);
 	}
 }
