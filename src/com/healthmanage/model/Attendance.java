@@ -6,17 +6,17 @@ import java.util.Date;
 public class Attendance {
     private String userId;
     private String date;
-    private Date enterTime;
-    private Date leaveTime;
+    private String enterTime;
+    private String leaveTime;
     private String workOutTime;
     //private String status; - 현재 출근중인지 상태확인(부가기능)
 
-    public Attendance(String userId, String date, Date enterTime) {
+    public Attendance(String userId, String date, String enterTime) {
         this.userId = userId;
         this.date = date;
         this.enterTime = enterTime;
-        this.leaveTime = null;
-        this.workOutTime = null;
+        this.leaveTime = "";
+        this.workOutTime = "";
     }
 
     public String getUserId() {
@@ -27,11 +27,11 @@ public class Attendance {
         return date;
     }
 
-    public Date getEnterTime() {
+    public String getEnterTime() {
         return enterTime;
     }
 
-    public Date getLeaveTime() {
+    public String getLeaveTime() {
         return leaveTime;
     }
 
@@ -40,7 +40,7 @@ public class Attendance {
     }
 
 
-    public void setLeaveTime(Date leaveTime) {
+    public void setLeaveTime(String leaveTime) {
         this.leaveTime = leaveTime;
     }
 
