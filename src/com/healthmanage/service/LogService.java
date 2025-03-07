@@ -28,7 +28,7 @@ public class LogService {
 	public void addLog(String message) {
 
 		String logDir = "logs"; // 로그 디렉토리
-		String logFileName = time.currentDay() + "_" + EnvConfig.get("LOG_FILE_PATH");
+		String logFileName = time.currentDay() + EnvConfig.get("LOG_FILE_PATH");
 
 		// 로그 디렉토리가 없다면 생성
 		File dir = new File(logDir);
