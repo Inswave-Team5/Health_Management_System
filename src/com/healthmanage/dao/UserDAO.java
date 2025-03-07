@@ -8,14 +8,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Set;
 
+import com.healthmanage.config.EnvConfig;
 import com.healthmanage.model.Gym;
 
 public class UserDAO {
 
-	public void userInfoSave(Object obj, String filePath) {
+	public void infoSave(Object obj, String filePath) {
 		File file = new File(filePath);
 
 		FileOutputStream fos = null;
@@ -43,7 +42,7 @@ public class UserDAO {
 		}
 	}
 
-	Object userInfoLoad(String filePath) {
+	Object infoLoad(String filePath) {
 		File file = new File(filePath);
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -69,4 +68,28 @@ public class UserDAO {
 			}
 		}
 	}
+	
+	 public void saveUsers() {
+	        infoSave(Gym.users, EnvConfig.get("USER_FILE"));
+	    }
+	 
+	 public void saveAdmins() {
+	        infoSave(Gym.admins, EnvConfig.get("ADMIN_FILE"));
+	    }
+	 
+	 public void saveCoupons() {
+	        infoSave(Gym.coupons, EnvConfig.get("COUPON_FILE"));
+	    }
+	 
+	 public void loadUsers() {
+		 infoLoad(EnvConfig.get("USER_FILE"));
+	    }
+	 
+	 public void loadAdmins() {
+		 infoLoad(EnvConfig.get("ADMIN_FILE"));
+	    }
+	 
+	 public void loadCoupons() {
+		 infoLoad(EnvConfig.get("COUPON_FILE"));
+	    }
 }
