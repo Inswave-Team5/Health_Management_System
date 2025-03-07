@@ -5,11 +5,14 @@ import java.util.Map;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
+import com.healthmanage.view.UserView;
 
 
 public class AdminService {
 	private CouponService couponservice;
 	private static AdminService instance;
+	private UserService userService;
+	private UserView userView;
 	
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
@@ -37,13 +40,28 @@ public class AdminService {
 		}
 	}
 	
-//	public void memberChange(String memberNum){ //수정
-//	
-//		}
-//	
+	
+	public void pwChange(String memberNum, String pw){ //비밀번호 수정
+		//로그인 상태에서 비밀번호 입력받아 맞는지 확인
+		//기존 비밀번호가 맞으면 새로운 비밀번호 변경
+		
+		if(!Gym.users.get(memberNum).getPassword().equals(pw)) {
+			userView.showMessage("비밀번호가 올바르지 않습니다.");
+			return;
+		}
+		
+		String newPw = userView.getInput("새로운 비밀번호를 입력하세요.");
+		Gym.users.get(memberNum).setPassword(newPw);
+		userView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
+		
+		
+	}
+	
 	public void memberDelete(String memberNum) { //삭제
 		Gym.users.remove(memberNum);
 	}
+	
+	
 	public boolean adminLogin(String adminId, String pw) {
 		if (!Gym.admins.containsKey(adminId)) {
 			System.out.println("없는 아이디입니다.");
