@@ -8,15 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Set;
 
+import com.healthmanage.config.EnvConfig;
 import com.healthmanage.model.Gym;
 
 public class UserDAO {
-	private static final String USER_FILE = "C:\\Temp\\infousers.txt";
-	private static final String ADMIN_FILE = "C:\\Temp\\infoadmins.txt";
-	private static final String COUPON_FILE = "C:\\Temp\\infocoupons.txt";
 
 	public void infoSave(Object obj, String filePath) {
 		File file = new File(filePath);
@@ -74,26 +70,26 @@ public class UserDAO {
 	}
 	
 	 public void saveUsers() {
-	        infoSave(Gym.users, USER_FILE);
+	        infoSave(Gym.users, EnvConfig.get("USER_FILE"));
 	    }
 	 
 	 public void saveAdmins() {
-	        infoSave(Gym.admins, ADMIN_FILE);
+	        infoSave(Gym.admins, EnvConfig.get("ADMIN_FILE"));
 	    }
 	 
 	 public void saveCoupons() {
-	        infoSave(Gym.coupons, COUPON_FILE);
+	        infoSave(Gym.coupons, EnvConfig.get("COUPON_FILE"));
 	    }
 	 
 	 public void loadUsers() {
-		 infoLoad(USER_FILE);
+		 infoLoad(EnvConfig.get("USER_FILE"));
 	    }
 	 
 	 public void loadAdmins() {
-		 infoLoad(ADMIN_FILE);
+		 infoLoad(EnvConfig.get("ADMIN_FILE"));
 	    }
 	 
 	 public void loadCoupons() {
-		 infoLoad(COUPON_FILE);
+		 infoLoad(EnvConfig.get("COUPON_FILE"));
 	    }
 }
