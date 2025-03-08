@@ -38,7 +38,7 @@ public class UserService {
 
 
 	}
-	
+
 	public String useCoupon(String couponNumber) {
 		return couponService.useCoupon(couponNumber);
 	}
