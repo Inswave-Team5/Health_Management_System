@@ -2,7 +2,7 @@ package com.healthmanage.app;
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.controller.GymController;
 import com.healthmanage.service.LogService;
-
+import com.healthmanage.controller.WeightController;
 public class Main {
 
 	public static void main(String[] args) {
@@ -16,7 +16,10 @@ public class Main {
 		log.logCleanUp();
 		
 		GymController gym = new GymController();
-		gym.start();
+//		gym.start();
+
+		WeightController weight = new WeightController();
+
 
 	}
 

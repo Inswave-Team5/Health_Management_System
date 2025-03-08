@@ -64,11 +64,12 @@ public class UserController {
             userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
         }
     }
-	
+
 
 	public void couponUser() {
 		String couponNumber = userView.getInput("쿠폰번호 입력: ");
 		userView.showMessage(userService.useCoupon(couponNumber));
 
 	}
+
 }
