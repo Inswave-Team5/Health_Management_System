@@ -53,7 +53,6 @@ public class AttendanceController {
 
     //전체 입/퇴장 기록 조회
     public void listAttendanceAll(){
-        String userId = LoginUser.getLoginUserId();
         if(LoginUser.isLogin()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
@@ -63,7 +62,6 @@ public class AttendanceController {
 
     //전체 누적 운동시간 조회
     public void getWorkOutTime(){
-        String userId = LoginUser.getLoginUserId();
         if(LoginUser.isLogin()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
@@ -72,5 +70,26 @@ public class AttendanceController {
         view.showMessage("[전체 누적 운동시간]" + totalTime);
     }
 
+    //단일(날짜 선택) 운동시간 조회
+    public void getDayWorkOutTime(){
+        if(LoginUser.isLogin()){
+            view.showMessage("로그인 후 이용가능합니다!");
+            System.exit(0);
+        }
+        String day = view.getInput("날짜 입력 (입력 형식 : MM-dd) : ");
+        String workOutTimeByDay = attendanceService.getDayWorkOutTime(userId, day);
+        view.showMessage("["+day+"]" + workOutTimeByDay);
+    }
+
+    //월별 누적 운동시간 조회
+    public void getMonthTotalWorkOutTime(String userId){
+        if(LoginUser.isLogin()){
+            view.showMessage("로그인 후 이용가능합니다!");
+            System.exit(0);
+        }
+        String month = (view.getInput("월 입력 (입력 형식 : MM) : "));
+        String workOutTimeByMonth = attendanceService.getMonthTotalWorkOutTime(userId, month);
+        view.showMessage("[" + month + "월 누적 운동시간]" + workOutTimeByMonth);
+    }
 
 }

@@ -66,7 +66,7 @@ public class WeightService {
             }
             view.showMessage("[" + month + "월]");
             for(Weight weight : monthWeightList){
-                System.out.println(weight.toString());
+                view.showMessage(weight.toString());
             }
         }
     }
