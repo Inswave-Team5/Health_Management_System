@@ -6,15 +6,14 @@ import java.util.regex.Pattern;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
-import com.healthmanage.view.UserView;
+import com.healthmanage.view.adminView;
 import com.healthmanage.utils.SHA256;
 
 
 public class AdminService {
 	private CouponService couponservice;
 	private static AdminService instance;
-	private UserService userService;
-	private UserView userView;
+	private adminView adminView;
 	
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
@@ -49,14 +48,14 @@ public class AdminService {
 
 		
 		if(!Gym.users.get(memberNum).getPassword().equals(hashedPw)) {
-			userView.showMessage("비밀번호가 올바르지 않습니다.");
+			adminView.showMessage("비밀번호가 올바르지 않습니다.");
 			return;
 		}
 
-		String newPw = userView.getInput("새로운 비밀번호를 입력하세요.");
+		String newPw = adminView.getInput("새로운 비밀번호를 입력하세요.");
 		String newHashedPw = SHA256.encrypt(newPw);
 		Gym.users.get(memberNum).setPassword(newHashedPw);
-		userView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
+		adminView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
 
 
 	}

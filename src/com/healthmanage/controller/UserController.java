@@ -2,6 +2,7 @@ package com.healthmanage.controller;
 
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.service.UserService;
+import com.healthmanage.utils.SHA256;
 import com.healthmanage.view.UserView;
 
 public class UserController {
@@ -47,9 +48,10 @@ public class UserController {
 		// 나머지 회원 정보 입력
 		String name = userView.getInput("이름 입력: ");
 		String password = userView.getInput("비밀번호 입력: ");
+		String hashedPw = SHA256.encrypt(password);
 
 		// DTO 생성 및 회원가입 진행
-		UserSignUpDTO userDTO = new UserSignUpDTO(userId, name, password);
+		UserSignUpDTO userDTO = new UserSignUpDTO(userId, name, hashedPw);
 		userService.addUser(userDTO);
 		userView.showMessage("회원가입 완료!");
 	}
@@ -57,7 +59,8 @@ public class UserController {
 	public void loginUser() {
         String userId = userView.getInput("ID 입력: ");
         String password = userView.getInput("비밀번호 입력: ");
-        boolean loginSuccess = userService.userLogin(userId, password);
+        String hashedPw = SHA256.encrypt(password);
+        boolean loginSuccess = userService.userLogin(userId, hashedPw);
         if (loginSuccess) {
             userView.showMessage("로그인 성공!");
         } else {
