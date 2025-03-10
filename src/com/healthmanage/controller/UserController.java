@@ -86,5 +86,16 @@ public class UserController {
 		String inputMoney = userView.getInput("충전금액 입력: ");
 		userView.showMessage(userService.addCoin(inputMoney));
 	}
+	
+	
+	public void withdrawUser() {
+		String senderId = userView.getInput("보내는 사람 ID 입력: ");
+		String receiverId = userView.getInput("받는 사람 ID 입력: ");
+		String coin = userView.getInput("이체할 코인 입력: ");
+		userView.showMessage(userService.withdrawCoin(coin, senderId, receiverId));
+	}
 
+	
+	
+	
 }
