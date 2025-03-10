@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.healthmanage.model.Coupon;
+import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
 import com.healthmanage.view.View;
 
@@ -15,7 +16,17 @@ public class AdminController {
 		this.adminService = AdminService.getInstance();
 	}
 	/*----------유저 정보 조회----*/
-	
+	public void memberList() {
+		Collection<User> users = adminService.memberList();
+		if ( users == null) {
+			view.showMessage("등록된 회원이 없습니다.");
+		}
+		else {
+			for (User user : users) {
+				view.showMessage(user.toString());
+			}
+		}
+	}
 	
 	/*----------쿠폰 조회------*/
 	public void findAllCoupon() {

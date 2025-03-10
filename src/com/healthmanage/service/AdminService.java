@@ -39,13 +39,11 @@ public class AdminService {
 	}
 	
 	// 회원 이름순 정렬 후 전체조회
-	public void memberList() {
+	public Collection<User> memberList() {
 	      List<User> users = Sort.sortUser(Gym.users.values());
-	      for (User user : users) {
-	         System.out.println(user);
-	      }
+	      return users;
 	}
-	
+
 
 	public String memberSearch(String memberNum) { // 회원 검색조회
 		if (Gym.users.containsKey(memberNum)) {
