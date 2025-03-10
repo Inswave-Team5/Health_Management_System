@@ -5,7 +5,6 @@ import com.healthmanage.service.LogService;
 public class Main {
 
 	public static void main(String[] args) {
-		System.out.println("초기 설정 중입니다.");
 		System.out.println(EnvConfig.get("APP_NAME") + " " +  EnvConfig.get("APP_VERSION") +" Starting...");
 		
 		LogService log = LogService.getInstance();
