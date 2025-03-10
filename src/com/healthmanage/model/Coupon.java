@@ -1,6 +1,8 @@
 package com.healthmanage.model;
 
-public class Coupon {
+import java.io.Serializable;
+
+public class Coupon implements Serializable{
 	private String number;
 	private boolean isUsed;
 	private int coinAmount;
