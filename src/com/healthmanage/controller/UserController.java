@@ -1,6 +1,7 @@
 package com.healthmanage.controller;
 
 import com.healthmanage.dto.UserSignUpDTO;
+import com.healthmanage.model.User;
 import com.healthmanage.service.UserService;
 import com.healthmanage.utils.SHA256;
 import com.healthmanage.view.UserView;
@@ -19,11 +20,13 @@ public class UserController {
 		int key = 0;
 		while ((key = Integer.parseInt(userView.selectMenu())) != 0) {
 			switch (key) {
-			/*
-			 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-			 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-			 * break; case 7: load(); break;
-			 */
+			case 1:
+
+				/*
+				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
+				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
+				 * break; case 7: load(); break;
+				 */
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
@@ -56,6 +59,8 @@ public class UserController {
 		userView.showMessage("회원가입 완료!");
 	}
 
+
+
 	public void loginUser() {
         String userId = userView.getInput("ID 입력: ");
         String password = userView.getInput("비밀번호 입력: ");
@@ -67,11 +72,19 @@ public class UserController {
             userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
         }
     }
-	
+
 
 	public void couponUser() {
 		String couponNumber = userView.getInput("쿠폰번호 입력: ");
+
 		userView.showMessage(userService.useCoupon(couponNumber));
 
 	}
+
+
+	public void addCoinUser() {
+		String inputMoney = userView.getInput("충전금액 입력: ");
+		userView.showMessage(userService.addCoin(inputMoney));
+	}
+
 }

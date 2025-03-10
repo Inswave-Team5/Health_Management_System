@@ -1,6 +1,7 @@
 package com.healthmanage.app;
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.controller.GymController;
+import com.healthmanage.controller.WeightController;
 
 public class Main {
 
@@ -10,7 +11,10 @@ public class Main {
 		
 		
 		GymController gym = new GymController();
-		gym.start();
+//		gym.start();
+
+		WeightController weight = new WeightController();
+
 
 	}
 

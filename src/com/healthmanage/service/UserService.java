@@ -10,8 +10,11 @@ import com.healthmanage.utils.SHA256;
 public class UserService {
 	private static UserService instance;
 	private CouponService couponService;
+	private CoinService coinService;
 	private UserService() {
 		this.couponService = CouponService.getInstance();
+		this.coinService = CoinService.getInstance();
+		
 	}
 
 	public static UserService getInstance() {
@@ -42,6 +45,7 @@ public class UserService {
 
 
 	}
+
 	
 	//영어 소문자+숫자, 5~12자
 	public boolean isValidId(String userId) {
@@ -54,7 +58,14 @@ public class UserService {
 	}
 	
 	
+
 	public String useCoupon(String couponNumber) {
-		return couponService.useCoupon(couponNumber);
+		User user = null;
+		return couponService.useCoupon(couponNumber, user);
+	}
+	
+	public String addCoin(String money) {
+		User user = null;
+		return coinService.addCoin(money, user);
 	}
 }
