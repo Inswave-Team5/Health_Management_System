@@ -45,19 +45,13 @@ public class UserService {
 	}
 
 	public void addUser(UserSignUpDTO userDTO) {
-		System.out.println(userDTO.getPassword() + "이건 저장된 비번");
 		Gym.users.put(userDTO.getUserId(), new User(userDTO.getUserId(), userDTO.getPassword(), userDTO.getName()));
 	}
 
 	public User userLogin(String userId, String pw) {
-		System.out.println("여긴데?");
-		System.out.println(Gym.users.get(userId).getPassword() + "진짜 저장된 pass");
-		System.out.println(pw + " 진짜 입력된 pass");
 		if (Gym.users.containsKey(userId) && Gym.users.get(userId).getPassword().equals(pw)) {
-			System.out.println("여기야");
 			return Gym.users.get(userId);
 		} else {
-			System.out.println("여기야2");
 			return null;
 		}
 	}
