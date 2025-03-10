@@ -3,7 +3,7 @@ package com.healthmanage.app;
 public class LoginUser {
 
     //로그인한 userid 저장하는 static 변수
-    private static String loginUserId = "1234";
+    private static String loginUserId = "1234"; //test를 위해서 잠시 이렇게..
 
     //로그인한 userid 설정
     public static void setLoginUserId(String userId) {

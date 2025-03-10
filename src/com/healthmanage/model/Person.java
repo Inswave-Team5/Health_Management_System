@@ -11,10 +11,6 @@ public class Person {
 		this.password = password;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	public String getUserId() {
 		return userId;
 	}

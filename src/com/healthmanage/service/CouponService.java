@@ -1,10 +1,9 @@
 package com.healthmanage.service;
 
-import java.util.Collection;
+import java.util.Map;
 
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
-import com.healthmanage.model.User;
 
 public class CouponService {
 	private static CouponService instance;
@@ -19,8 +18,8 @@ public class CouponService {
 		return instance;
 	}
 	
-	public Collection<Coupon> findAllCoupons() {
-		return Gym.coupons.values();
+	public Map<String, Coupon> findAllCoupons() {
+		return Gym.coupons;
 	} //-> 이미 메모리에 있는거 보여준다??? 그냥 바로 가져오면 되지 않나??
 	
 	private Coupon findCoupon(String number) {
@@ -40,26 +39,23 @@ public class CouponService {
 		return true;
 	}
 	
-
 	public Coupon deleteCoupon(String number) {
 		return Gym.coupons.remove(number);
 	}
 	
-	public String useCoupon(String number, User user) {
+	public String useCoupon(String number) {
 		Coupon coupon = findCoupon(number);
 		if (coupon == null) {
 			return "존재하지 않는 쿠폰입니다.";
 		}
 		else if (!coupon.isUsed()) {
 			coupon.setUsed(true);
-			user.setCoin(user.getCoin() + coupon.getCoinAmount());
-			
+			// 고객 코인 += coinAmount;
 			return "쿠폰 사용 성공";
 		}
 		else {
 			return "이미 사용된 쿠폰입니다.";
 		}
-
 	}
 
 }

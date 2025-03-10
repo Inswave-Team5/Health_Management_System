@@ -4,8 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.utils.Time;
@@ -26,6 +26,7 @@ public class LogService {
 	}
 
 	public void addLog(String message) {
+
 		String logDir = "logs"; // 로그 디렉토리
 		String logFileName = time.currentDay() + EnvConfig.get("LOG_FILE_PATH");
 
@@ -43,31 +44,6 @@ public class LogService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public void logCleanUp() {
-		System.out.println("로그파일 정리 시작중,,");
-		File[] logFiles = new File("logs").listFiles();
-		
-		if(logFiles.length >= 14) {
-			for(File file : logFiles) {
-				String fileName = getFileName(file.getName());
-				
-				LocalDate dateTime = convertLocalDateTime(fileName);
-				LocalDate cutoffDate = convertLocalDateTime(time.currentDay()).minusDays(13);
 
-				if(dateTime.isBefore(cutoffDate)) {
-					System.out.println(file.getName()+" 로그 파일 삭제");
-					file.delete();
-				}
-			}
-		}
-	}
-	private String getFileName(String fullName) {
-		return fullName.split("\\.")[0];
-	}
-	private LocalDate convertLocalDateTime(String fileName) {
-		DateTimeFormatter  dateFormatParser = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		return LocalDate.parse(fileName, dateFormatParser);
 	}
 }

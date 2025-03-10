@@ -1,9 +1,7 @@
 package com.healthmanage.controller;
 
 import com.healthmanage.dto.UserSignUpDTO;
-import com.healthmanage.model.User;
 import com.healthmanage.service.UserService;
-import com.healthmanage.utils.SHA256;
 import com.healthmanage.view.UserView;
 
 public class UserController {
@@ -20,13 +18,11 @@ public class UserController {
 		int key = 0;
 		while ((key = Integer.parseInt(userView.selectMenu())) != 0) {
 			switch (key) {
-			case 1:
-
-				/*
-				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-				 * break; case 7: load(); break;
-				 */
+			/*
+			 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
+			 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
+			 * break; case 7: load(); break;
+			 */
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
@@ -51,21 +47,17 @@ public class UserController {
 		// 나머지 회원 정보 입력
 		String name = userView.getInput("이름 입력: ");
 		String password = userView.getInput("비밀번호 입력: ");
-		String hashedPw = SHA256.encrypt(password);
 
 		// DTO 생성 및 회원가입 진행
-		UserSignUpDTO userDTO = new UserSignUpDTO(userId, name, hashedPw);
+		UserSignUpDTO userDTO = new UserSignUpDTO(userId, name, password);
 		userService.addUser(userDTO);
 		userView.showMessage("회원가입 완료!");
 	}
 
-
-
 	public void loginUser() {
         String userId = userView.getInput("ID 입력: ");
         String password = userView.getInput("비밀번호 입력: ");
-        String hashedPw = SHA256.encrypt(password);
-        boolean loginSuccess = userService.userLogin(userId, hashedPw);
+        boolean loginSuccess = userService.userLogin(userId, password);
         if (loginSuccess) {
             userView.showMessage("로그인 성공!");
         } else {
@@ -76,15 +68,8 @@ public class UserController {
 
 	public void couponUser() {
 		String couponNumber = userView.getInput("쿠폰번호 입력: ");
-
 		userView.showMessage(userService.useCoupon(couponNumber));
 
-	}
-
-
-	public void addCoinUser() {
-		String inputMoney = userView.getInput("충전금액 입력: ");
-		userView.showMessage(userService.addCoin(inputMoney));
 	}
 
 }
