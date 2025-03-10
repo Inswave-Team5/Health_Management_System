@@ -5,11 +5,10 @@ import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
 
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.*;
 
 public class AttendanceService {
-    View view = new View();
+    private static View view;
     private static AttendanceService instance;
     private Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
     Time time = Time.getInstance();
@@ -18,6 +17,7 @@ public class AttendanceService {
         if (instance == null) {
             instance = new AttendanceService();
         }
+        view = new View();
         return instance;
     }
 
@@ -57,14 +57,41 @@ public class AttendanceService {
 
 //    //월별 입/퇴장 기록 조회
 //
-//    //일별 입/퇴장 기록 조회
+    //일별 입/퇴장 기록 조회
+    public String getAttendacneByDay(String userId, String date){
+        List<Attendance> userAttendanceList = attendanceList.get(userId);
+        String attendacneByDay = "";
+        if (userAttendanceList != null) {
+            for (Attendance attendance : userAttendanceList) {
+                if(attendance.getDate().equals(date)){
+                    attendacneByDay = attendance.toStringAttendacne();
+                }
+            }
+        }else{
+            view.showMessage("기록이 없습니다!");
+        }
+        return attendacneByDay;
+    }
+
+    //전체 출결 불러오기(날짜 별)
+    public  HashMap<String, String> listAllAttendanceByDay(String date) {
+        HashMap<String, String> map = new HashMap<>();
+
+        for (String userId : attendanceList.keySet()) {
+            String attendanceByDay = getAttendacneByDay(userId, date);
+            if(!attendanceByDay.isEmpty()){
+                map.put(userId, attendanceByDay);
+            }
+        }
+        return map;
+    }
 
     //전체 운동시간 기록 조회(전체 출결 조회)
     public void listAttendanceAll(String userId){
         List<Attendance> userAttendanceList = attendanceList.get(userId);
         view.showMessage("[전체 운동시간 기록]");
         for(Attendance attendance : userAttendanceList){
-            System.out.println(attendance.toString());
+            view.showMessage(attendance.toStringWorkOut());
         }
     }
 
@@ -97,14 +124,14 @@ public class AttendanceService {
     }
 
     // 월별 누적 운동시간 조회
-    public String getMonthTotalWorkOutTime(String userId, String month) {
+    public String getMonthTotalWorkOutTime(String userId, String yearMonth) {
         List<Attendance> userAttendanceList = attendanceList.get(userId);
         Duration totalDuration = Duration.ZERO; // 누적 시간 초기화
 
         if (userAttendanceList != null) {
             for (Attendance attendance : userAttendanceList) {
                 // 월이 일치하는지 확인
-                if (time.getMonthByInput(attendance.getDate()).equals(month)) {
+                if (time.getYearMonthByInput(attendance.getDate()).equals(yearMonth)) {
                     // 월별 운동 시간을 누적
                     totalDuration = totalDuration.plus(time.totalDuration(attendance.getWorkOutTime()));
                 }

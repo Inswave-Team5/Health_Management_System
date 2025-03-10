@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.Duration;
-import java.util.List;
-import java.util.function.Function;
 
 public class Time {
 	private static Time instance;
@@ -35,11 +33,11 @@ public class Time {
 		return dtf.format(now);
 	}
 
-	//입력받은 날짜에서 월(MM)만 추출
-	public String getMonthByInput(String input) {
+	//입력받은 날짜에서 년-월(yyyy-MM)만 추출
+	public String getYearMonthByInput(String input) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate date = LocalDate.parse(input, dtf);
-		return date.format(DateTimeFormatter.ofPattern("MM"));
+		return date.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 	}
 
 	//시간만 추출

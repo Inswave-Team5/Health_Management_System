@@ -11,7 +11,7 @@ import java.util.*;
 
 public class WeightService {
     private Map<String, List<Weight>> weightList = new HashMap<>(); //각 사용자의 몸무게 기록을 담을 map
-    private View view = new View();
+    private static View view;
     private static WeightService instance;
     Time time = Time.getInstance();
 
@@ -19,6 +19,7 @@ public class WeightService {
         if (instance == null) {
             instance = new WeightService();
         }
+         view = new View();
         return instance;
     }
     //Weight 추가 메서드
@@ -51,7 +52,7 @@ public class WeightService {
     }
 
     //Weight 월별 조회 메서드
-    public void ListWeightByMonth(String userId, String month) {
+    public void ListWeightByMonth(String userId, String yearMonth) {
         List<Weight> userWeightList = weightList.get(userId);
         List<Weight> monthWeightList = new ArrayList<Weight>();
 
@@ -60,11 +61,11 @@ public class WeightService {
             view.showMessage("몸무게를 입력해주세요.");
         } else {
             for(Weight userWeight : userWeightList){
-                if(time.getMonthByInput(userWeight.date).equals(month)){
+                if(time.getYearMonthByInput(userWeight.date).equals(yearMonth)){
                     monthWeightList.add(userWeight);
                 }
             }
-            view.showMessage("[" + month + "월]");
+            view.showMessage("[" + yearMonth + "]");
             for(Weight weight : monthWeightList){
                 view.showMessage(weight.toString());
             }
