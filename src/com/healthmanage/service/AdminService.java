@@ -6,21 +6,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-
+import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.AdminDAO;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
-import com.healthmanage.view.adminView;
+import com.healthmanage.view.AdminView;
+import com.healthmanage.utils.FileIO;
 import com.healthmanage.utils.SHA256;
 
 
 public class AdminService {
 	private CouponService couponservice;
 	private static AdminService instance;
-	private adminView adminView;
+	private AdminView adminView;
+	private AdminDAO adminDAO;
 	
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
+		this.adminDAO = new AdminDAO();
 
 	}
 
@@ -29,6 +33,15 @@ public class AdminService {
 			instance = new AdminService();
 		}
 		return instance;
+	}
+	
+	public void load() {
+		adminDAO.loadAdmins(EnvConfig.get("ADMIN_FILE"));
+
+	}
+	
+	public void save() {
+		adminDAO.saveAdmins();
 	}
 
 	public void memberList() { // 회원 전체조회

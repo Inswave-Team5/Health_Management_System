@@ -2,26 +2,39 @@ package com.healthmanage.service;
 
 import java.util.regex.Pattern;
 
+import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.UserDAO;
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
+import com.healthmanage.utils.FileIO;
 import com.healthmanage.utils.SHA256;
 
 public class UserService {
 	private static UserService instance;
 	private CouponService couponService;
 	private CoinService coinService;
+	private UserDAO userDAO;
 	private UserService() {
 		this.couponService = CouponService.getInstance();
 		this.coinService = CoinService.getInstance();
-		
+		this.userDAO = new UserDAO();
 	}
-
+	
 	public static UserService getInstance() {
 		if (instance == null) {
 			instance = new UserService();
 		}
 		return instance;
+	}
+	
+	public void load() {
+		userDAO.loadUsers(EnvConfig.get("USER_FILE"));
+	}
+	
+	public void save() {
+		userDAO.saveUsers();
+		
 	}
 
 	public boolean checkId(String userId) {
@@ -32,18 +45,21 @@ public class UserService {
 	}
 
 	public void addUser(UserSignUpDTO userDTO) {
+		System.out.println(userDTO.getPassword() + "이건 저장된 비번");
 		Gym.users.put(userDTO.getUserId(), new User(userDTO.getUserId(), userDTO.getPassword(), userDTO.getName()));
 	}
 
-	public boolean userLogin(String userId, String pw) {
-		String hashedPw = SHA256.encrypt(pw);
+	public User userLogin(String userId, String pw) {
+		System.out.println("여긴데?");
+		System.out.println(Gym.users.get(userId).getPassword() + "진짜 저장된 pass");
+		System.out.println(pw + " 진짜 입력된 pass");
 		if (Gym.users.containsKey(userId) && Gym.users.get(userId).getPassword().equals(pw)) {
-			return true;
+			System.out.println("여기야");
+			return Gym.users.get(userId);
 		} else {
-			return false;
+			System.out.println("여기야2");
+			return null;
 		}
-
-
 	}
 
 	
