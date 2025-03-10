@@ -16,9 +16,9 @@ public class Main {
 		log.logCleanUp();
 		
 		GymController gym = new GymController();
-//		gym.start();
+		gym.start();
 
-		WeightController weight = new WeightController();
+//		WeightController weight = new WeightController();
 
 
 	}

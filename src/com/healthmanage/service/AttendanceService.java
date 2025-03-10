@@ -1,6 +1,5 @@
 package com.healthmanage.service;
 
-import com.healthmanage.app.LoginUser;
 import com.healthmanage.model.Attendance;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
@@ -24,8 +23,8 @@ public class AttendanceService {
 
     //출근 시간 기록
     public void setEnterTime(String userId){
-        String date = time.currentDay().substring(0, 10);
-        String enterTime = time.currentDayAndTime().substring(13, 21);
+        String date = time.currentDay();
+        String enterTime = time.currentDayAndTime();
         Attendance attendance = new Attendance(userId, date, enterTime);
 
         //user 의 Attendance 객체를 리스트에 담기
@@ -45,22 +44,14 @@ public class AttendanceService {
             view.showMessage("입장을 먼저 해주세요!");
         }
 
-        String leaveTime = time.currentDayAndTime().substring(13, 21);
+        String leaveTime = time.currentDayAndTime();
         Attendance lastAttendance = userAttendanceList.get(userAttendanceList.size()-1);
         lastAttendance.setLeaveTime(leaveTime);
 
         // 입장-퇴장 시간 차이 계산
-        LocalTime leaveLocalTime = LocalTime.parse(leaveTime);
-        LocalTime enterLocalTime = LocalTime.parse(leaveTime);
-        Duration duration = Duration.between(enterLocalTime, leaveLocalTime);
-
-        // 차이를 "HH:mm:ss" 형식의 문자열로 변환
-        long hours = duration.toHours();
-        long minutes = duration.toMinutesPart();
-        long seconds = duration.toSecondsPart();
-        String workoutTime = String.format("%02d:%02d:%02d", hours, minutes, seconds);
-
-        lastAttendance.setWorkOutTime(workoutTime);
+        Duration diffTime = time.getTimeDiff(lastAttendance.getEnterTime(), leaveTime);
+        String diffTimeStr = time.transTimeFormat(diffTime);
+        lastAttendance.setWorkOutTime(diffTimeStr);
     }
 
 
@@ -79,23 +70,16 @@ public class AttendanceService {
 
     //전체 누적 운동시간 조회
     public String getTotalWorkOutTime(String userId){
-        Duration totalDuration = Duration.ZERO; // (계산을 위한)누적 시간 초기화
         List<Attendance> userAttendanceList = attendanceList.get(userId);
+        Duration totalDuration = Duration.ZERO;
         if (userAttendanceList != null) {
             for (Attendance attendance : userAttendanceList) {
                 String workOutTime = attendance.getWorkOutTime(); // "HH:mm:ss" 형식의 문자열
-                LocalTime time = LocalTime.parse(workOutTime); // LocalTime 변환
-                totalDuration = totalDuration.plusHours(time.getHour())
-                        .plusMinutes(time.getMinute())
-                        .plusSeconds(time.getSecond());
+                totalDuration = totalDuration.plus(time.totalDuration(workOutTime));
             }
         }
-        // 누적된 Duration을 "HH:mm:ss" 형식의 문자열로 변환
-        long hours = totalDuration.toHours();
-        long minutes = totalDuration.toMinutesPart();
-        long seconds = totalDuration.toSecondsPart();
 
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return time.transTimeFormat(totalDuration);
     }
 
     //단일(날짜 선택) 운동시간 조회
@@ -112,29 +96,23 @@ public class AttendanceService {
         return dayWorkOutTime;
     }
 
-    //월별 누적 운동시간 조회
-    public String getMonthTotalWorkOutTime(String userId, String month){
-        Duration totalDuration = Duration.ZERO; // (계산을 위한)누적 시간 초기화
+    // 월별 누적 운동시간 조회
+    public String getMonthTotalWorkOutTime(String userId, String month) {
         List<Attendance> userAttendanceList = attendanceList.get(userId);
-        String monthWorkOutTime = "";
+        Duration totalDuration = Duration.ZERO; // 누적 시간 초기화
+
         if (userAttendanceList != null) {
             for (Attendance attendance : userAttendanceList) {
-                if (attendance.getDate().substring(5, 7).equals(month)) {
-                    monthWorkOutTime = attendance.getWorkOutTime();
-                    LocalTime time = LocalTime.parse(monthWorkOutTime);
-                    totalDuration = totalDuration.plusHours(time.getHour())
-                            .plusMinutes(time.getMinute())
-                            .plusSeconds(time.getSecond());
+                // 월이 일치하는지 확인
+                if (time.getMonthByInput(attendance.getDate()).equals(month)) {
+                    // 월별 운동 시간을 누적
+                    totalDuration = totalDuration.plus(time.totalDuration(attendance.getWorkOutTime()));
                 }
             }
-
         }
-        // 누적된 Duration을 "HH:mm:ss" 형식의 문자열로 변환
-        long hours = totalDuration.toHours();
-        long minutes = totalDuration.toMinutesPart();
-        long seconds = totalDuration.toSecondsPart();
 
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        // 누적된 시간을 "HH:mm:ss" 형식으로 변환하여 반환
+        return time.transTimeFormat(totalDuration);
     }
 
 }

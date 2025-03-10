@@ -1,7 +1,5 @@
 package com.healthmanage.model;
 
-import com.healthmanage.utils.Time;
-
 public class Weight {
 
     public String userId;   // 로그인한 userId

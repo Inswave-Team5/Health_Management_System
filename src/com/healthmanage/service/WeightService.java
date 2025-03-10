@@ -60,7 +60,7 @@ public class WeightService {
             view.showMessage("몸무게를 입력해주세요.");
         } else {
             for(Weight userWeight : userWeightList){
-                if(userWeight.date.substring(5, 7).equals(month)){
+                if(time.getMonthByInput(userWeight.date).equals(month)){
                     monthWeightList.add(userWeight);
                 }
             }
@@ -72,15 +72,16 @@ public class WeightService {
     }
 
     //Weight 일별 조회 메서드
-    public void ListWeightByDay(String userId, String day) {
+    public void ListWeightByDay(String userId, String date) {
         List<Weight> userWeightList = weightList.get(userId);
 
         if(userWeightList == null || userWeightList.isEmpty()){
             view.showMessage("아직 몸무게 기록이 없습니다!");
             view.showMessage("몸무게를 입력해주세요.");
         } else {
+            view.showMessage("[" + date + "]");
             for(Weight userWeight : userWeightList){
-                if(userWeight.date.substring(5,10).equals(day)){
+                if(userWeight.date.equals(date)){
                     view.showMessage(userWeight.toString());
                 }
             }
