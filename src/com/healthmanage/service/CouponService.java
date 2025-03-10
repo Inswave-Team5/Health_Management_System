@@ -1,10 +1,12 @@
 package com.healthmanage.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
+import com.healthmanage.utils.Sort;
 
 public class CouponService {
 	private static CouponService instance;
@@ -19,9 +21,13 @@ public class CouponService {
 		return instance;
 	}
 	
-	public Collection<Coupon> findAllCoupons() {
-		return Gym.coupons.values();
-	} //-> 이미 메모리에 있는거 보여준다??? 그냥 바로 가져오면 되지 않나??
+	// 쿠폰번호로 정렬후 조회
+	public void findAllCoupons() {
+	      List<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
+	      for (Coupon coupon : coupons) {
+	         System.out.println(coupon);
+	      }
+	   }
 	
 	private Coupon findCoupon(String number) {
         if (!Gym.coupons.containsKey(number)) {  
