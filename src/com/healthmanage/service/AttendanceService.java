@@ -110,7 +110,6 @@ public class AttendanceService {
                 }
             }
         }
-
         // 누적된 시간을 "HH:mm:ss" 형식으로 변환하여 반환
         return time.transTimeFormat(totalDuration);
     }
