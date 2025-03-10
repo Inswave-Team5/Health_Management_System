@@ -42,7 +42,8 @@ public class UserService {
 
 	}
 	
-	public String useCoupon(String couponNumber, User user) {
+	public String useCoupon(String couponNumber) {
+		User user = null;
 		return couponService.useCoupon(couponNumber, user);
 	}
 	
