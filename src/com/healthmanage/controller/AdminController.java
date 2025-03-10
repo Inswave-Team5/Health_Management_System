@@ -1,6 +1,7 @@
 package com.healthmanage.controller;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.healthmanage.model.Coupon;
 import com.healthmanage.service.AdminService;

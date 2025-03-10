@@ -109,8 +109,8 @@ public class AdminService {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
 	}
 
-	public void findAllCoupon() {
-		couponservice.findAllCoupons();
+	public Collection<Coupon> findAllCoupon() {
+		return couponservice.findAllCoupons();
 	}
 
 	public void addCoupon(String number, int coinAmount) {

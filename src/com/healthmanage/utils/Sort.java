@@ -14,7 +14,7 @@ import com.healthmanage.model.User;
 //정렬 유틸리티 클래스
 public class Sort {
 
- public static List<Coupon> sortCoupon(Collection<Coupon> list) {
+ public static Collection<Coupon> sortCoupon(Collection<Coupon> list) {
      return list.stream()
              .sorted(Comparator.comparing(Coupon::getNumber))
              .collect(Collectors.toList());

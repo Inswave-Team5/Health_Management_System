@@ -26,11 +26,13 @@ public class CouponService {
 //	} //-> 이미 메모리에 있는거 보여준다??? 그냥 바로 가져오면 되지 않나??
 	
 	// 쿠폰번호로 정렬후 조회
-	public void findAllCoupons() {
-	      List<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
-	      for (Coupon coupon : coupons) {
-	         System.out.println(coupon);
-	      }
+	public Collection<Coupon> findAllCoupons() {
+	      Collection<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
+	      return coupons;
+//	      for (Coupon coupon : coupons) {
+//	         System.out.println(coupon);
+//	    	
+//	      }
 	   }
 	
 	private Coupon findCoupon(String number) {
