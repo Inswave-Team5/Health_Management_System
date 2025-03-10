@@ -2,9 +2,9 @@ package com.healthmanage.view;
 
 import java.util.Scanner;
 
-public class adminView extends View {
+public class AdminView extends View {
 	
-	public adminView() {
+	public AdminView() {
 		super();
 	}
 	
