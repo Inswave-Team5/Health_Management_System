@@ -1,7 +1,11 @@
 package com.healthmanage.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
@@ -84,6 +88,7 @@ public class AdminService {
 
 	}
 
+
 	// 영어 소문자+숫자, 5~12자
 	public boolean isValidId(String adminId) {
 		return Pattern.matches("^[a-z0-9]{5,12}$", adminId);
@@ -94,7 +99,7 @@ public class AdminService {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
 	}
 
-	public Map<String, Coupon> findAllCoupon() {
+	public Collection<Coupon> findAllCoupon() {
 		return couponservice.findAllCoupons();
 	}
 

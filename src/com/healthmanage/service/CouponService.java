@@ -1,6 +1,6 @@
 package com.healthmanage.service;
 
-import java.util.Map;
+import java.util.Collection;
 
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
@@ -19,8 +19,8 @@ public class CouponService {
 		return instance;
 	}
 	
-	public Map<String, Coupon> findAllCoupons() {
-		return Gym.coupons;
+	public Collection<Coupon> findAllCoupons() {
+		return Gym.coupons.values();
 	} //-> 이미 메모리에 있는거 보여준다??? 그냥 바로 가져오면 되지 않나??
 	
 	private Coupon findCoupon(String number) {
