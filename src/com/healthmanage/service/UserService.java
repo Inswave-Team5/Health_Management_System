@@ -7,8 +7,11 @@ import com.healthmanage.model.User;
 public class UserService {
 	private static UserService instance;
 	private CouponService couponService;
+	private CoinService coinService;
 	private UserService() {
 		this.couponService = CouponService.getInstance();
+		this.coinService = CoinService.getInstance();
+		
 	}
 
 	public static UserService getInstance() {
@@ -40,6 +43,12 @@ public class UserService {
 	}
 
 	public String useCoupon(String couponNumber) {
-		return couponService.useCoupon(couponNumber);
+		User user = null;
+		return couponService.useCoupon(couponNumber, user);
+	}
+	
+	public String addCoin(String money) {
+		User user = null;
+		return coinService.addCoin(money, user);
 	}
 }
