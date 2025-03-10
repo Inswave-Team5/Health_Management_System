@@ -79,9 +79,11 @@ public class UserService {
 		
 		String result = coinService.withdraw(coin, sender, receiver);
 		
+		if(result.equals("이체되었습니다.")) {
 		Gym.users.get(sender.getUserId()).setCoin(sender.getCoin());
 		Gym.users.get(receiver.getUserId()).setCoin(receiver.getCoin());
-	
+		}
+		
 		return result;
 	}
 }
