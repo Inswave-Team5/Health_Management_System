@@ -1,6 +1,8 @@
 package com.healthmanage.model;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable{
 	public String userId;
 	public String name;
 	public String password;

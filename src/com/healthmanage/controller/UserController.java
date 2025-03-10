@@ -1,6 +1,7 @@
 package com.healthmanage.controller;
 
 import com.healthmanage.dto.UserSignUpDTO;
+import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.UserService;
 import com.healthmanage.utils.SHA256;
@@ -16,22 +17,64 @@ public class UserController {
 		this.userView = new UserView();
 	}
 
-	public void start() {
+	public void entry() {
 		int key = 0;
-		while ((key = Integer.parseInt(userView.selectMenu())) != 0) {
+		while (!Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectLogin())) != 0) {
 			switch (key) {
 			case 1:
-
-				/*
-				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-				 * break; case 7: load(); break;
-				 */
+				loginUser();
+				break;
+			case 2:
+				registerUser();
+				break;
 			default:
-				System.out.println("잘못 선택하였습니다.");
+				userView.showMessage("잘못 선택하였습니다.");
+				break;
+			}
+		};
+		start();
+
+	}
+
+	public void start() {
+		int key = 0;
+		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
+			switch (key) {
+			case 1:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			case 2:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			case 3:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			case 4:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			case 5:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			case 6:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			case 7:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			case 8:
+				System.out.println(key + "번 입력되었습니다.");
+				break;
+			/*
+			 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
+			 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
+			 * break; case 7: load(); break;
+			 */
+			default:
+				userView.showMessage("잘못 선택하였습니다.");
 				break;
 			}
 		}
+		Gym.logoutUser();
 		System.out.println("종료합니다...");
 	}
 
@@ -54,40 +97,36 @@ public class UserController {
 		String hashedPw = SHA256.encrypt(password);
 
 		// DTO 생성 및 회원가입 진행
-		UserSignUpDTO userDTO = new UserSignUpDTO(userId, name, hashedPw);
+		UserSignUpDTO userDTO = new UserSignUpDTO(userId, hashedPw, name);
 		userService.addUser(userDTO);
 		userView.showMessage("회원가입 완료!");
 	}
 
-
-
-	public void loginUser() {
-        String userId = userView.getInput("ID 입력: ");
-        String password = userView.getInput("비밀번호 입력: ");
-        String hashedPw = SHA256.encrypt(password);
-        boolean loginSuccess = userService.userLogin(userId, hashedPw);
-        if (loginSuccess) {
-            userView.showMessage("로그인 성공!");
-        } else {
-            userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
-        }
-    }
-
+	public boolean loginUser() {
+		String userId = userView.getInput("ID 입력: ");
+		String password = userView.getInput("비밀번호 입력: ");
+		String hashedPw = SHA256.encrypt(password);
+		User loginSuccess = userService.userLogin(userId, hashedPw);
+		if (loginSuccess != null) {
+			userView.showMessage("로그인 성공!");
+			Gym.currentUser = loginSuccess;
+			return true;
+		} else {
+			userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
+			return false;
+		}
+	}
 
 	public void couponUser() {
 		String couponNumber = userView.getInput("쿠폰번호 입력: ");
-
 		userView.showMessage(userService.useCoupon(couponNumber));
-
 	}
-
 
 	public void addCoinUser() {
 		String inputMoney = userView.getInput("충전금액 입력: ");
 		userView.showMessage(userService.addCoin(inputMoney));
 	}
-	
-	
+
 	public void withdrawUser() {
 		String senderId = userView.getInput("보내는 사람 ID 입력: ");
 		String receiverId = userView.getInput("받는 사람 ID 입력: ");
@@ -95,7 +134,4 @@ public class UserController {
 		userView.showMessage(userService.withdrawCoin(coin, senderId, receiverId));
 	}
 
-	
-	
-	
 }
