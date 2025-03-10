@@ -32,22 +32,23 @@ public class UserService {
 		Gym.users.put(userDTO.getUserId(), new User(userDTO.getUserId(), userDTO.getPassword(), userDTO.getName()));
 	}
 
-	public User userLogin(String userId, String pw) {
+	public boolean userLogin(String userId, String pw) {
 		if (Gym.users.containsKey(userId) && Gym.users.get(userId).getPassword().equals(pw)) {
-			return Gym.users.get(userId);
+			return true;
 		} else {
-			return null;
+			return false;
 		}
 
 
 	}
-	
+
 	public String useCoupon(String couponNumber) {
 		User user = null;
 		return couponService.useCoupon(couponNumber, user);
 	}
 	
-	public String addCoin(String money, User user) {
+	public String addCoin(String money) {
+		User user = null;
 		return coinService.addCoin(money, user);
 	}
 }
