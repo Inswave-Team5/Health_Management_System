@@ -1,5 +1,6 @@
 package com.healthmanage.app;
 import com.healthmanage.config.EnvConfig;
+import com.healthmanage.controller.EquipmentController;
 import com.healthmanage.controller.GymController;
 import com.healthmanage.controller.WeightController;
 
@@ -13,7 +14,11 @@ public class Main {
 		GymController gym = new GymController();
 //		gym.start();
 
-		WeightController weight = new WeightController();
+		EquipmentController equipment = new EquipmentController();
+		equipment.useEquipment();
+		equipment.useEquipment();
+		equipment.viewWorkoutHistory();
+
 
 
 	}
