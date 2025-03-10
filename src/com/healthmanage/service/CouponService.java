@@ -21,6 +21,10 @@ public class CouponService {
 		return instance;
 	}
 	
+//	public Collection<Coupon> findAllCoupons() {
+//		return Gym.coupons.values();
+//	} //-> 이미 메모리에 있는거 보여준다??? 그냥 바로 가져오면 되지 않나??
+	
 	// 쿠폰번호로 정렬후 조회
 	public void findAllCoupons() {
 	      List<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
