@@ -51,12 +51,12 @@ public class CouponService {
 	}
 
 	public Coupon createCoupon(String number, int coinAmount) {
+		Coupon coupon = null;
 		if (Gym.coupons.containsKey(number)) {
-			return null;
-		}
-		Coupon coupon = Gym.coupons.put(number, new Coupon(number, coinAmount));
-		if(coupon != null) {
-			logger.addLog(number + "번의 쿠폰이 추가되었습니다.");			
+			coupon = Gym.coupons.put(number, new Coupon(number, coinAmount));
+			if(coupon != null) {
+				logger.addLog(number + "번의 쿠폰이 추가되었습니다.");			
+			}
 		}
 		return coupon;
 	}
