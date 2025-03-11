@@ -30,7 +30,6 @@ import com.healthmanage.utils.FileIO;
 
 import com.healthmanage.utils.SHA256;
 
-
 import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 
@@ -44,7 +43,7 @@ public class AdminService {
 	Time time = Time.getInstance();
 	private AdminDAO adminDAO;
 	private LogService logger;
-	
+
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
@@ -58,11 +57,12 @@ public class AdminService {
 		}
 		return instance;
 	}
+
 	// 회원 이름순 정렬 후 전체조회
 	public Collection<User> memberList() {
-	      List<User> users = Sort.sortUser(Gym.users.values());
-	      return users;
-}
+		List<User> users = Sort.sortUser(Gym.users.values());
+		return users;
+	}
 
 	public void load() {
 		adminDAO.loadAdmins(EnvConfig.get("ADMIN_FILE"));
@@ -111,21 +111,20 @@ public class AdminService {
 		logger.addLog(memberNum + "님의 User정보가 삭제되었습니다.");
 	}
 
-
 	public Admin adminLogin(String adminId, String pw) {
-		if (!Gym.users.containsKey(adminId)){
+		if (!Gym.users.containsKey(adminId)) {
 			return null;
 		}
 		Admin admin = Gym.admins.get(adminId);
 
-		  boolean isPasswordValid = SHA256.verifyPassword(pw, admin.getSalt(), admin.getPassword());
+		boolean isPasswordValid = SHA256.verifyPassword(pw, admin.getSalt(), admin.getPassword());
 
-		    if (isPasswordValid) {
-		        logger.addLog(adminId + "님이 로그인 하셨습니다.");
-		        return admin;
-		    } else {
-		        return null;
-		    }
+		if (isPasswordValid) {
+			logger.addLog(adminId + "님이 로그인 하셨습니다.");
+			return admin;
+		} else {
+			return null;
+		}
 	}
 
 	// 영어 소문자+숫자, 5~12자
@@ -154,35 +153,34 @@ public class AdminService {
 		}
 		return coupon.toString() + "삭제";
 	}
-	
+
 	// 회원 운동시간 누적기준 정렬
 	public Map<String, String> getRank() {
 		// attendance list 받아오기
-	      
-        // 시간 계산하기
-        Map<String, String> tmpList = new HashMap<>();
-        	            
-        for (int i = 0; i < attendanceList.size(); i++) {
-           String tmpId = attendanceList.get(i).getUserId();
-           String tmpTime = attendanceList.get(i).getWorkOutTime();
-           
-           if (!tmpList.containsKey(tmpId)) {
-        	   tmpList.put(tmpId, tmpTime);
-           }
-           else {
-              String existingTime = tmpList.get(tmpId);
-              Duration duration1 = time.totalDuration(existingTime);
-              Duration duration2 = time.totalDuration(tmpTime);
-              
-              tmpList.replace(tmpId, duration1.plus(duration2).toString());
-           }
-           
-        }
-        
-        // attendance list 넘겨주기
-        Map<String, String> sortedList = Sort.sortRank2(tmpList);
-        
-        return sortedList;
+
+		// 시간 계산하기
+		Map<String, String> tmpList = new HashMap<>();
+
+		for (int i = 0; i < attendanceList.size(); i++) {
+			String tmpId = attendanceList.get(i).getUserId();
+			String tmpTime = attendanceList.get(i).getWorkOutTime();
+
+			if (!tmpList.containsKey(tmpId)) {
+				tmpList.put(tmpId, tmpTime);
+			} else {
+				String existingTime = tmpList.get(tmpId);
+				Duration duration1 = time.totalDuration(existingTime);
+				Duration duration2 = time.totalDuration(tmpTime);
+
+				tmpList.replace(tmpId, duration1.plus(duration2).toString());
+			}
+
+		}
+
+		// attendance list 넘겨주기
+		Map<String, String> sortedList = Sort.sortRank2(tmpList);
+
+		return sortedList;
 	}
 
 	// 회원 아이디로 이름찾기

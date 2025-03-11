@@ -70,12 +70,6 @@ public class AdminController {
             return false;
         }
 		
-		// 유저 정보 가져오기
-		Admin admin = Gym.admins.get(userId);
-		if (admin == null) {
-			view.showMessage("로그인 실패. 존재하지 않는 아이디입니다.");
-			return false;
-		}
 		
 		// 로그인 검증
 		Admin loginSuccess = adminService.adminLogin(userId, password);

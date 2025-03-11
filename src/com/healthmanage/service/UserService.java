@@ -50,36 +50,36 @@ public class UserService {
 	}
 
 	public User addUser(UserSignUpDTO userDTO) {
-		  if (Gym.users.containsKey(userDTO.getUserId())) {
-		        logger.addLog("회원가입 실패: 이미 존재하는 아이디 (" + userDTO.getUserId() + ")");
-		        return null;
-		    }
+		if (Gym.users.containsKey(userDTO.getUserId())) {
+			logger.addLog("회원가입 실패: 이미 존재하는 아이디 (" + userDTO.getUserId() + ")");
+			return null;
+		}
 
-		    String salt = SHA256.generateSalt();
-		    String hashedPw = SHA256.hashPassword(userDTO.getPassword(), salt);
-		    User newUser = new User(userDTO.getUserId(), hashedPw, userDTO.getName(), salt);
+		String salt = SHA256.generateSalt();
+		String hashedPw = SHA256.hashPassword(userDTO.getPassword(), salt);
+		User newUser = new User(userDTO.getUserId(), hashedPw, userDTO.getName(), salt);
 
-		    Gym.users.put(userDTO.getUserId(), newUser);
+		Gym.users.put(userDTO.getUserId(), newUser);
 
-		    logger.addLog("아이디 : " + newUser.getUserId() + " | 이름 : " + newUser.getName() + "님이 회원가입하셨습니다.");
+		logger.addLog("아이디 : " + newUser.getUserId() + " | 이름 : " + newUser.getName() + "님이 회원가입하셨습니다.");
 
-		    return newUser;
+		return newUser;
 	}
 
 	public User userLogin(String userId, String pw) {
-		if (!Gym.users.containsKey(userId)){
+		if (!Gym.users.containsKey(userId)) {
 			return null;
 		}
 		User user = Gym.users.get(userId);
 
-		  boolean isPasswordValid = SHA256.verifyPassword(pw, user.getSalt(), user.getPassword());
+		boolean isPasswordValid = SHA256.verifyPassword(pw, user.getSalt(), user.getPassword());
 
-		    if (isPasswordValid) {
-		        logger.addLog(userId + "님이 로그인 하셨습니다.");
-		        return user;
-		    } else {
-		        return null;
-		    }
+		if (isPasswordValid) {
+			logger.addLog(userId + "님이 로그인 하셨습니다.");
+			return user;
+		} else {
+			return null;
+		}
 	}
 
 	// 영어 소문자+숫자, 5~12자
