@@ -181,7 +181,7 @@ public class UserController {
 		 try {
 		        String couponNumber = userView.getInput("쿠폰번호 입력: ");
 		        if (!isValidCouponNumber(couponNumber)) {
-		            userView.showMessage("유효하지 않은 쿠폰번호 형식입니다.");
+		            userView.showMessage("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
 		            return;
 		        }
 
@@ -234,11 +234,15 @@ public class UserController {
 			String senderId = userView.getInput("보내는 사람 ID 입력: ");
 			if (senderId.isEmpty()) {
 				throw new IllegalArgumentException("보내는 사람 ID는 비워둘 수 없습니다.");
+			}if (!userService.isValidId(senderId)) {
+				throw new IllegalArgumentException("ID 형식이 올바르지 않습니다.");
 			}
 
 			String receiverId = userView.getInput("받는 사람 ID 입력: ");
 			if (receiverId.isEmpty()) {
 				throw new IllegalArgumentException("받는 사람 ID는 비워둘 수 없습니다.");
+			}if (!userService.isValidId(receiverId)) {
+				throw new IllegalArgumentException("ID 형식이 올바르지 않습니다.");
 			}
 
 			String coin = userView.getInput("이체할 코인 입력: ");
