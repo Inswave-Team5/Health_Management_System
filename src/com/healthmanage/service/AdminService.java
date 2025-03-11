@@ -20,13 +20,16 @@ import com.healthmanage.model.User;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AdminDAO;
+import com.healthmanage.model.Admin;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
+import com.healthmanage.model.User;
 import com.healthmanage.view.AdminView;
 import com.healthmanage.utils.FileIO;
 
 import com.healthmanage.utils.SHA256;
+
 import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 
@@ -80,18 +83,24 @@ public class AdminService {
 	}
 
 	public boolean pwChange(String memberNum, String pw) { // 비밀번호 수정
-		// 로그인 상태에서 비밀번호 입력받아 맞는지 확인
-		// 기존 비밀번호가 맞으면 새로운 비밀번호 변경
-		String hashedPw = SHA256.encrypt(pw);
 
-		if (!Gym.users.get(memberNum).getPassword().equals(hashedPw)) {
+		User user = Gym.users.get(memberNum);
+		if (user == null) {
+			adminView.showMessage("사용자를 찾을 수 없습니다.");
+			return false;
+		}
+
+		if (!SHA256.verifyPassword(pw, user.getSalt(), user.getPassword())) {
 			adminView.showMessage("비밀번호가 올바르지 않습니다.");
 			return false;
 		}
 
 		String newPw = adminView.getInput("새로운 비밀번호를 입력하세요.");
-		String newHashedPw = SHA256.encrypt(newPw);
-		Gym.users.get(memberNum).setPassword(newHashedPw);
+		String newSalt = SHA256.generateSalt();
+		String newHashedPw = SHA256.hashPassword(newPw, newSalt);
+
+		user.setPassword(newHashedPw, newSalt);
+
 		adminView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
 		logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
 		return true;
@@ -103,9 +112,16 @@ public class AdminService {
 	}
 
 	public Admin adminLogin(String adminId, String pw) {
-		if (Gym.admins.containsKey(adminId) && Gym.admins.get(adminId).getPassword().equals(pw)) {
-			logger.addLog(Gym.admins.get(adminId).getName() + "님이 로그인 하셨습니다.");
-			return Gym.admins.get(adminId);
+		if (!Gym.users.containsKey(adminId)) {
+			return null;
+		}
+		Admin admin = Gym.admins.get(adminId);
+
+		boolean isPasswordValid = SHA256.verifyPassword(pw, admin.getSalt(), admin.getPassword());
+
+		if (isPasswordValid) {
+			logger.addLog(adminId + "님이 로그인 하셨습니다.");
+			return admin;
 		} else {
 			return null;
 		}

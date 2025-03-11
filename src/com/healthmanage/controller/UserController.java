@@ -4,17 +4,21 @@ import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.UserService;
-import com.healthmanage.utils.SHA256;
 import com.healthmanage.view.UserView;
 
 public class UserController {
-	private UserService userService;
-
-	private UserView userView;
+	private final UserService userService;
+	private final UserView userView;
+	AttendanceController attendanceController;
+	WeightController weightController;
+	EquipmentController equipmentController;
 
 	public UserController() {
 		this.userService = UserService.getInstance();
 		this.userView = new UserView();
+		this.attendanceController = new AttendanceController();
+		this.weightController = new WeightController();
+		this.equipmentController = new EquipmentController();
 	}
 
 	public void entry() {
@@ -39,36 +43,38 @@ public class UserController {
 	public void start() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
+
+			userView.showMessage(key + "번 입력되었습니다.");
+
 			switch (key) {
 			case 1:
-				System.out.println(key + "번 입력되었습니다.");
+				attendanceController.attendanceEntry();
+
 				break;
 			case 2:
-				System.out.println(key + "번 입력되었습니다.");
+				attendanceController.timeEntry();
 				break;
 			case 3:
-				System.out.println(key + "번 입력되었습니다.");
+				weightController.weightEntry();
 				break;
 			case 4:
-				System.out.println(key + "번 입력되었습니다.");
+				equipmentController.equipmentEntry();
 				break;
 			case 5:
-				System.out.println(key + "번 입력되었습니다.");
+				// 쿠폰등록
+				couponUser();
 				break;
 			case 6:
-				System.out.println(key + "번 입력되었습니다.");
+				// 코인
+				coinEntry();
 				break;
 			case 7:
-				System.out.println(key + "번 입력되었습니다.");
+				// 비밀번호 변경
 				break;
-			case 8:
-				System.out.println(key + "번 입력되었습니다.");
+			case 0:
+				// 로그아웃
+				Gym.logoutUser();
 				break;
-			/*
-			 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-			 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-			 * break; case 7: load(); break;
-			 */
 			default:
 				userView.showMessage("잘못 선택하였습니다.");
 				break;
@@ -78,11 +84,39 @@ public class UserController {
 		System.out.println("종료합니다...");
 	}
 
+	public void coinEntry() {
+		int key = 0;
+		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.coinSelectMenu())) != 0) {
+			userView.showMessage(key + "번 입력되었습니다.");
+			switch (key) {
+			case 1:
+				addCoinUser();
+				break;
+			case 2:
+				withdrawUser();
+				break;
+			case 0:
+				start();
+				break;
+			default:
+				userView.showMessage("잘못 선택하였습니다.");
+				break;
+			}
+		}
+		System.out.println("종료합니다...");
+	}
+
 	public void registerUser() {
 		String userId;
 		while (true) {
 			// 🔹 View에서 아이디 입력 받기
 			userId = userView.getInput("ID 입력: ");
+
+			// ID 유효성 검사
+			if (!userService.isValidId(userId)) {
+				userView.showMessage("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
+				continue;
+			}
 
 			// 🔹 아이디 중복 검사
 			if (userService.checkId(userId)) {
@@ -93,28 +127,52 @@ public class UserController {
 
 		// 나머지 회원 정보 입력
 		String name = userView.getInput("이름 입력: ");
-		String password = userView.getInput("비밀번호 입력: ");
-		String hashedPw = SHA256.encrypt(password);
 
-		// DTO 생성 및 회원가입 진행
-		UserSignUpDTO userDTO = new UserSignUpDTO(userId, hashedPw, name);
-		User user = userService.addUser(userDTO);
-		if (user != null) {
-			userView.showMessage(user.getName()+"님 회원가입 완료되었습니다!");
+		while (true) {
+			String password = userView.getInput("비밀번호 입력: ");
+
+			// 비밀번호 유효성 검사
+			if (!userService.isValidPw(password)) {
+				userView.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+				continue;
+			} else {
+				// DTO 생성 및 회원가입 진행
+				UserSignUpDTO userDTO = new UserSignUpDTO(userId, password, name);
+				User user = userService.addUser(userDTO);
+				if (user != null) {
+					userView.showMessage(user.getName() + "님 회원가입 완료되었습니다!");
+					break;
+				}
+			}
 		}
 	}
 
 	public boolean loginUser() {
 		String userId = userView.getInput("ID 입력: ");
 		String password = userView.getInput("비밀번호 입력: ");
-		String hashedPw = SHA256.encrypt(password);
-		User loginSuccess = userService.userLogin(userId, hashedPw);
+
+		// 유효성 검사
+		if (!userService.isValidId(userId) || !userService.isValidPw(password)) {
+			userView.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+			return false;
+		}
+
+		// 유저 정보 가져오기
+		User user = Gym.users.get(userId);
+		if (user == null) {
+			userView.showMessage("로그인 실패. 존재하지 않는 아이디입니다.");
+			return false;
+		}
+
+		// 로그인 검증
+		User loginSuccess = userService.userLogin(userId, password);
+
 		if (loginSuccess != null) {
 			userView.showMessage("로그인 성공!");
 			Gym.setCurrentUser(loginSuccess);
 			return true;
 		} else {
-			userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
+			userView.showMessage("로그인 실패. 비밀번호를 확인하세요.");
 			return false;
 		}
 	}

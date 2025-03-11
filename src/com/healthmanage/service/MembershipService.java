@@ -38,14 +38,14 @@ public class MembershipService {
 			System.out.println("패스워드 형식이 올바르지 않습니다. 대문자,숫자,소문자영문,특수문자 1개 이상 포함한 8~16자를 입력해주세요.");
 			return;
 		}
-		
-		String hashedPw = SHA256.encrypt(pw);
+		String salt = SHA256.generateSalt();
+		String hashedPw = SHA256.hashPassword(pw, salt);
 		
 		String name ="";
 		System.out.println("이름을 입력해주세요 : ");
 		name = scan.nextLine();
 		
-		User user = new User(name, hashedPw, id);
+		User user = new User(name, hashedPw, id, salt);
 		user_dic.put(id, user);
 		System.out.println(name + "님 회원가입이 완료됐습니다.");
 
