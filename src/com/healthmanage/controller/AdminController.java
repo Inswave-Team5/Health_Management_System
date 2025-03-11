@@ -31,10 +31,12 @@ public class AdminController {
 			}
 		}
 	}
+
 	public void entry() {
 		while (!Gym.isLoggedIn()) {
 			loginAdmin();
-		};
+		}
+		;
 		start();
 	}
 
@@ -57,12 +59,21 @@ public class AdminController {
 		Gym.logoutUser();
 		System.out.println("종료합니다...");
 	}
-	
+
 	public boolean loginAdmin() {
 		String userId = view.getInput("ID 입력: ");
 		String password = view.getInput("비밀번호 입력: ");
-		String hashedPw = SHA256.encrypt(password);
-		Admin loginSuccess = adminService.adminLogin(userId, hashedPw);
+
+		//유효성 검사
+		if (!adminService.isValidId(userId) || !adminService.isValidPw(password)) {
+            view.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+            return false;
+        }
+		
+		
+		// 로그인 검증
+		Admin loginSuccess = adminService.adminLogin(userId, password);
+		
 		if (loginSuccess != null) {
 			view.showMessage("로그인 성공!");
 			Gym.setCurrentUser(loginSuccess);
@@ -72,7 +83,7 @@ public class AdminController {
 			return false;
 		}
 	}
-	
+
 	public void userManage() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectUserManageMenu())) != 0) {
@@ -91,7 +102,7 @@ public class AdminController {
 		Gym.logoutUser();
 		System.out.println("종료합니다...");
 	}
-	
+
 	/*----------쿠폰 조회------*/
 	public void findAllCoupon() {
 		Collection<Coupon> coupons = adminService.findAllCoupon();
@@ -137,23 +148,23 @@ public class AdminController {
 		}
 	}
 
-	//개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
-	public void UserAttendanceByDay(){
+	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
+	public void UserAttendanceByDay() {
 		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
 		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
 		adminService.UserAttendanceByDay(id, date);
 	}
 
-	//개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
-	public void listUserAttendanceAll(){
+	// 개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
+	public void listUserAttendanceAll() {
 		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
 
 		adminService.listUserAttendanceAll(id);
 	}
 
-	//전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
-	public void listUserAttendanceByDay(){
+	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
+	public void listUserAttendanceByDay() {
 		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
 		adminService.listAllUsersAttendanceByDay(date);

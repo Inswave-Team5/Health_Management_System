@@ -29,7 +29,13 @@ public class GymService {
 	}
 
 	public void adminInit() {
-		Gym.admins.put(EnvConfig.get("ADMIN_ID"),
-				new Admin(EnvConfig.get("ADMIN_NAME"), SHA256.encrypt(EnvConfig.get("ADMIN_PASSWORD")), EnvConfig.get("ADMIN_ID")));
+		String adminId = EnvConfig.get("ADMIN_ID");
+		String adminName = EnvConfig.get("ADMIN_NAME");
+		String adminPassword = EnvConfig.get("ADMIN_PASSWORD");
+
+		String salt = SHA256.generateSalt();
+		String hashedPassword = SHA256.hashPassword(adminPassword, salt);
+
+		Gym.admins.put(adminId, new Admin(adminName, hashedPassword, adminId, salt));
 	}
 }
