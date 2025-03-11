@@ -1,7 +1,7 @@
 package com.healthmanage.model;
 
 
-import java.util.Date;
+import com.healthmanage.utils.Time;
 
 public class Attendance {
     private String userId;
@@ -9,6 +9,7 @@ public class Attendance {
     private String enterTime;
     private String leaveTime;
     private String workOutTime;
+    private Time time;
     //private String status; - 현재 출근중인지 상태확인(부가기능)
 
     public Attendance(String userId, String date, String enterTime) {
@@ -52,5 +53,5 @@ public class Attendance {
         return "[날짜] " + date + "\t[운동시간] " + workOutTime;
     }
 
-    public String toStringAttendacne(){ return "[입장시간] " + enterTime + "\t[퇴장시간] " + leaveTime;}
+    public String toStringAttendacne(){ return "[입장시간] " + time.getTimeFromString(enterTime) + "\t[퇴장시간] " + time.getTimeFromString(leaveTime); }
 }

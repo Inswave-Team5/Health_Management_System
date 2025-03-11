@@ -51,7 +51,7 @@ public class WeightService {
             view.showMessage("몸무게를 입력해주세요.");
         } else {
             for(Weight userWeight : userWeightList){
-                System.out.println(userWeight.toString());
+                view.showMessage(userWeight.toString());
             }
         }
     }
@@ -65,12 +65,18 @@ public class WeightService {
             view.showMessage("아직 몸무게 기록이 없습니다!");
             view.showMessage("몸무게를 입력해주세요.");
         } else {
+            view.showMessage("[" + yearMonth + "]");
             for(Weight userWeight : userWeightList){
                 if(time.getYearMonthByInput(userWeight.date).equals(yearMonth)){
                     monthWeightList.add(userWeight);
                 }
             }
-            view.showMessage("[" + yearMonth + "]");
+
+        }
+
+        if(monthWeightList.isEmpty()){
+            view.showMessage("검색된 몸무게 기록이 없습니다.");
+        }else{
             for(Weight weight : monthWeightList){
                 view.showMessage(weight.toString());
             }
@@ -80,6 +86,7 @@ public class WeightService {
     //Weight 일별 조회 메서드
     public void ListWeightByDay(String userId, String date) {
         List<Weight> userWeightList = weightList.get(userId);
+        List<Weight> dayWeightList = new ArrayList<Weight>();
 
         if(userWeightList == null || userWeightList.isEmpty()){
             view.showMessage("아직 몸무게 기록이 없습니다!");
@@ -88,8 +95,15 @@ public class WeightService {
             view.showMessage("[" + date + "]");
             for(Weight userWeight : userWeightList){
                 if(userWeight.date.equals(date)){
-                    view.showMessage(userWeight.toString());
+                    dayWeightList.add(userWeight);
                 }
+            }
+        }
+        if(dayWeightList.isEmpty()){
+            view.showMessage("검색된 몸무게 기록이 없습니다.");
+        }else{
+            for(Weight weight : dayWeightList){
+                view.showMessage(weight.toString());
             }
         }
     }
