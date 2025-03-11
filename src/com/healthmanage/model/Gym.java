@@ -8,7 +8,7 @@ public class Gym {
 	public static Map<String, Admin> admins;
 	public static Map<String, Coupon> coupons;
 	// Map<String, Machine> machines;
-	public static Person currentUser;
+	private static Person currentUser;
 
 	Gym() {
 		/*users = new HashMap<String, User>();

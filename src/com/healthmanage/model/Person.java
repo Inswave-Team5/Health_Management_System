@@ -3,9 +3,9 @@ package com.healthmanage.model;
 import java.io.Serializable;
 
 public class Person implements Serializable{
-	public String userId;
-	public String name;
-	public String password;
+	private String userId;
+	private String name;
+	private String password;
 	
 	Person(String name, String password, String userId){
 		this.name = name;
