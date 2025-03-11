@@ -1,7 +1,22 @@
 package com.healthmanage.service;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+
+import com.healthmanage.model.Attendance;
+import com.healthmanage.model.Coupon;
+import com.healthmanage.model.Gym;
+import com.healthmanage.model.Person;
+import com.healthmanage.model.User;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AdminDAO;
@@ -10,16 +25,22 @@ import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
 import com.healthmanage.view.AdminView;
 import com.healthmanage.utils.FileIO;
+
 import com.healthmanage.utils.SHA256;
+import com.healthmanage.utils.Sort;
+import com.healthmanage.utils.Time;
 
 public class AdminService {
 	private CouponService couponservice;
 	private AttendanceService attendanceService;
 	private static AdminService instance;
+	private List<Attendance> attendanceList = new ArrayList<>();
+
 	private AdminView adminView;
+	Time time = Time.getInstance();
 	private AdminDAO adminDAO;
 	private LogService logger;
-
+	
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
@@ -33,6 +54,11 @@ public class AdminService {
 		}
 		return instance;
 	}
+	// 회원 이름순 정렬 후 전체조회
+	public Collection<User> memberList() {
+	      List<User> users = Sort.sortUser(Gym.users.values());
+	      return users;
+}
 
 	public void load() {
 		adminDAO.loadAdmins(EnvConfig.get("ADMIN_FILE"));
@@ -42,12 +68,6 @@ public class AdminService {
 	public void save() {
 		adminDAO.saveAdmins();
 		logger.addLog(EnvConfig.get("ADMIN_FILE") + " File SAVE");
-	}
-
-	public void memberList() { // 회원 전체조회
-		for (Person member : Gym.users.values()) {
-			System.out.println(member);
-		}
 	}
 
 	public String memberSearch(String memberNum) { // 회원 검색조회
@@ -117,7 +137,6 @@ public class AdminService {
 
 	public boolean addCoupon(String number, int coinAmount) {
 		return couponservice.createCoupon(number, coinAmount);
-	
 	}
 
 	public String deleteCoupon(String number) {
@@ -126,6 +145,36 @@ public class AdminService {
 			return "삭제 실패 - 없는 쿠폰번호 입니다.";
 		}
 		return coupon.toString() + "삭제";
+	}
+	
+	// 회원 운동시간 누적기준 정렬
+	public Map<String, String> getRank() {
+		// attendance list 받아오기
+	      
+        // 시간 계산하기
+        Map<String, String> tmpList = new HashMap<>();
+        	            
+        for (int i = 0; i < attendanceList.size(); i++) {
+           String tmpId = attendanceList.get(i).getUserId();
+           String tmpTime = attendanceList.get(i).getWorkOutTime();
+           
+           if (!tmpList.containsKey(tmpId)) {
+        	   tmpList.put(tmpId, tmpTime);
+           }
+           else {
+              String existingTime = tmpList.get(tmpId);
+              Duration duration1 = time.totalDuration(existingTime);
+              Duration duration2 = time.totalDuration(tmpTime);
+              
+              tmpList.replace(tmpId, duration1.plus(duration2).toString());
+           }
+           
+        }
+        
+        // attendance list 넘겨주기
+        Map<String, String> sortedList = Sort.sortRank2(tmpList);
+        
+        return sortedList;
 	}
 
 	// 회원 아이디로 이름찾기
