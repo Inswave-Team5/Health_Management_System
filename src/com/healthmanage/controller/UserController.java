@@ -185,7 +185,7 @@ public class UserController {
 	public void addCoinUser() {
 		String inputMoney = userView.getInput("충전금액 입력: ");
 		// 🔹 Controller에서 입력값 검증 (Validation)
-		if (!isValidCoinInput(inputMoney)) {
+		if (!isValidMoneyInput(inputMoney)) {
 			userView.showMessage("숫자로 된 올바른 충전 금액을 입력해주세요. (1000원 이상)");
 			return;
 		}
@@ -194,20 +194,39 @@ public class UserController {
 	}
 
 	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
-	private boolean isValidCoinInput(String money) {
+	private boolean isValidMoneyInput(String money) {
 		try {
-			int coin = Integer.parseInt(money);
-			return coin > 1000; // 1원 이상인지 확인
+			int vaildatedMoney = Integer.parseInt(money);
+			return vaildatedMoney > 1000; // 1원 이상인지 확인
 		} catch (NumberFormatException e) {
 			return false; // 숫자가 아닌 경우 false 반환
 		}
 	}
+	
+	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
+		private boolean isValidCoinInput(String coin) {
+			try {
+				int vaildatedCoin = Integer.parseInt(coin);
+				return vaildatedCoin > 1; // 1원 이상인지 확인
+			} catch (NumberFormatException e) {
+				return false; // 숫자가 아닌 경우 false 반환
+			}
+		}
 
 	public void withdrawUser() {
-		String senderId = userView.getInput("보내는 사람 ID 입력: ");
 		String receiverId = userView.getInput("받는 사람 ID 입력: ");
+		User receiver = Gym.users.get(receiverId);
+		if (receiver == null) {
+			userView.showMessage("수신자를 찾을 수 없습니다.");
+			return;
+		}
+		
 		String coin = userView.getInput("이체할 코인 입력: ");
-		userView.showMessage(userService.withdrawCoin(coin, senderId, receiverId));
+		if (!isValidCoinInput(coin)) {
+			userView.showMessage("숫자로 된 올바른 코인을 입력해주세요. (1개 이상)");
+			return;
+		}
+		userView.showMessage(userService.withdrawCoin(Integer.parseInt(coin), receiver));
 	}
 
 }
