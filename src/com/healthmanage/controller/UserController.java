@@ -44,7 +44,7 @@ public class UserController {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
 
-			System.out.println(key + "번 입력되었습니다.");
+			userView.showMessage(key + "번 입력되었습니다.");
 
 			switch (key) {
 			case 1:
@@ -87,18 +87,16 @@ public class UserController {
 	public void coinEntry() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.coinSelectMenu())) != 0) {
+			userView.showMessage(key + "번 입력되었습니다.");
 			switch (key) {
 				case 1:
 					addCoinUser();
-					System.out.println(key + "번 입력되었습니다.");
 					break;
 				case 2:
 					withdrawUser();
-					System.out.println(key + "번 입력되었습니다.");
 					break;
 				case 0:
 					start();
-					System.out.println(key + "번 입력되었습니다.");
 					break;
 				default:
 					userView.showMessage("잘못 선택하였습니다.");

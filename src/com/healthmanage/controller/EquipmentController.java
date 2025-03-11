@@ -3,12 +3,10 @@ package com.healthmanage.controller;
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.EquipmentService;
 import com.healthmanage.view.UserView;
-import com.healthmanage.view.View;
 
 public class EquipmentController {
     private final EquipmentService equipmentService;
     private final UserView view;
-    UserController userController;
 
     public EquipmentController() {
         equipmentService = EquipmentService.getInstance();
@@ -18,7 +16,7 @@ public class EquipmentController {
     public void equipmentEntry() {
         int key = 0;
         while (Gym.isLoggedIn() && (key = Integer.parseInt(view.EquipmentSelectMenu())) != 0) {
-            System.out.println(key + "번 입력되었습니다.");
+            view.showMessage(key + "번 입력되었습니다.");
             switch (key) {
                 case 1:
                     useEquipment();

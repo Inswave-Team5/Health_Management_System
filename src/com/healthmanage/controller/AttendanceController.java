@@ -20,7 +20,7 @@ public class AttendanceController {
     public void attendanceEntry() {
         int key=0;
         while (Gym.isLoggedIn() && (key = Integer.parseInt(view.AttendanceSelectMenu())) != 0) {
-            System.out.println(key + "번 입력되었습니다.");
+            view.showMessage(key + "번 입력되었습니다.");
             switch (key) {
                 case 1:
                     setEnterTime();
@@ -45,7 +45,7 @@ public class AttendanceController {
         int key=0;
         while (Gym.isLoggedIn() && (key = Integer.parseInt(view.TimeSelectMenu())) != 0) {
 
-            System.out.println(key + "번 입력되었습니다.");
+            view.showMessage(key + "번 입력되었습니다.");
 
             switch (key) {
                 case 1:

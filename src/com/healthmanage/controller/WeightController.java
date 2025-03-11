@@ -19,6 +19,7 @@ public class WeightController {
     public void weightEntry() {
         int key = 0;
         while (Gym.isLoggedIn() && (key = Integer.parseInt(view.WeightSelectMenu())) != 0) {
+            view.showMessage(key + "번 입력되었습니다.");
             switch (key) {
                 case 1:
                     addWeight();
@@ -38,6 +39,7 @@ public class WeightController {
     public void checkEntry() {
         int key = 0;
         while (Gym.isLoggedIn() && (key = Integer.parseInt(view.WeightSelectCheckMenu())) != 0) {
+            view.showMessage(key + "번 입력되었습니다.");
             switch (key) {
                 case 1:
                     listWeight();
