@@ -116,11 +116,8 @@ public class AdminService {
 	}
 
 	public boolean addCoupon(String number, int coinAmount) {
-		boolean result = couponservice.createCoupon(number, coinAmount);
-		if(result) {
-			logger.addLog(number + "번의 쿠폰이 추가되었습니다.");
-		}
-		return result;
+		return couponservice.createCoupon(number, coinAmount);
+	
 	}
 
 	public String deleteCoupon(String number) {
@@ -128,7 +125,6 @@ public class AdminService {
 		if (coupon == null) {
 			return "삭제 실패 - 없는 쿠폰번호 입니다.";
 		}
-		logger.addLog(number + "번의 쿠폰이 삭제되었습니다.");
 		return coupon.toString() + "삭제";
 	}
 
