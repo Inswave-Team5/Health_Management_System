@@ -15,7 +15,6 @@ public class Main {
 		GymController gym = new GymController();
 		gym.start();
 
-		//WeightController weight = new WeightController();
 	}
 
 }

@@ -1,9 +1,6 @@
 package com.healthmanage.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import com.healthmanage.config.EnvConfig;
@@ -18,6 +15,7 @@ import com.healthmanage.utils.SHA256;
 
 public class AdminService {
 	private CouponService couponservice;
+	private AttendanceService attendanceService;
 	private static AdminService instance;
 	private AdminView adminView;
 	private AdminDAO adminDAO;
@@ -126,6 +124,41 @@ public class AdminService {
 			return "삭제 실패 - 없는 쿠폰번호 입니다.";
 		}
 		return coupon.toString() + "삭제";
+	}
+
+
+	//회원 아이디로 이름찾기
+	public String findName(String memberNum) {
+		if(Gym.users.containsKey(memberNum)) {
+			return Gym.users.get(memberNum).getName();
+		}else{
+			adminView.showMessage("일치하는 회원이 없습니다! 다시 검색해주세요.");
+			return null;
+		}
+	}
+
+	//개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //회원 아이디와 날짜 입력 받고 회원 출결 출력
+	public String UserAttendanceByDay(String memberNum, String date) {
+		adminView.showMessage("[" + date + "]");
+		return "[" + findName(memberNum) + "]" + attendanceService.getAttendacneByDay(memberNum, date);
+	}
+
+	//개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
+	public void listUserAttendanceAll(String memberNum) {
+		adminView.showMessage("[" + findName(memberNum) + "의 출결 기록]");
+		List<String> attendanceList = attendanceService.listUserAttendaceAll(memberNum);
+		for (String attendance : attendanceList) {
+			adminView.showMessage(attendance);
+		}
+	}
+
+	//전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
+	public void listAllUsersAttendanceByDay(String date){
+		adminView.showMessage("[" + date + "]");
+		HashMap<String, String> map = attendanceService.listAllAttendanceByDay(date);
+		for(String key : map.keySet()) {
+			adminView.showMessage("[" + findName(key) + "]" + map.get(key));
+		}
 	}
 
 }

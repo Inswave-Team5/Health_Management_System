@@ -57,10 +57,7 @@ public class AttendanceService {
         lastAttendance.setWorkOutTime(diffTimeStr);
     }
 
-
-//    //월별 입/퇴장 기록 조회
-//
-    //일별 입/퇴장 기록 조회
+    //일별 개인 입/퇴장 기록 조회
     public String getAttendacneByDay(String userId, String date){
         List<Attendance> userAttendanceList = attendanceList.get(userId);
         String attendacneByDay = "";
@@ -77,7 +74,7 @@ public class AttendanceService {
     }
 
     //전체 출결 불러오기(날짜 별)
-    public  HashMap<String, String> listAllAttendanceByDay(String date) {
+    public HashMap<String, String> listAllAttendanceByDay(String date) {
         HashMap<String, String> map = new HashMap<>();
 
         for (String userId : attendanceList.keySet()) {
@@ -87,6 +84,16 @@ public class AttendanceService {
             }
         }
         return map;
+    }
+
+    //개인 회원 출결 조회 (전체)
+    public List<String> listUserAttendaceAll(String userId) {
+        List<Attendance> userattendanceList = attendanceList.get(userId);
+        List<String> attendanceList = new ArrayList<>();
+        for(int i = 0; i < userattendanceList.size(); i++){
+            attendanceList.add("[" + userattendanceList.get(i).getDate() + "] " + userattendanceList.get(i).toStringAttendacne());
+        }
+        return attendanceList;
     }
 
     //전체 운동시간 기록 조회(전체 출결 조회)
