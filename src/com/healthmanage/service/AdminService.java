@@ -139,8 +139,8 @@ public class AdminService {
 		return couponservice.findAllCoupons();
 	}
 
-	public void addCoupon(String number, int coinAmount) {
-		couponservice.createCoupon(number, coinAmount);
+	public boolean addCoupon(String number, int coinAmount) {
+		return couponservice.createCoupon(number, coinAmount);
 	}
 
 	public String deleteCoupon(String number) {
