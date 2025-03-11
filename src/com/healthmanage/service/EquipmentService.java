@@ -10,9 +10,14 @@ import java.util.List;
 
 public class EquipmentService {
     private static EquipmentService instance;
-    private View view = new View();
+    private View view;
     private HashMap<String, List<Equipment>> userWorkoutHistory = new HashMap<>();;
-//    private List<WorkoutRecord> workoutRecords;
+    private LogService logger;
+    
+    private EquipmentService() {
+    	this.view = new View();
+    	this.logger = LogService.getInstance();
+    }
 
     public static EquipmentService getInstance() {
         if (instance == null) {
