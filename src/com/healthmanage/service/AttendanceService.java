@@ -106,8 +106,13 @@ public class AttendanceService {
     public void listAttendanceAll(String userId){
         List<Attendance> userAttendanceList = attendanceList.get(userId);
         view.showMessage("[전체 운동시간 기록]");
-        for(Attendance attendance : userAttendanceList){
-            view.showMessage(attendance.toStringWorkOut());
+
+        if(userAttendanceList == null || userAttendanceList.isEmpty()){
+            view.showMessage("아직 운동기록이 없습니다.");
+        }else{
+            for(Attendance attendance : userAttendanceList){
+                view.showMessage(attendance.toStringWorkOut());
+            }
         }
     }
 
@@ -128,14 +133,21 @@ public class AttendanceService {
     //단일(날짜 선택) 운동시간 조회
     public String getDayWorkOutTime(String userId, String day){
         List<Attendance> userAttendanceList = attendanceList.get(userId);
+        Duration totalDuration = Duration.ZERO;  // 운동 시간 합산용 변수
         String dayWorkOutTime = "";
+
         if (userAttendanceList != null) {
             for (Attendance attendance : userAttendanceList) {
-                if(attendance.getDate().equals(day)){
-                    dayWorkOutTime = attendance.getWorkOutTime();
+                if(attendance.getDate().equals(day)) {
+                    // 운동 시간 문자열을 Duration으로 변환하여 누적
+                    Duration workOutDuration = time.totalDuration(attendance.getWorkOutTime());
+                    totalDuration = totalDuration.plus(workOutDuration);
                 }
             }
         }
+        // 최종 누적된 운동 시간을 문자열로 변환
+        dayWorkOutTime = time.transTimeFormat(totalDuration);
+
         return dayWorkOutTime;
     }
 

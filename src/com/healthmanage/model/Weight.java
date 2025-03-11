@@ -14,6 +14,6 @@ public class Weight {
 
     @Override
     public String toString() {
-        return "[날짜] " + date + "\t[몸무게] " + weight;
+        return "[날짜] " + date + "\t[몸무게] " + weight + "kg";
     }
 }

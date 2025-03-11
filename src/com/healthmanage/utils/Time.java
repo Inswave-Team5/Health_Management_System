@@ -22,7 +22,7 @@ public class Time {
 	}
 	
 	public String currentDayAndTime() {
-		dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd-a_HH:mm:ss" );
+		dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss" );
 		now = LocalDateTime.now();
 		return dtf.format(now);
 	}
@@ -40,21 +40,46 @@ public class Time {
 		return date.format(DateTimeFormatter.ofPattern("yyyy-MM"));
 	}
 
-	//시간만 추출
-	public String currentTime() {
-		dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-		now = LocalDateTime.now();
-		return dtf.format(now);
+	// 시간만 추출
+	public String getTimeFromString(String inputTime) {
+		// 입력된 문자열에 맞는 포맷 설정
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+		try {
+			// 문자열을 LocalDateTime으로 파싱
+			LocalDateTime parsedDateTime = LocalDateTime.parse(inputTime, formatter);
+
+			// 시간만 추출해서 반환
+			return parsedDateTime.toLocalTime().toString(); // "19:09:38" 형식으로 반환
+		} catch (Exception e) {
+			System.out.println("시간 파싱 오류: " + e.getMessage());
+			return null; // 오류 발생 시 null 반환
+		}
 	}
 
 	//두 시간의 차이 계산
+// 두 시간의 차이 계산
 	public Duration getTimeDiff(String startTime, String endTime) {
-		LocalTime startLocalTime = LocalTime.parse(startTime);
-		LocalTime endLocalTime = LocalTime.parse(endTime);
+		// 24시간 형식으로 포맷 설정 (AM/PM 제거)
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
-		return Duration.between(startLocalTime, endLocalTime);
+		// '-'와 '_'를 공백으로 교체하여 구분
+		startTime = startTime.replace("-", " ").replace("_", " ");
+		endTime = endTime.replace("-", " ").replace("_", " ");
 
+		try {
+			// 날짜와 시간을 LocalTime 객체로 변환
+			LocalTime startLocalTime = LocalTime.parse(startTime, formatter);
+			LocalTime endLocalTime = LocalTime.parse(endTime, formatter);
+
+			// 두 시간의 차이를 계산하여 반환
+			return Duration.between(startLocalTime, endLocalTime);
+		} catch (Exception e) {
+			System.out.println("시간 파싱 오류: " + e.getMessage());
+			return Duration.ZERO;  // 오류 발생 시 0 반환
+		}
 	}
+
 
 
 	//시간 누적 계산

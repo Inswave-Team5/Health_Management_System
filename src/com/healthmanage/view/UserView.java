@@ -9,7 +9,7 @@ public class UserView extends View {
 
 	public String selectMenu() {
 		return getInput("사용자 모드입니다. \n "
-				+ "1:나의 출결 2:운동시간 3:체중관리 4:운동기구 5:쿠폰등록 6:코인 7:비밀번호 변경 8:로그아웃");
+				+ "1:나의 출결 2:운동시간 3:체중관리 4:운동기구 5:쿠폰등록 6:코인 7:비밀번호 변경 0:로그아웃");
 	}
 	
 	public String selectLogin() {
