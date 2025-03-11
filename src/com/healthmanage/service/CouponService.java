@@ -11,9 +11,10 @@ import com.healthmanage.model.User;
 public class CouponService {
 	private static CouponService instance;
 	private CouponDAO couponDAO;
-
+	private LogService logger;
 	private CouponService() {
 		couponDAO = new CouponDAO();
+		logger = LogService.getInstance();
 	}
 
 	public static CouponService getInstance() {
@@ -49,11 +50,16 @@ public class CouponService {
 		}
 		Coupon coupon = new Coupon(number, coinAmount);
 		Gym.coupons.put(number, coupon);
+		logger.addLog(number + "번의 쿠폰이 추가되었습니다.");
 		return true;
 	}
 
 	public Coupon deleteCoupon(String number) {
-		return Gym.coupons.remove(number);
+		Coupon coupon = Gym.coupons.remove(number);
+		if (coupon != null) {
+			logger.addLog(number + "번의 쿠폰이 삭제되었습니다.");			
+		}
+		return coupon;
 	}
 
 	public String useCoupon(String number, User user) {
@@ -63,12 +69,10 @@ public class CouponService {
 		} else if (!coupon.isUsed()) {
 			coupon.setUsed(true);
 			user.setCoin(user.getCoin() + coupon.getCoinAmount());
-
+			logger.addLog(number + "번의 쿠폰이 사용되었습니다.");
 			return "쿠폰 사용 성공";
 		} else {
 			return "이미 사용된 쿠폰입니다.";
 		}
-
 	}
-
 }
