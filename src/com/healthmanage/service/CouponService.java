@@ -24,13 +24,12 @@ public class CouponService {
 		}
 		return instance;
 	}
-	
+
 	// 쿠폰번호로 정렬후 조회
 	public Collection<Coupon> findAllCoupons() {
-	      Collection<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
-	      return coupons;
-	   }
-
+		Collection<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
+		return coupons;
+	}
 
 	public void load() {
 		couponDAO.loadCoupons(EnvConfig.get("COUPON_FILE"));
@@ -39,7 +38,6 @@ public class CouponService {
 	public void save() {
 		couponDAO.saveCoupons();
 	}
-
 
 	private Coupon findCoupon(String number) {
 		if (!Gym.coupons.containsKey(number)) {
@@ -60,6 +58,7 @@ public class CouponService {
 	public Coupon deleteCoupon(String number) {
 		return Gym.coupons.remove(number);
 	}
+
 
 	public String useCoupon(String number, User user) {
 		Coupon coupon = findCoupon(number);

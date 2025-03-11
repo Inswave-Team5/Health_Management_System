@@ -76,7 +76,10 @@ public class AdminController {
 	};
 
 	public void deleteCoupon() {
-		
+		String delCouponNum = view.getInput("삭제할 쿠폰 번호 입력 : ");
+		String result = adminService.deleteCoupon(delCouponNum);
+		view.showMessage(result);
+
 	};
 
 	public void getRank() {
