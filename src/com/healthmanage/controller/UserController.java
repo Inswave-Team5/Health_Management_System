@@ -83,6 +83,12 @@ public class UserController {
 			// 🔹 View에서 아이디 입력 받기
 			userId = userView.getInput("ID 입력: ");
 
+			 //ID 유효성 검사
+            if (!userService.isValidId(userId)) {
+                userView.showMessage("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
+                continue;
+            }
+			
 			// 🔹 아이디 중복 검사
 			if (userService.checkId(userId)) {
 				break;
@@ -92,7 +98,19 @@ public class UserController {
 
 		// 나머지 회원 정보 입력
 		String name = userView.getInput("이름 입력: ");
-		String password = userView.getInput("비밀번호 입력: ");
+		String password;
+		
+		while (true) {
+            password = userView.getInput("비밀번호 입력: ");
+
+            //비밀번호 유효성 검사
+            if (!userService.isValidPw(password)) {
+                userView.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+                continue;
+            }
+
+            break;
+        }
 
 		// DTO 생성 및 회원가입 진행
 		UserSignUpDTO userDTO = new UserSignUpDTO(userId, password, name);
@@ -104,6 +122,12 @@ public class UserController {
 		String userId = userView.getInput("ID 입력: ");
 		String password = userView.getInput("비밀번호 입력: ");
 
+		//유효성 검사
+		if (!userService.isValidId(userId) || !userService.isValidPw(password)) {
+            userView.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+            return false;
+        }
+		
 		// 유저 정보 가져오기
 		User user = Gym.users.get(userId);
 		if (user == null) {

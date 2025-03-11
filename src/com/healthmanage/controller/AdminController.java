@@ -64,6 +64,12 @@ public class AdminController {
 		String userId = view.getInput("ID 입력: ");
 		String password = view.getInput("비밀번호 입력: ");
 
+		//유효성 검사
+		if (!adminService.isValidId(userId) || !adminService.isValidPw(password)) {
+            view.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+            return false;
+        }
+		
 		// 유저 정보 가져오기
 		Admin admin = Gym.admins.get(userId);
 		if (admin == null) {
