@@ -10,12 +10,21 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+
 import com.healthmanage.model.Attendance;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
 import com.healthmanage.model.User;
-import com.healthmanage.view.adminView;
+
+import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.AdminDAO;
+import com.healthmanage.model.Coupon;
+import com.healthmanage.model.Gym;
+import com.healthmanage.model.Person;
+import com.healthmanage.view.AdminView;
+import com.healthmanage.utils.FileIO;
+
 import com.healthmanage.utils.SHA256;
 import com.healthmanage.utils.Sort;
 
@@ -24,10 +33,14 @@ public class AdminService {
 	private CouponService couponservice;
 	private static AdminService instance;
 	private List<Attendance> attendanceList = new ArrayList<>();
-	private adminView adminView;
+
+	private AdminView adminView;
+	private AdminDAO adminDAO;
+
 	
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
+		this.adminDAO = new AdminDAO();
 
 	}
 
@@ -38,11 +51,24 @@ public class AdminService {
 		return instance;
 	}
 	
+
 	// 회원 이름순 정렬 후 전체조회
 	public Collection<User> memberList() {
 	      List<User> users = Sort.sortUser(Gym.users.values());
 	      return users;
+}
+
+	public void load() {
+		adminDAO.loadAdmins(EnvConfig.get("ADMIN_FILE"));
+
 	}
+	
+	public void save() {
+		adminDAO.saveAdmins();
+	}
+
+
+
 
 
 	public String memberSearch(String memberNum) { // 회원 검색조회

@@ -87,7 +87,7 @@ public class AttendanceController {
             view.showMessage("로그인 후 이용가능합니다!");
             System.exit(0);
         }
-        String month = (view.getInput("월 입력 (입력 형식 : MM) : "));
+        String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
         String workOutTimeByMonth = attendanceService.getMonthTotalWorkOutTime(userId, month);
         view.showMessage("[" + month + "월 누적 운동시간]" + workOutTimeByMonth);
     }

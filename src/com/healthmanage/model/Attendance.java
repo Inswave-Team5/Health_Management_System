@@ -48,8 +48,9 @@ public class Attendance {
         this.workOutTime = workOutTime;
     }
 
-    @Override
-    public String toString() {
+    public String toStringWorkOut() {
         return "[날짜] " + date + "\t[운동시간] " + workOutTime;
     }
+
+    public String toStringAttendacne(){ return "[입장시간] " + enterTime + "\t[퇴장시간] " + leaveTime;}
 }

@@ -58,7 +58,7 @@ public class WeightController {
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        String month = (view.getInput("월 입력 (입력 형식 : MM) : "));
+        String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
         weightService.ListWeightByMonth(userId, month);
     }
 
@@ -68,7 +68,7 @@ public class WeightController {
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        String day = (view.getInput("날짜 입력 (입력 형식 : MM-dd) : "));
+        String day = (view.getInput("날짜 입력 (입력 형식 : yyyy-MM-dd) : "));
         weightService.ListWeightByMonth(userId, day);
     }
 

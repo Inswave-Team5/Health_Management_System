@@ -11,10 +11,13 @@ import java.util.*;
 
 public class WeightService {
     private Map<String, List<Weight>> weightList = new HashMap<>(); //각 사용자의 몸무게 기록을 담을 map
-    private View view = new View();
+    private static View view;
     private static WeightService instance;
     Time time = Time.getInstance();
 
+    public WeightService() {
+        view = new View();
+    }
     public static WeightService getInstance() {
         if (instance == null) {
             instance = new WeightService();
@@ -51,7 +54,7 @@ public class WeightService {
     }
 
     //Weight 월별 조회 메서드
-    public void ListWeightByMonth(String userId, String month) {
+    public void ListWeightByMonth(String userId, String yearMonth) {
         List<Weight> userWeightList = weightList.get(userId);
         List<Weight> monthWeightList = new ArrayList<Weight>();
 
@@ -60,11 +63,11 @@ public class WeightService {
             view.showMessage("몸무게를 입력해주세요.");
         } else {
             for(Weight userWeight : userWeightList){
-                if(userWeight.date.substring(5, 7).equals(month)){
+                if(time.getYearMonthByInput(userWeight.date).equals(yearMonth)){
                     monthWeightList.add(userWeight);
                 }
             }
-            view.showMessage("[" + month + "월]");
+            view.showMessage("[" + yearMonth + "]");
             for(Weight weight : monthWeightList){
                 view.showMessage(weight.toString());
             }
@@ -72,15 +75,16 @@ public class WeightService {
     }
 
     //Weight 일별 조회 메서드
-    public void ListWeightByDay(String userId, String day) {
+    public void ListWeightByDay(String userId, String date) {
         List<Weight> userWeightList = weightList.get(userId);
 
         if(userWeightList == null || userWeightList.isEmpty()){
             view.showMessage("아직 몸무게 기록이 없습니다!");
             view.showMessage("몸무게를 입력해주세요.");
         } else {
+            view.showMessage("[" + date + "]");
             for(Weight userWeight : userWeightList){
-                if(userWeight.date.substring(5,10).equals(day)){
+                if(userWeight.date.equals(date)){
                     view.showMessage(userWeight.toString());
                 }
             }

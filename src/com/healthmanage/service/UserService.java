@@ -2,26 +2,39 @@ package com.healthmanage.service;
 
 import java.util.regex.Pattern;
 
+import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.UserDAO;
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
+import com.healthmanage.utils.FileIO;
 import com.healthmanage.utils.SHA256;
 
 public class UserService {
 	private static UserService instance;
 	private CouponService couponService;
 	private CoinService coinService;
+	private UserDAO userDAO;
 	private UserService() {
 		this.couponService = CouponService.getInstance();
 		this.coinService = CoinService.getInstance();
-		
+		this.userDAO = new UserDAO();
 	}
-
+	
 	public static UserService getInstance() {
 		if (instance == null) {
 			instance = new UserService();
 		}
 		return instance;
+	}
+	
+	public void load() {
+		userDAO.loadUsers(EnvConfig.get("USER_FILE"));
+	}
+	
+	public void save() {
+		userDAO.saveUsers();
+		
 	}
 
 	public boolean checkId(String userId) {
@@ -35,15 +48,12 @@ public class UserService {
 		Gym.users.put(userDTO.getUserId(), new User(userDTO.getUserId(), userDTO.getPassword(), userDTO.getName()));
 	}
 
-	public boolean userLogin(String userId, String pw) {
-		String hashedPw = SHA256.encrypt(pw);
+	public User userLogin(String userId, String pw) {
 		if (Gym.users.containsKey(userId) && Gym.users.get(userId).getPassword().equals(pw)) {
-			return true;
+			return Gym.users.get(userId);
 		} else {
-			return false;
+			return null;
 		}
-
-
 	}
 
 	
