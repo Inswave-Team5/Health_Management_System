@@ -20,7 +20,8 @@ public class CoinService {
 		return instance;
 	}
 
-	public String addCoin(String money, User user) {
+	public String addCoin(String money) {
+		User user = (User)Gym.getCurrentUser();
 		int coin = Integer.parseInt(money);
 		if (coin > 0) {
 			user.setCoin(user.getCoin() + coin);

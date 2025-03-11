@@ -65,8 +65,9 @@ public class CouponService {
 		return coupon;
 	}
 
-	public String useCoupon(String number, User user) {
+	public String useCoupon(String number) {
 		Coupon coupon = findCoupon(number);
+		User user = (User)Gym.getCurrentUser();
 		if (coupon == null) {
 			return "존재하지 않는 쿠폰입니다.";
 		} else if (!coupon.isUsed()) {
