@@ -2,17 +2,37 @@ package com.healthmanage.controller;
 
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.EquipmentService;
+import com.healthmanage.view.UserView;
 import com.healthmanage.view.View;
 
 public class EquipmentController {
-    private EquipmentService equipmentService;
-    private View view;
-
-//    String userId = LoginUser.getLoginUserId();
+    private final EquipmentService equipmentService;
+    private final UserView view;
+    UserController userController;
 
     public EquipmentController() {
         equipmentService = EquipmentService.getInstance();
-        view = new View();
+        view = new UserView();
+    }
+
+    public void equipmentEntry() {
+        int key = 0;
+        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.EquipmentSelectMenu())) != 0) {
+            System.out.println(key + "번 입력되었습니다.");
+            switch (key) {
+                case 1:
+                    useEquipment();
+                    break;
+                case 2:
+                    viewWorkoutHistory();
+                    break;
+                case 0:
+                    break;
+                default:
+                    view.showMessage("잘못 선택하였습니다.");
+                    break;
+            }
+        }
     }
 
     public void useEquipment() {
@@ -31,7 +51,7 @@ public class EquipmentController {
     }
 
     public void viewWorkoutHistory() {
-        if (Gym.isLoggedIn()) {
+        if (!Gym.isLoggedIn()) {
             view.showMessage("로그인이 필요합니다!");
             return;
         }

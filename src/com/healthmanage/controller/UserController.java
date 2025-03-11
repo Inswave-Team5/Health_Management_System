@@ -8,13 +8,18 @@ import com.healthmanage.utils.SHA256;
 import com.healthmanage.view.UserView;
 
 public class UserController {
-	private UserService userService;
-
-	private UserView userView;
+	private final UserService userService;
+	private final UserView userView;
+	AttendanceController attendanceController;
+	WeightController weightController;
+	EquipmentController equipmentController;
 
 	public UserController() {
-		this.userService = UserService.getInstance();
+        this.userService = UserService.getInstance();
 		this.userView = new UserView();
+		this.attendanceController = new AttendanceController();
+		this.weightController = new WeightController();
+		this.equipmentController = new EquipmentController();
 	}
 
 	public void entry() {
@@ -38,36 +43,38 @@ public class UserController {
 	public void start() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
+
+			System.out.println(key + "번 입력되었습니다.");
+
 			switch (key) {
 			case 1:
-				System.out.println(key + "번 입력되었습니다.");
+				attendanceController.attendanceEntry();
+
 				break;
 			case 2:
-				System.out.println(key + "번 입력되었습니다.");
+				attendanceController.timeEntry();
 				break;
 			case 3:
-				System.out.println(key + "번 입력되었습니다.");
+				weightController.weightEntry();
 				break;
 			case 4:
-				System.out.println(key + "번 입력되었습니다.");
+				equipmentController.equipmentEntry();
 				break;
 			case 5:
-				System.out.println(key + "번 입력되었습니다.");
+				//쿠폰등록
+				couponUser();
 				break;
 			case 6:
-				System.out.println(key + "번 입력되었습니다.");
+				//코인
+				coinEntry();
 				break;
 			case 7:
-				System.out.println(key + "번 입력되었습니다.");
+				//비밀번호 변경
 				break;
-			case 8:
-				System.out.println(key + "번 입력되었습니다.");
+			case 0:
+				//로그아웃
+				Gym.logoutUser();
 				break;
-			/*
-			 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-			 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-			 * break; case 7: load(); break;
-			 */
 			default:
 				userView.showMessage("잘못 선택하였습니다.");
 				break;
@@ -76,6 +83,32 @@ public class UserController {
 		Gym.logoutUser();
 		System.out.println("종료합니다...");
 	}
+
+	public void coinEntry() {
+		int key = 0;
+		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.coinSelectMenu())) != 0) {
+			switch (key) {
+				case 1:
+					addCoinUser();
+					System.out.println(key + "번 입력되었습니다.");
+					break;
+				case 2:
+					withdrawUser();
+					System.out.println(key + "번 입력되었습니다.");
+					break;
+				case 0:
+					start();
+					System.out.println(key + "번 입력되었습니다.");
+					break;
+				default:
+					userView.showMessage("잘못 선택하였습니다.");
+					break;
+			}
+		}
+		System.out.println("종료합니다...");
+	}
+
+
 
 	public void registerUser() {
 		String userId;

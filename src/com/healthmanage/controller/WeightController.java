@@ -2,40 +2,65 @@ package com.healthmanage.controller;
 
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.WeightService;
-import com.healthmanage.view.View;
+import com.healthmanage.view.UserView;
+
 
 public class WeightController {
-    private WeightService weightService;
-    private View view;
-    //로그인한 userid 불러오기
-    //String userId = LoginUser.getLoginUserId();
+    private final WeightService weightService;
+    private final UserView view;
+    UserController userController;
 
     public WeightController() {
-        this.weightService = WeightService.getInstance();
-        this.view = new View();
-    }
-    
 
-    public void start() {
+        this.weightService = WeightService.getInstance();
+        this.view = new UserView();
+    }
+
+    public void weightEntry() {
         int key = 0;
-        while ((key = Integer.parseInt(view.selectMenu())) != 0) {
+        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.WeightSelectMenu())) != 0) {
             switch (key) {
-                /*
-                 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-                 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-                 * break; case 7: load(); break;
-                 */
+                case 1:
+                    addWeight();
+                    break;
+                case 2:
+                    checkEntry();
+                    break;
+                case 0:
+                    return;
                 default:
-                    System.out.println("잘못 선택하였습니다.");
+                    view.showMessage("잘못 선택하였습니다.");
                     break;
             }
         }
-        System.out.println("종료합니다...");
+    }
+
+    public void checkEntry() {
+        int key = 0;
+        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.WeightSelectCheckMenu())) != 0) {
+            switch (key) {
+                case 1:
+                    listWeight();
+                    break;
+                case 2:
+                    listWeightByMonth();
+                    break;
+                case 3:
+                    listWeightByDay();
+                    break;
+                case 0:
+                    weightEntry();
+                    break;
+                default:
+                    view.showMessage("잘못 선택하였습니다.");
+                    break;
+            }
+        }
     }
 
     public void addWeight(){
         //로그인 검증
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
@@ -44,18 +69,18 @@ public class WeightController {
         weightService.addWeight(Gym.getCurrentUser().getUserId(), weight);
     }
 
-    public void ListWeight(){
+    public void listWeight(){
         //로그인 검증
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
         weightService.ListWeight(Gym.getCurrentUser().getUserId());
     }
 
-    public void ListWeightByMonth(){
+    public void listWeightByMonth(){
         //로그인 검증
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
@@ -63,9 +88,9 @@ public class WeightController {
         weightService.ListWeightByMonth(Gym.getCurrentUser().getUserId(), month);
     }
 
-    public void ListWeightByDay(){
+    public void listWeightByDay(){
         //로그인 검증
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
