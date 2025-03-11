@@ -108,7 +108,6 @@ public class AdminController {
 		// 쿠폰넘버, 코인 입력받고
 		String couponNumber = view.getInput("생성할 쿠폰 번호 입력 : ");
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
-
 		// 트루면
 		if (adminService.addCoupon(couponNumber, coinAmount)) {
 			view.showMessage("쿠폰 생성이 완료됐습니다.");

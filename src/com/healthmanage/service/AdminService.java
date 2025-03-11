@@ -37,15 +37,15 @@ public class AdminService {
 	private List<Attendance> attendanceList = new ArrayList<>();
 
 	private AdminView adminView;
-	Time time = Time.getInstance();
+	private Time time;
 	private AdminDAO adminDAO;
 	private LogService logger;
-	
+
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
-
+		this.time = Time.getInstance();
 	}
 
 	public static AdminService getInstance() {
@@ -54,11 +54,12 @@ public class AdminService {
 		}
 		return instance;
 	}
+
 	// 회원 이름순 정렬 후 전체조회
 	public Collection<User> memberList() {
-	      List<User> users = Sort.sortUser(Gym.users.values());
-	      return users;
-}
+		List<User> users = Sort.sortUser(Gym.users.values());
+		return users;
+	}
 
 	public void load() {
 		adminDAO.loadAdmins(EnvConfig.get("ADMIN_FILE"));
@@ -103,7 +104,7 @@ public class AdminService {
 
 	public Admin adminLogin(String adminId, String pw) {
 		if (Gym.admins.containsKey(adminId) && Gym.admins.get(adminId).getPassword().equals(pw)) {
-			logger.addLog(Gym.admins.get(adminId).getName()+"님이 로그인 하셨습니다.");
+			logger.addLog(Gym.admins.get(adminId).getName() + "님이 로그인 하셨습니다.");
 			return Gym.admins.get(adminId);
 		} else {
 			return null;
@@ -125,7 +126,10 @@ public class AdminService {
 	}
 
 	public boolean addCoupon(String number, int coinAmount) {
-		return couponservice.createCoupon(number, coinAmount);
+		if (couponservice.createCoupon(number, coinAmount) == null) {
+			return false;
+		}
+		return true;
 	}
 
 	public String deleteCoupon(String number) {
@@ -135,35 +139,34 @@ public class AdminService {
 		}
 		return coupon.toString() + "삭제";
 	}
-	
+
 	// 회원 운동시간 누적기준 정렬
 	public Map<String, String> getRank() {
 		// attendance list 받아오기
-	      
-        // 시간 계산하기
-        Map<String, String> tmpList = new HashMap<>();
-        	            
-        for (int i = 0; i < attendanceList.size(); i++) {
-           String tmpId = attendanceList.get(i).getUserId();
-           String tmpTime = attendanceList.get(i).getWorkOutTime();
-           
-           if (!tmpList.containsKey(tmpId)) {
-        	   tmpList.put(tmpId, tmpTime);
-           }
-           else {
-              String existingTime = tmpList.get(tmpId);
-              Duration duration1 = time.totalDuration(existingTime);
-              Duration duration2 = time.totalDuration(tmpTime);
-              
-              tmpList.replace(tmpId, duration1.plus(duration2).toString());
-           }
-           
-        }
-        
-        // attendance list 넘겨주기
-        Map<String, String> sortedList = Sort.sortRank2(tmpList);
-        
-        return sortedList;
+
+		// 시간 계산하기
+		Map<String, String> tmpList = new HashMap<>();
+
+		for (int i = 0; i < attendanceList.size(); i++) {
+			String tmpId = attendanceList.get(i).getUserId();
+			String tmpTime = attendanceList.get(i).getWorkOutTime();
+
+			if (!tmpList.containsKey(tmpId)) {
+				tmpList.put(tmpId, tmpTime);
+			} else {
+				String existingTime = tmpList.get(tmpId);
+				Duration duration1 = time.totalDuration(existingTime);
+				Duration duration2 = time.totalDuration(tmpTime);
+
+				tmpList.replace(tmpId, duration1.plus(duration2).toString());
+			}
+
+		}
+
+		// attendance list 넘겨주기
+		Map<String, String> sortedList = Sort.sortRank2(tmpList);
+
+		return sortedList;
 	}
 
 	// 회원 아이디로 이름찾기
