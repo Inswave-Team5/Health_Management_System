@@ -14,7 +14,5 @@ public class Main {
 		
 		GymController gym = new GymController();
 		gym.start();
-
 	}
-
 }
