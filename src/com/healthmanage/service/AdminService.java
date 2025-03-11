@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-
+import com.healthmanage.model.Admin;
 import com.healthmanage.model.Attendance;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
@@ -101,24 +101,15 @@ public class AdminService {
 		logger.addLog(memberNum + "님의 User정보가 삭제되었습니다.");
 	}
 
-	public boolean adminLogin(String adminId, String pw) {
-		String hashedPw = SHA256.encrypt(pw);
-
-		if (!Gym.admins.containsKey(adminId)) {
-			System.out.println("없는 아이디입니다.");
-			return false;
+	public Admin adminLogin(String adminId, String pw) {
+		if (Gym.admins.containsKey(adminId) && Gym.admins.get(adminId).getPassword().equals(pw)) {
+			logger.addLog(Gym.admins.get(adminId).getName()+"님이 로그인 하셨습니다.");
+			return Gym.admins.get(adminId);
+		} else {
+			System.out.println(Gym.admins.get(adminId).getPassword());
+			System.out.println(pw);
+			return null;
 		}
-
-		else {
-			if (!Gym.admins.get(adminId).getPassword().equals(hashedPw)) {
-				System.out.println("비밀번호가 일치하지 않습니다.");
-				return false;
-			} else {
-				System.out.println("로그인 성공");
-				return true;
-			}
-		}
-
 	}
 
 	// 영어 소문자+숫자, 5~12자
