@@ -25,7 +25,6 @@ public class CoinService {
 		if (user == null) {
 			return "로그인이 필요합니다.";
 		}
-
 		user.setCoin(user.getCoin() + coin);
 		logger.addLog(user.getUserId() + "님에게 " + coin + " 코인이 충전되었습니다.");
 		return coin + " 코인 충전 완료!";
@@ -45,9 +44,8 @@ public class CoinService {
 		}
 	}
 
-	// 코인 잔액 조회
-	public String getCoin(User user) {
-		return "보유한 코인은 " + user.getCoin() + "입니다.";
-	}
-
+//	// 코인 잔액 조회 -> user 필드의 getCoin() 사용
+//	public String getCoin(User user) {
+//		return "보유한 코인은 " + user.getCoin() + "입니다.";
+//	}
 }
