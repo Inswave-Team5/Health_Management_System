@@ -12,10 +12,12 @@ public class AttendanceService {
     private static AttendanceService instance;
     private Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
     private Time time;
+    private LogService logger;
 
     public AttendanceService() {
         view = new View();
         time = Time.getInstance();
+        logger = LogService.getInstance();
     }
 
     public static AttendanceService getInstance() {
@@ -34,6 +36,7 @@ public class AttendanceService {
         //user 의 Attendance 객체를 리스트에 담기
         attendanceList.putIfAbsent(userId, new ArrayList<Attendance>()); // 기존에 없으면 새로운 리스트 생성-맵에 추가
         attendanceList.get(userId).add(attendance);
+        logger.addLog(userId+"님이"+ date + enterTime+"에 입장하셨습니다.");
     }
 
     //퇴근 시간 기록
@@ -56,6 +59,8 @@ public class AttendanceService {
         Duration diffTime = time.getTimeDiff(lastAttendance.getEnterTime(), leaveTime);
         String diffTimeStr = time.transTimeFormat(diffTime);
         lastAttendance.setWorkOutTime(diffTimeStr);
+        
+        logger.addLog(userId+"님이"+ leaveTime+"에 퇴장하셨습니다.");
     }
 
     //일별 개인 입/퇴장 기록 조회
