@@ -199,7 +199,7 @@ public class UserController {
 			userView.showMessage("숫자로 된 올바른 충전 금액을 입력해주세요. (1000원 이상)");
 			return;
 		}
-		String resultMessage = userService.addCoin(inputMoney);
+		String resultMessage = userService.addCoin(Integer.parseInt(inputMoney));
 		userView.showMessage(resultMessage);
 	}
 

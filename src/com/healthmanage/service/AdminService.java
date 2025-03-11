@@ -40,7 +40,7 @@ public class AdminService {
 	private List<Attendance> attendanceList = new ArrayList<>();
 
 	private AdminView adminView;
-	Time time = Time.getInstance();
+	private Time time;
 	private AdminDAO adminDAO;
 	private LogService logger;
 
@@ -48,7 +48,7 @@ public class AdminService {
 		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
-
+		this.time = Time.getInstance();
 	}
 
 	public static AdminService getInstance() {
@@ -142,8 +142,10 @@ public class AdminService {
 	}
 
 	public boolean addCoupon(String number, int coinAmount) {
-		return couponservice.createCoupon(number, coinAmount);
-
+		if (couponservice.createCoupon(number, coinAmount) == null) {
+			return false;
+		}
+		return true;
 	}
 
 	public String deleteCoupon(String number) {
