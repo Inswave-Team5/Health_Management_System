@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.User;
 
-//정렬 유틸리티 클래스
 public class Sort {
 
  public static Collection<Coupon> sortCoupon(Collection<Coupon> list) {
@@ -27,17 +26,13 @@ public class Sort {
  }
  
  public static List<Duration> sortRank(Collection<Duration> list) {
-     
     return list.stream()
           // a,b가 values값(시간)
             .sorted((a, b) -> a.compareTo(b))
             .collect(Collectors.toList());
-    
  }
 
  public static Map<String, String> sortRank2(Map<String, String> list) {
-     
-    
     return list.entrySet().stream()
              .sorted(Map.Entry.comparingByValue())
              .collect(Collectors.toMap(
@@ -47,7 +42,5 @@ public class Sort {
                      LinkedHashMap::new
              ));
  }
-
-
 }
 
