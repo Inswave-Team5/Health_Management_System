@@ -106,8 +106,6 @@ public class AdminService {
 			logger.addLog(Gym.admins.get(adminId).getName()+"님이 로그인 하셨습니다.");
 			return Gym.admins.get(adminId);
 		} else {
-			System.out.println(Gym.admins.get(adminId).getPassword());
-			System.out.println(pw);
 			return null;
 		}
 	}
