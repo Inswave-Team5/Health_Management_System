@@ -22,4 +22,5 @@ public class View {
 	public String selectMenu() {
 		return getInput("1:관리자모드 2:사용자모드 0:종료");
 	};
+	
 }

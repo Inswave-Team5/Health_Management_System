@@ -8,7 +8,7 @@ import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.utils.FileIO;
-import com.healthmanage.utils.SecurePassword;
+import com.healthmanage.utils.SHA256;
 
 public class UserService {
 	private static UserService instance;
@@ -55,8 +55,8 @@ public class UserService {
 		        return null;
 		    }
 
-		    String salt = SecurePassword.generateSalt();
-		    String hashedPw = SecurePassword.hashPassword(userDTO.getPassword(), salt);
+		    String salt = SHA256.generateSalt();
+		    String hashedPw = SHA256.hashPassword(userDTO.getPassword(), salt);
 		    User newUser = new User(userDTO.getUserId(), hashedPw, userDTO.getName(), salt);
 
 		    Gym.users.put(userDTO.getUserId(), newUser);
@@ -72,7 +72,7 @@ public class UserService {
 		}
 		User user = Gym.users.get(userId);
 
-		  boolean isPasswordValid = SecurePassword.verifyPassword(pw, user.getSalt(), user.getPassword());
+		  boolean isPasswordValid = SHA256.verifyPassword(pw, user.getSalt(), user.getPassword());
 
 		    if (isPasswordValid) {
 		        logger.addLog(userId + "님이 로그인 하셨습니다.");

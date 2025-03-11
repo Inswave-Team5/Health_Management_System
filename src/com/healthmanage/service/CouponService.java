@@ -1,12 +1,14 @@
 package com.healthmanage.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.CouponDAO;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
+import com.healthmanage.utils.Sort;
 
 public class CouponService {
 	private static CouponService instance;
@@ -24,6 +26,12 @@ public class CouponService {
 		return instance;
 	}
 
+	// 쿠폰번호로 정렬후 조회
+	public Collection<Coupon> findAllCoupons() {
+		Collection<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
+		return coupons;
+	}
+
 	public void load() {
 		couponDAO.loadCoupons(EnvConfig.get("COUPON_FILE"));
 		logger.addLog(EnvConfig.get("COUPON_FILE") + " File LOAD");
@@ -35,10 +43,6 @@ public class CouponService {
 		logger.addLog(EnvConfig.get("COUPON_FILE") + " File SAVE");
 	}
 
-	public Collection<Coupon> findAllCoupons() {
-		return Gym.coupons.values();
-	} // -> 이미 메모리에 있는거 보여준다??? 그냥 바로 가져오면 되지 않나??
-
 	private Coupon findCoupon(String number) {
 		if (!Gym.coupons.containsKey(number)) {
 			return null;
@@ -48,7 +52,6 @@ public class CouponService {
 
 	public boolean createCoupon(String number, int coinAmount) {
 		if (Gym.coupons.containsKey(number)) {
-			System.out.println("이미 존재하는 쿠폰번호입니다.");
 			return false;
 		}
 		Coupon coupon = new Coupon(number, coinAmount);

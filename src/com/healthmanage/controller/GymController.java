@@ -15,10 +15,12 @@ public class GymController {
 		this.userController = new UserController();
 		this.adminController = new AdminController();
 		this.gymService = new GymService();
+		
 	}
 	
 	public void start() {
 		gymService.load();
+		gymService.adminInit();
 		int key = 0;
 		while ((key = Integer.parseInt(view.selectMenu())) != 0) {
 			switch (key) {

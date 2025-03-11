@@ -1,7 +1,22 @@
 package com.healthmanage.service;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import com.healthmanage.model.Admin;
+import com.healthmanage.model.Attendance;
+import com.healthmanage.model.Coupon;
+import com.healthmanage.model.Gym;
+import com.healthmanage.model.Person;
+import com.healthmanage.model.User;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AdminDAO;
@@ -12,17 +27,25 @@ import com.healthmanage.model.Person;
 import com.healthmanage.model.User;
 import com.healthmanage.view.AdminView;
 import com.healthmanage.utils.FileIO;
-import com.healthmanage.utils.SecurePassword;
+
+import com.healthmanage.utils.SHA256;
+
+
+import com.healthmanage.utils.Sort;
+import com.healthmanage.utils.Time;
 
 public class AdminService {
 	private CouponService couponservice;
 	private AttendanceService attendanceService;
 	private static AdminService instance;
-	private AdminView adminView;
-	private AdminDAO adminDAO;
-	private SecurePassword securepw;
-	private LogService logger;
+	private List<Attendance> attendanceList = new ArrayList<>();
 
+	private AdminView adminView;
+	Time time = Time.getInstance();
+	private AdminDAO adminDAO;
+	private SHA256 securepw;
+	private LogService logger;
+	
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
@@ -36,6 +59,11 @@ public class AdminService {
 		}
 		return instance;
 	}
+	// 회원 이름순 정렬 후 전체조회
+	public Collection<User> memberList() {
+	      List<User> users = Sort.sortUser(Gym.users.values());
+	      return users;
+}
 
 	public void load() {
 		adminDAO.loadAdmins(EnvConfig.get("ADMIN_FILE"));
@@ -45,12 +73,6 @@ public class AdminService {
 	public void save() {
 		adminDAO.saveAdmins();
 		logger.addLog(EnvConfig.get("ADMIN_FILE") + " File SAVE");
-	}
-
-	public void memberList() { // 회원 전체조회
-		for (Person member : Gym.users.values()) {
-			System.out.println(member);
-		}
 	}
 
 	public String memberSearch(String memberNum) { // 회원 검색조회
@@ -69,14 +91,14 @@ public class AdminService {
 			return false;
 		}
 
-		if (!SecurePassword.verifyPassword(pw, user.getSalt(), user.getPassword())) {
+		if (!SHA256.verifyPassword(pw, user.getSalt(), user.getPassword())) {
 			adminView.showMessage("비밀번호가 올바르지 않습니다.");
 			return false;
 		}
 
 		String newPw = adminView.getInput("새로운 비밀번호를 입력하세요.");
-		String newSalt = SecurePassword.generateSalt();
-		String newHashedPw = SecurePassword.hashPassword(newPw, newSalt);
+		String newSalt = SHA256.generateSalt();
+		String newHashedPw = SHA256.hashPassword(newPw, newSalt);
 
 		user.setPassword(newHashedPw, newSalt);
 
@@ -90,26 +112,27 @@ public class AdminService {
 		logger.addLog(memberNum + "님의 User정보가 삭제되었습니다.");
 	}
 
+
 	public boolean adminLogin(String adminId, String pw) {
-		Admin admin = Gym.admins.get(adminId);
-		String hashedPw = SecurePassword.hashPassword(pw, admin.getSalt());
+	
+	    if (!Gym.admins.containsKey(adminId)) {
+	        System.out.println("없는 아이디입니다.");
+	        return false;
+	    }
 
-		if (!Gym.admins.containsKey(adminId)) {
-			System.out.println("없는 아이디입니다.");
-			return false;
-		}
+	    Admin admin = Gym.admins.get(adminId);
+	    String hashedPw = SHA256.hashPassword(pw, admin.getSalt());
 
-		else {
-			if (!admin.getPassword().equals(hashedPw)) {
-				System.out.println("비밀번호가 일치하지 않습니다.");
-				return false;
-			} else {
-				System.out.println("로그인 성공");
-				return true;
-			}
-		}
 
+	    if (!admin.getPassword().equals(hashedPw)) {
+	        System.out.println("비밀번호가 일치하지 않습니다.");
+	        return false;
+	    }
+
+	    System.out.println("로그인 성공");
+	    return true;
 	}
+	
 
 	// 영어 소문자+숫자, 5~12자
 	public boolean isValidId(String adminId) {
@@ -136,6 +159,36 @@ public class AdminService {
 			return "삭제 실패 - 없는 쿠폰번호 입니다.";
 		}
 		return coupon.toString() + "삭제";
+	}
+	
+	// 회원 운동시간 누적기준 정렬
+	public Map<String, String> getRank() {
+		// attendance list 받아오기
+	      
+        // 시간 계산하기
+        Map<String, String> tmpList = new HashMap<>();
+        	            
+        for (int i = 0; i < attendanceList.size(); i++) {
+           String tmpId = attendanceList.get(i).getUserId();
+           String tmpTime = attendanceList.get(i).getWorkOutTime();
+           
+           if (!tmpList.containsKey(tmpId)) {
+        	   tmpList.put(tmpId, tmpTime);
+           }
+           else {
+              String existingTime = tmpList.get(tmpId);
+              Duration duration1 = time.totalDuration(existingTime);
+              Duration duration2 = time.totalDuration(tmpTime);
+              
+              tmpList.replace(tmpId, duration1.plus(duration2).toString());
+           }
+           
+        }
+        
+        // attendance list 넘겨주기
+        Map<String, String> sortedList = Sort.sortRank2(tmpList);
+        
+        return sortedList;
 	}
 
 	// 회원 아이디로 이름찾기

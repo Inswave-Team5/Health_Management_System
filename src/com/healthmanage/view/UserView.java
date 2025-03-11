@@ -13,6 +13,6 @@ public class UserView extends View {
 	}
 	
 	public String selectLogin() {
-		return getInput("1. 로그인 2. 회원가입");
+		return getInput("1. 로그인 2. 회원가입 0. 종료");
 	}
 }

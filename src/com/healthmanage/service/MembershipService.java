@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import com.healthmanage.model.User;
 
-import com.healthmanage.utils.SecurePassword;
+import com.healthmanage.utils.SHA256;
 
 public class MembershipService {
 	
@@ -38,8 +38,8 @@ public class MembershipService {
 			System.out.println("패스워드 형식이 올바르지 않습니다. 대문자,숫자,소문자영문,특수문자 1개 이상 포함한 8~16자를 입력해주세요.");
 			return;
 		}
-		String salt = SecurePassword.generateSalt();
-		String hashedPw = SecurePassword.hashPassword(pw, salt);
+		String salt = SHA256.generateSalt();
+		String hashedPw = SHA256.hashPassword(pw, salt);
 		
 		String name ="";
 		System.out.println("이름을 입력해주세요 : ");

@@ -4,7 +4,6 @@ import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.UserService;
-import com.healthmanage.utils.SecurePassword;
 import com.healthmanage.view.UserView;
 
 public class UserController {
@@ -34,7 +33,6 @@ public class UserController {
 		}
 		;
 		start();
-
 	}
 
 	public void start() {
