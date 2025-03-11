@@ -15,10 +15,12 @@ public class UserService {
 	private CouponService couponService;
 	private CoinService coinService;
 	private UserDAO userDAO;
+	private LogService logger;
 	private UserService() {
 		this.couponService = CouponService.getInstance();
 		this.coinService = CoinService.getInstance();
 		this.userDAO = new UserDAO();
+		this.logger = LogService.getInstance();
 	}
 	
 	public static UserService getInstance() {
@@ -30,10 +32,12 @@ public class UserService {
 	
 	public void load() {
 		userDAO.loadUsers(EnvConfig.get("USER_FILE"));
+		logger.addLog(EnvConfig.get("USER_FILE") + " File LOAD");
 	}
 	
 	public void save() {
 		userDAO.saveUsers();
+		logger.addLog(EnvConfig.get("USER_FILE") + " File SAVE");
 		
 	}
 

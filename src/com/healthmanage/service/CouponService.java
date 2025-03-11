@@ -26,10 +26,13 @@ public class CouponService {
 
 	public void load() {
 		couponDAO.loadCoupons(EnvConfig.get("COUPON_FILE"));
+		logger.addLog(EnvConfig.get("COUPON_FILE") + " File LOAD");
+		
 	}
 
 	public void save() {
 		couponDAO.saveCoupons();
+		logger.addLog(EnvConfig.get("COUPON_FILE") + " File SAVE");
 	}
 
 	public Collection<Coupon> findAllCoupons() {
