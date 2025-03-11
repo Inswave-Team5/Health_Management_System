@@ -5,12 +5,14 @@ import java.util.regex.Pattern;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AdminDAO;
+import com.healthmanage.model.Admin;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Person;
+import com.healthmanage.model.User;
 import com.healthmanage.view.AdminView;
 import com.healthmanage.utils.FileIO;
-import com.healthmanage.utils.SHA256;
+import com.healthmanage.utils.SecurePassword;
 
 public class AdminService {
 	private CouponService couponservice;
@@ -18,6 +20,7 @@ public class AdminService {
 	private static AdminService instance;
 	private AdminView adminView;
 	private AdminDAO adminDAO;
+	private SecurePassword securepw;
 	private LogService logger;
 
 	private AdminService() {
@@ -59,18 +62,24 @@ public class AdminService {
 	}
 
 	public boolean pwChange(String memberNum, String pw) { // 비밀번호 수정
-		// 로그인 상태에서 비밀번호 입력받아 맞는지 확인
-		// 기존 비밀번호가 맞으면 새로운 비밀번호 변경
-		String hashedPw = SHA256.encrypt(pw);
 
-		if (!Gym.users.get(memberNum).getPassword().equals(hashedPw)) {
+		User user = Gym.users.get(memberNum);
+		if (user == null) {
+			adminView.showMessage("사용자를 찾을 수 없습니다.");
+			return false;
+		}
+
+		if (!SecurePassword.verifyPassword(pw, user.getSalt(), user.getPassword())) {
 			adminView.showMessage("비밀번호가 올바르지 않습니다.");
 			return false;
 		}
 
 		String newPw = adminView.getInput("새로운 비밀번호를 입력하세요.");
-		String newHashedPw = SHA256.encrypt(newPw);
-		Gym.users.get(memberNum).setPassword(newHashedPw);
+		String newSalt = SecurePassword.generateSalt();
+		String newHashedPw = SecurePassword.hashPassword(newPw, newSalt);
+
+		user.setPassword(newHashedPw, newSalt);
+
 		adminView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
 		logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
 		return true;
@@ -82,7 +91,8 @@ public class AdminService {
 	}
 
 	public boolean adminLogin(String adminId, String pw) {
-		String hashedPw = SHA256.encrypt(pw);
+		Admin admin = Gym.admins.get(adminId);
+		String hashedPw = SecurePassword.hashPassword(pw, admin.getSalt());
 
 		if (!Gym.admins.containsKey(adminId)) {
 			System.out.println("없는 아이디입니다.");
@@ -90,7 +100,7 @@ public class AdminService {
 		}
 
 		else {
-			if (!Gym.admins.get(adminId).getPassword().equals(hashedPw)) {
+			if (!admin.getPassword().equals(hashedPw)) {
 				System.out.println("비밀번호가 일치하지 않습니다.");
 				return false;
 			} else {
@@ -117,7 +127,7 @@ public class AdminService {
 
 	public boolean addCoupon(String number, int coinAmount) {
 		return couponservice.createCoupon(number, coinAmount);
-	
+
 	}
 
 	public String deleteCoupon(String number) {

@@ -4,7 +4,7 @@ import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.UserService;
-import com.healthmanage.utils.SHA256;
+import com.healthmanage.utils.SecurePassword;
 import com.healthmanage.view.UserView;
 
 public class UserController {
@@ -31,7 +31,8 @@ public class UserController {
 				userView.showMessage("잘못 선택하였습니다.");
 				break;
 			}
-		};
+		}
+		;
 		start();
 
 	}
@@ -94,10 +95,9 @@ public class UserController {
 		// 나머지 회원 정보 입력
 		String name = userView.getInput("이름 입력: ");
 		String password = userView.getInput("비밀번호 입력: ");
-		String hashedPw = SHA256.encrypt(password);
 
 		// DTO 생성 및 회원가입 진행
-		UserSignUpDTO userDTO = new UserSignUpDTO(userId, hashedPw, name);
+		UserSignUpDTO userDTO = new UserSignUpDTO(userId, password, name);
 		userService.addUser(userDTO);
 		userView.showMessage("회원가입 완료!");
 	}
@@ -105,14 +105,23 @@ public class UserController {
 	public boolean loginUser() {
 		String userId = userView.getInput("ID 입력: ");
 		String password = userView.getInput("비밀번호 입력: ");
-		String hashedPw = SHA256.encrypt(password);
-		User loginSuccess = userService.userLogin(userId, hashedPw);
+
+		// 유저 정보 가져오기
+		User user = Gym.users.get(userId);
+		if (user == null) {
+			userView.showMessage("로그인 실패. 존재하지 않는 아이디입니다.");
+			return false;
+		}
+
+		// 로그인 검증
+		User loginSuccess = userService.userLogin(userId, password);
+
 		if (loginSuccess != null) {
 			userView.showMessage("로그인 성공!");
 			Gym.setCurrentUser(loginSuccess);
 			return true;
 		} else {
-			userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
+			userView.showMessage("로그인 실패. 비밀번호를 확인하세요.");
 			return false;
 		}
 	}
