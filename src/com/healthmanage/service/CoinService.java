@@ -8,7 +8,6 @@ import com.healthmanage.model.Gym;
 public class CoinService {
 
 	private static CoinService instance;
-	private UserView userView;
 
 	private CoinService() {
 
