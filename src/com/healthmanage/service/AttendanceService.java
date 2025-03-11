@@ -11,10 +11,11 @@ public class AttendanceService {
     private View view;
     private static AttendanceService instance;
     private Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
-    Time time = Time.getInstance();
+    private Time time;
 
     public AttendanceService() {
         view = new View();
+        time = Time.getInstance();
     }
 
     public static AttendanceService getInstance() {
