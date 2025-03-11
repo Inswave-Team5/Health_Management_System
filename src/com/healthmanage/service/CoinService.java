@@ -20,11 +20,13 @@ public class CoinService {
 		return instance;
 	}
 
-	public String addCoin(int coin) {
+	public String addCoin(int money) {
 		User user = (User) Gym.getCurrentUser();
 		if (user == null) {
 			return "로그인이 필요합니다.";
 		}
+		int coin = money / 1000; // 1000원당 1코인
+		int change = money % 1000; // 거스름돈 (1000원 단위로 나누고 남은 금액)
 		user.setCoin(user.getCoin() + coin);
 		logger.addLog(user.getUserId() + "님에게 " + coin + " 코인이 충전되었습니다.");
 		return coin + " 코인 충전 완료!";
