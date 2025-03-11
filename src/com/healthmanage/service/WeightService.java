@@ -15,11 +15,13 @@ public class WeightService {
     private static WeightService instance;
     Time time = Time.getInstance();
 
+    public WeightService() {
+        view = new View();
+    }
     public static WeightService getInstance() {
         if (instance == null) {
             instance = new WeightService();
         }
-         view = new View();
         return instance;
     }
     //Weight 추가 메서드

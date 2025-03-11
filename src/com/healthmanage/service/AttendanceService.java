@@ -8,16 +8,19 @@ import java.time.Duration;
 import java.util.*;
 
 public class AttendanceService {
-    private static View view;
+    private View view;
     private static AttendanceService instance;
     private Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
     Time time = Time.getInstance();
+
+    public AttendanceService() {
+        view = new View();
+    }
 
     public static AttendanceService getInstance() {
         if (instance == null) {
             instance = new AttendanceService();
         }
-        view = new View();
         return instance;
     }
 
