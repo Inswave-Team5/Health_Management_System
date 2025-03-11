@@ -33,7 +33,6 @@ public class UserController {
 			}
 		};
 		start();
-
 	}
 
 	public void start() {

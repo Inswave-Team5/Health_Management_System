@@ -1,14 +1,14 @@
 package com.healthmanage.controller;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
+import com.healthmanage.model.Admin;
 import com.healthmanage.model.Coupon;
+import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
-import com.healthmanage.service.CouponService;
-import com.healthmanage.view.View;
+import com.healthmanage.utils.SHA256;
 import com.healthmanage.view.AdminView;
 
 public class AdminController {
@@ -31,10 +31,16 @@ public class AdminController {
 			}
 		}
 	}
+	public void entry() {
+		while (!Gym.isLoggedIn()) {
+			loginAdmin();
+		};
+		start();
+	}
 
 	public void start() {
 		int key = 0;
-		while ((key = Integer.parseInt(view.selectMenu())) != 0) {
+		while (loginAdmin() && (key = Integer.parseInt(view.selectMenu())) != 0) {
 			switch (key) {
 			case 1:
 				/*
@@ -47,9 +53,26 @@ public class AdminController {
 				break;
 			}
 		}
+		Gym.logoutUser();
 		System.out.println("종료합니다...");
 	}
-
+	
+	public boolean loginAdmin() {
+		String userId = view.getInput("ID 입력: ");
+		String password = view.getInput("비밀번호 입력: ");
+		String hashedPw = SHA256.encrypt(password);
+		Admin loginSuccess = adminService.adminLogin(userId, hashedPw);
+		if (loginSuccess != null) {
+			view.showMessage("로그인 성공!");
+			Gym.setCurrentUser(loginSuccess);
+			return true;
+		} else {
+			view.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
+			return false;
+		}
+	}
+	
+	
 	/*----------쿠폰 조회------*/
 	public void findAllCoupon() {
 		Collection<Coupon> coupons = adminService.findAllCoupon();
