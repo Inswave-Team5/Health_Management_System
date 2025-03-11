@@ -12,10 +12,13 @@ public class WeightService {
     private Map<String, List<Weight>> weightList = new HashMap<>(); //각 사용자의 몸무게 기록을 담을 map
     private static View view;
     private static WeightService instance;
-    Time time = Time.getInstance();
+    private Time time;
+    private LogService logger;
 
     public WeightService() {
         view = new View();
+        this.time = Time.getInstance();
+        this.logger = LogService.getInstance();
     }
     public static WeightService getInstance() {
         if (instance == null) {
@@ -33,7 +36,8 @@ public class WeightService {
         //user 의 Weight 객체를 리스트에 담기
         weightList.putIfAbsent(userId, new ArrayList<>()); // 기존에 없으면 새로운 리스트 생성-맵에 추가
         weightList.get(userId).add(userWeight);
-
+        
+        logger.addLog(userId +"님의 몸무게가 등록되었습니다. : " + weight+" kg");
         view.showMessage("몸무게가 정상 기록되었습니다!");
     }
 
