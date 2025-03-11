@@ -43,7 +43,6 @@ public class AdminService {
 	private AdminView adminView;
 	Time time = Time.getInstance();
 	private AdminDAO adminDAO;
-	private SHA256 securepw;
 	private LogService logger;
 	
 	private AdminService() {
@@ -113,26 +112,21 @@ public class AdminService {
 	}
 
 
-	public boolean adminLogin(String adminId, String pw) {
-	
-	    if (!Gym.admins.containsKey(adminId)) {
-	        System.out.println("없는 아이디입니다.");
-	        return false;
-	    }
+	public Admin adminLogin(String adminId, String pw) {
+		if (!Gym.users.containsKey(adminId)){
+			return null;
+		}
+		Admin admin = Gym.admins.get(adminId);
 
-	    Admin admin = Gym.admins.get(adminId);
-	    String hashedPw = SHA256.hashPassword(pw, admin.getSalt());
+		  boolean isPasswordValid = SHA256.verifyPassword(pw, admin.getSalt(), admin.getPassword());
 
-
-	    if (!admin.getPassword().equals(hashedPw)) {
-	        System.out.println("비밀번호가 일치하지 않습니다.");
-	        return false;
-	    }
-
-	    System.out.println("로그인 성공");
-	    return true;
+		    if (isPasswordValid) {
+		        logger.addLog(adminId + "님이 로그인 하셨습니다.");
+		        return admin;
+		    } else {
+		        return null;
+		    }
 	}
-	
 
 	// 영어 소문자+숫자, 5~12자
 	public boolean isValidId(String adminId) {

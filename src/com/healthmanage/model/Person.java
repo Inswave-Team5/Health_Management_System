@@ -42,6 +42,6 @@ public class Person implements Serializable{
 
 	@Override
 	public String toString() {
-		return "[ userId=" + userId + ", name=" + name + ", password=" + password + ", salt=" + salt + " ]";
+		return "[ userId=" + userId + ", name=" + name + ", password=" + password + " ]";
 	}
 }
