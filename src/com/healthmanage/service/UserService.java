@@ -81,7 +81,7 @@ public class UserService {
 		return couponService.useCoupon(couponNumber);
 	}
 
-	public String addCoin(String money) {
+	public String addCoin(int money) {
 		return coinService.addCoin(money);
 	}
 

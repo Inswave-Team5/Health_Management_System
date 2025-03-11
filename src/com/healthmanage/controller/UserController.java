@@ -122,8 +122,24 @@ public class UserController {
 	}
 
 	public void addCoinUser() {
-		String inputMoney = userView.getInput("충전금액 입력: ");
-		userView.showMessage(userService.addCoin(inputMoney));
+	    String inputMoney = userView.getInput("충전금액 입력: ");
+	    // 🔹 Controller에서 입력값 검증 (Validation)
+	    if (!isValidCoinInput(inputMoney)) {
+	        userView.showMessage("숫자로 된 올바른 충전 금액을 입력해주세요. (1000원 이상)");
+	        return;
+	    }
+	    String resultMessage = userService.addCoin(Integer.parseInt(inputMoney));
+	    userView.showMessage(resultMessage);
+	}
+	
+	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
+	private boolean isValidCoinInput(String money) {
+	    try {
+	        int coin = Integer.parseInt(money);
+	        return coin > 1000; // 1원 이상인지 확인
+	    } catch (NumberFormatException e) {
+	        return false; // 숫자가 아닌 경우 false 반환
+	    }
 	}
 
 	public void withdrawUser() {
