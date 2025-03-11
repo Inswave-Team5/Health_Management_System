@@ -131,9 +131,9 @@ public class AdminService {
 	public String deleteCoupon(String number) {
 		Coupon coupon = couponservice.deleteCoupon(number);
 		if (coupon == null) {
-			return "삭제 실패 - 없는 쿠폰번호 입니다.";
+			return "삭제 실패 : 없는 쿠폰번호 입니다.";
 		}
-		return coupon.toString() + "삭제";
+		return coupon.toString() + " : 삭제완료했습니다";
 	}
 	
 	// 회원 운동시간 누적기준 정렬
