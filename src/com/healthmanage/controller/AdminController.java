@@ -2,6 +2,7 @@ package com.healthmanage.controller;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.User;
@@ -70,4 +71,18 @@ public class AdminController {
 	public void deleteCoupon() {
 		
 	};
+	
+	public void getRank() {
+		Map<String, String> ranks = adminService.getRank();
+		if (ranks == null) {
+			view.showMessage("랭킹정보가 없습니다.");
+		}
+		else {
+			int cnt = 1;
+			for (Map.Entry<String, String> entry : ranks.entrySet()) {
+				view.showRank(cnt, entry.getKey(), entry.getValue());
+				cnt ++;
+			}
+		}
+	}
 }

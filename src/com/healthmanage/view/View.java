@@ -22,4 +22,8 @@ public class View {
 	public String selectMenu() {
 		return getInput("1:관리자모드 2:사용자모드 0:종료");
 	};
+	
+	public void showRank(int rank, String userId, String workOutTime) {
+		System.out.println("랭킹 " + rank + "등 아이디 : " + userId + " 누적 시간 : " + workOutTime);
+	}
 }

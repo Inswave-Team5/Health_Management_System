@@ -27,6 +27,7 @@ import com.healthmanage.utils.FileIO;
 
 import com.healthmanage.utils.SHA256;
 import com.healthmanage.utils.Sort;
+import com.healthmanage.utils.Time;
 
 
 public class AdminService {
@@ -35,6 +36,7 @@ public class AdminService {
 	private List<Attendance> attendanceList = new ArrayList<>();
 
 	private AdminView adminView;
+	Time time = Time.getInstance();
 	private AdminDAO adminDAO;
 
 	
@@ -150,86 +152,33 @@ public class AdminService {
 	}
 	
 	// 회원 운동시간 누적기준 정렬
-	public void getRank() {
-	      Map<String, Duration> timeForRank = attendanceList.stream()
-	                .filter(a -> !a.getWorkOutTime().isEmpty()) // 운동 시간이 있는 경우만 처리
-	                .collect(Collectors.groupingBy(
-	                        Attendance::getUserId, // userId로 그룹화
-	                        Collectors.reducing(
-	                                Duration.ZERO,
-	                                a -> {
-	                                    LocalTime time = LocalTime.parse(a.getWorkOutTime());
-	                                    return Duration.ofHours(time.getHour())
-	                                            .plusMinutes(time.getMinute())
-	                                            .plusSeconds(time.getSecond());
-	                                },
-	                                Duration::plus // Duration 합산
-	                        )
-	                ));
+	public Map<String, String> getRank() {
+		// attendance list 받아오기
 	      
-	      
-	      List<Duration> rankInfo = Sort.sortRank(timeForRank.values());
-	      
-	      int ranking = 1;
-	      for (Duration dur : rankInfo) {
-	         // 여기는 일단 아이디 값(key값까지 넣어주려고)
-	         for (Map.Entry<String, Duration> infos : timeForRank.entrySet()) {
-	            if (infos.getValue().equals(dur)) {
-	                    System.out.printf("Rank %d: %s - %02d:%02d:%02d\n",
-	                          // 랭킹
-	                          ranking,
-	                          infos.getKey(),
-	                            dur);
-	                    ranking++;
-	                    break; // 동일한 값이 여러 번 출력되지 않도록 종료
-	            }
-	         }
-	      }
-	      
-	      
-	      // attendance list 받아오기
-	      
-	            // 시간 계산하기
-	            Map<String, String> tmpList = new HashMap<>();
-	            
-	            for (int i = 0; i < attendanceList.size(); i++) {
-	               String tmpId = attendanceList.get(i).getUserId();
-	               String tmpTime = attendanceList.get(i).getWorkOutTime();
-	               
-	               if (!tmpList.containsKey(tmpId)) {
-	            	   tmpList.put(tmpId, tmpTime);
-	               }
-	               else {
-	                  String existingTime = tmpList.get(tmpId);
-	                  LocalTime time1 = LocalTime.parse(existingTime);
-	                  Duration duration1 = Duration.ofHours(time1.getHour())
-	                            .plusMinutes(time1.getMinute())
-	                            .plusSeconds(time1.getSecond());
-	                  
-	                  LocalTime time2 = LocalTime.parse(tmpTime);
-	                  Duration duration2 = Duration.ofHours(time2.getHour())
-	                            .plusMinutes(time2.getMinute())
-	                            .plusSeconds(time2.getSecond());
-	                    
-//	                      tmpLst.put(tmpId, duration1.plus(duration2).toString());
-	                  tmpList.replace(tmpId, duration1.plus(duration2).toString());
-	               }
-	               
-	            }
-	            
-	            // attendance list 넘겨주기
-	            Map<String, String> sortedList = Sort.sortRank2(tmpList);
-	            // 정렬된 값 출력하기
-	            sortedList.forEach((key, value) -> System.out.println(key + ": " + value));
-	            
-	            int cnt = 1;
-	            for (Map.Entry<String, String> entry : sortedList.entrySet()) {
-	                  System.out.println("랭킹 " + cnt + "등 아이디 : " + entry.getKey() + " 누적 시간 : " + entry.getValue());
-	                  cnt++;
-	              }
-	      
-	      
-	   
-	   }
+        // 시간 계산하기
+        Map<String, String> tmpList = new HashMap<>();
+        	            
+        for (int i = 0; i < attendanceList.size(); i++) {
+           String tmpId = attendanceList.get(i).getUserId();
+           String tmpTime = attendanceList.get(i).getWorkOutTime();
+           
+           if (!tmpList.containsKey(tmpId)) {
+        	   tmpList.put(tmpId, tmpTime);
+           }
+           else {
+              String existingTime = tmpList.get(tmpId);
+              Duration duration1 = time.totalDuration(existingTime);
+              Duration duration2 = time.totalDuration(tmpTime);
+              
+              tmpList.replace(tmpId, duration1.plus(duration2).toString());
+           }
+           
+        }
+        
+        // attendance list 넘겨주기
+        Map<String, String> sortedList = Sort.sortRank2(tmpList);
+        
+        return sortedList;
+	}
 
 }
