@@ -109,7 +109,7 @@ public class UserController {
 		User loginSuccess = userService.userLogin(userId, hashedPw);
 		if (loginSuccess != null) {
 			userView.showMessage("로그인 성공!");
-			Gym.currentUser = loginSuccess;
+			Gym.setCurrentUser(loginSuccess);
 			return true;
 		} else {
 			userView.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");

@@ -1,13 +1,13 @@
 package com.healthmanage.controller;
 
-import com.healthmanage.app.LoginUser;
+import com.healthmanage.model.Gym;
 import com.healthmanage.service.AttendanceService;
 import com.healthmanage.view.View;
 
 
 public class AttendanceController {
     AttendanceService attendanceService;
-    String userId = LoginUser.getLoginUserId();
+    String userId = Gym.getCurrentUser().getUserId();
     private View view;
 
     public AttendanceController() {
@@ -33,7 +33,7 @@ public class AttendanceController {
     }
 
     public void setEnterTime(){
-        if(LoginUser.isLogin()){
+        if(Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
@@ -42,8 +42,8 @@ public class AttendanceController {
     }
 
     public void setLeaveTime(){
-        String userId = LoginUser.getLoginUserId();
-        if(LoginUser.isLogin()){
+        String userId = Gym.getCurrentUser().getUserId();
+        if(Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
@@ -53,7 +53,7 @@ public class AttendanceController {
 
     //전체 입/퇴장 기록 조회
     public void listAttendanceAll(){
-        if(LoginUser.isLogin()){
+        if(Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
@@ -62,7 +62,7 @@ public class AttendanceController {
 
     //전체 누적 운동시간 조회
     public void getWorkOutTime(){
-        if(LoginUser.isLogin()){
+        if(Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
@@ -72,7 +72,7 @@ public class AttendanceController {
 
     //단일(날짜 선택) 운동시간 조회
     public void getDayWorkOutTime(){
-        if(LoginUser.isLogin()){
+        if(Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             System.exit(0);
         }
@@ -83,7 +83,7 @@ public class AttendanceController {
 
     //월별 누적 운동시간 조회
     public void getMonthTotalWorkOutTime(String userId){
-        if(LoginUser.isLogin()){
+        if(Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             System.exit(0);
         }

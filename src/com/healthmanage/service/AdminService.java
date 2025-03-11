@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -29,20 +30,21 @@ import com.healthmanage.utils.SHA256;
 import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 
-
 public class AdminService {
 	private CouponService couponservice;
+	private AttendanceService attendanceService;
 	private static AdminService instance;
 	private List<Attendance> attendanceList = new ArrayList<>();
 
 	private AdminView adminView;
 	Time time = Time.getInstance();
 	private AdminDAO adminDAO;
-
+	private LogService logger;
 	
 	private AdminService() {
 		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
+		this.logger = LogService.getInstance();
 
 	}
 
@@ -52,8 +54,6 @@ public class AdminService {
 		}
 		return instance;
 	}
-	
-
 	// 회원 이름순 정렬 후 전체조회
 	public Collection<User> memberList() {
 	      List<User> users = Sort.sortUser(Gym.users.values());
@@ -62,16 +62,13 @@ public class AdminService {
 
 	public void load() {
 		adminDAO.loadAdmins(EnvConfig.get("ADMIN_FILE"));
-
+		logger.addLog(EnvConfig.get("ADMIN_FILE") + " File LOAD");
 	}
-	
+
 	public void save() {
 		adminDAO.saveAdmins();
+		logger.addLog(EnvConfig.get("ADMIN_FILE") + " File SAVE");
 	}
-
-
-
-
 
 	public String memberSearch(String memberNum) { // 회원 검색조회
 		if (Gym.users.containsKey(memberNum)) {
@@ -81,27 +78,27 @@ public class AdminService {
 		}
 	}
 
-	public void pwChange(String memberNum, String pw){ //비밀번호 수정
-		//로그인 상태에서 비밀번호 입력받아 맞는지 확인
-		//기존 비밀번호가 맞으면 새로운 비밀번호 변경
+	public boolean pwChange(String memberNum, String pw) { // 비밀번호 수정
+		// 로그인 상태에서 비밀번호 입력받아 맞는지 확인
+		// 기존 비밀번호가 맞으면 새로운 비밀번호 변경
 		String hashedPw = SHA256.encrypt(pw);
 
-		
-		if(!Gym.users.get(memberNum).getPassword().equals(hashedPw)) {
+		if (!Gym.users.get(memberNum).getPassword().equals(hashedPw)) {
 			adminView.showMessage("비밀번호가 올바르지 않습니다.");
-			return;
+			return false;
 		}
 
 		String newPw = adminView.getInput("새로운 비밀번호를 입력하세요.");
 		String newHashedPw = SHA256.encrypt(newPw);
 		Gym.users.get(memberNum).setPassword(newHashedPw);
 		adminView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
-
-
+		logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
+		return true;
 	}
-	
+
 	public void memberDelete(String memberNum) { // 삭제
 		Gym.users.remove(memberNum);
+		logger.addLog(memberNum + "님의 User정보가 삭제되었습니다.");
 	}
 
 	public boolean adminLogin(String adminId, String pw) {
@@ -123,7 +120,6 @@ public class AdminService {
 		}
 
 	}
-
 
 	// 영어 소문자+숫자, 5~12자
 	public boolean isValidId(String adminId) {
@@ -179,6 +175,40 @@ public class AdminService {
         Map<String, String> sortedList = Sort.sortRank2(tmpList);
         
         return sortedList;
+	}
+
+	// 회원 아이디로 이름찾기
+	public String findName(String memberNum) {
+		if (Gym.users.containsKey(memberNum)) {
+			return Gym.users.get(memberNum).getName();
+		} else {
+			adminView.showMessage("일치하는 회원이 없습니다! 다시 검색해주세요.");
+			return null;
+		}
+	}
+
+	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //회원 아이디와 날짜 입력 받고 회원 출결 출력
+	public String UserAttendanceByDay(String memberNum, String date) {
+		adminView.showMessage("[" + date + "]");
+		return "[" + findName(memberNum) + "]" + attendanceService.getAttendacneByDay(memberNum, date);
+	}
+
+	// 개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
+	public void listUserAttendanceAll(String memberNum) {
+		adminView.showMessage("[" + findName(memberNum) + "의 출결 기록]");
+		List<String> attendanceList = attendanceService.listUserAttendaceAll(memberNum);
+		for (String attendance : attendanceList) {
+			adminView.showMessage(attendance);
+		}
+	}
+
+	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
+	public void listAllUsersAttendanceByDay(String date) {
+		adminView.showMessage("[" + date + "]");
+		HashMap<String, String> map = attendanceService.listAllAttendanceByDay(date);
+		for (String key : map.keySet()) {
+			adminView.showMessage("[" + findName(key) + "]" + map.get(key));
+		}
 	}
 
 }

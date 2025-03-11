@@ -94,4 +94,26 @@ public class AdminController {
 			}
 		}
 	}
+
+	//개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
+	public void UserAttendanceByDay(){
+		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+
+		adminService.UserAttendanceByDay(id, date);
+	}
+
+	//개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
+	public void listUserAttendanceAll(){
+		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+
+		adminService.listUserAttendanceAll(id);
+	}
+
+	//전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
+	public void listUserAttendanceByDay(){
+		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+
+		adminService.listAllUsersAttendanceByDay(date);
+	}
 }
