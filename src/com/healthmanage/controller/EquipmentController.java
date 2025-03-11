@@ -1,6 +1,6 @@
 package com.healthmanage.controller;
 
-import com.healthmanage.app.LoginUser;
+import com.healthmanage.model.Gym;
 import com.healthmanage.service.EquipmentService;
 import com.healthmanage.view.View;
 
@@ -8,7 +8,7 @@ public class EquipmentController {
     private EquipmentService equipmentService;
     private View view;
 
-    String userId = LoginUser.getLoginUserId();
+//    String userId = LoginUser.getLoginUserId();
 
     public EquipmentController() {
         equipmentService = EquipmentService.getInstance();
@@ -16,7 +16,7 @@ public class EquipmentController {
     }
 
     public void useEquipment() {
-        if (LoginUser.isLogin()) {
+        if (Gym.isLoggedIn()) {
             view.showMessage("로그인이 필요합니다!");
             return;
         }
@@ -25,17 +25,17 @@ public class EquipmentController {
         int value1 = Integer.parseInt(view.getInput("속도 or 무게 입력: "));
         int value2 = Integer.parseInt(view.getInput("시간 or 횟수 입력: "));
 
-        equipmentService.addWorkoutRecord(userId, equipmentType, value1, value2);
+        equipmentService.addWorkoutRecord(Gym.getCurrentUser().getUserId(), equipmentType, value1, value2);
 
         view.showMessage("운동기구 사용이 정상 기록되었습니다!");
     }
 
     public void viewWorkoutHistory() {
-        if (LoginUser.isLogin()) {
+        if (Gym.isLoggedIn()) {
             view.showMessage("로그인이 필요합니다!");
             return;
         }
         view.showMessage("[운동기구 사용기록]");
-        equipmentService.getUserWorkoutHistory(userId);
+        equipmentService.getUserWorkoutHistory(Gym.getCurrentUser().getUserId());
     }
 }

@@ -1,6 +1,5 @@
 package com.healthmanage.service;
 
-import com.healthmanage.app.LoginUser;
 import com.healthmanage.model.Weight;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
