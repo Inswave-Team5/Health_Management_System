@@ -1,5 +1,7 @@
 package com.healthmanage.controller;
 
+import javax.swing.JSpinner.NumberEditor;
+
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
@@ -99,7 +101,13 @@ public class UserController {
 
 	public void coinEntry() {
 		int key = 0;
-		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.coinSelectMenu())) != 0) {
+		while (Gym.isLoggedIn()) {
+			try {
+				key = Integer.parseInt(userView.coinSelectMenu());		
+			}catch(NumberFormatException e) {
+				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
 			userView.showAlert(key + "번 입력되었습니다.");
 			switch (key) {
 			case 1:
@@ -109,15 +117,14 @@ public class UserController {
 				withdrawUser();
 				break;
 			case 0:
-				start();
-				break;
+				userService.save();
+				userView.showAlert("종료합니다.");
+				return;
 			default:
 				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
 		}
-		userService.save();
-		System.out.println("종료합니다...");
 	}
 
 	public void registerUser() {
