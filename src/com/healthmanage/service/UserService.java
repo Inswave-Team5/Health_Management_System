@@ -1,14 +1,19 @@
 package com.healthmanage.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.UserDAO;
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
-import com.healthmanage.utils.FileIO;
 import com.healthmanage.utils.SHA256;
+import com.healthmanage.utils.Sort;
 
 public class UserService {
 	private static UserService instance;
@@ -103,5 +108,24 @@ public class UserService {
 	public String withdrawCoin(int coin, User receiver) {
 		User sender = Gym.users.get(((User) Gym.getCurrentUser()).getUserId());
 		return coinService.withdraw(coin, sender, receiver);
+	}
+
+	public String findUserId(String userId) { // 회원 검색조회
+		if (Gym.users.containsKey(userId)) {
+			return Gym.users.get(userId).toString();
+		}
+		return null;
+	}
+
+	// 회원 전체조회
+	private Collection<User> findAllUser() {
+		return Gym.users.values(); 
+	}
+	
+	// 회원 이름순 정렬 후 전체조회
+	public List<User> findAllUserSortName() {	    
+	    return findAllUser().stream()
+        .sorted(Comparator.comparing(User::getName))
+        .collect(Collectors.toList());
 	}
 }

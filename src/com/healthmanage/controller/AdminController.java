@@ -1,63 +1,94 @@
 package com.healthmanage.controller;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
+import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Admin;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
 import com.healthmanage.utils.Validations;
+import com.healthmanage.service.CouponService;
+import com.healthmanage.service.UserService;
 import com.healthmanage.view.AdminView;
 
 public class AdminController {
 	private AdminView view;
 	private AdminService adminService;
+	private CouponService couponService;
+	private UserService userService;
 
 	AdminController() {
 		this.view = new AdminView();
 		this.adminService = AdminService.getInstance();
+		this.couponService = CouponService.getInstance();
+		this.userService = UserService.getInstance();
 	}
+
+	public void findUserId(String userId) {
+		String user = userService.findUserId(userId);
+		if (user == null) {
+			view.showMessage("일치하는 회원이 없습니다! 다시 검색해주세요.");
+			return;
+		}
+		view.showMessage(user);
+	}
+
 	/*----------유저 정보 조회----*/
 
 	public void memberList() {
-		Collection<User> users = adminService.memberList();
-		if (users == null) {
+		List<User> users = userService.findAllUserSortName();
+		if (users == null || users.isEmpty()) {
 			view.showMessage("등록된 회원이 없습니다.");
-		} else {
-			for (User user : users) {
-				view.showMessage(user.toString());
-			}
+			return;
+		}
+		for (User user : users) {
+			view.showMessage(user.toString());
 		}
 	}
 
 	public void entry() {
-		while (!Gym.isLoggedIn()) {
-			loginAdmin();
-		}
-		;
+		int key = 0;
+		while (!Gym.isLoggedIn() && (key = Integer.parseInt(view.selectEntryMenu())) != 0) {
+			switch (key) {
+			case 1:
+				loginAdmin();
+				break;
+			case 2:
+				addAdmin();
+				break;
+			default:
+				view.showMessage("잘못 선택하였습니다.");
+				break;
+			}
+		};
+		adminService.save();// 회원가입된 관리자 저장
 		start();
 	}
 
 	public void start() {
 		int key = 0;
-		while (loginAdmin() && (key = Integer.parseInt(view.selectAdminMenu())) != 0) {
+		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectAdminMenu())) != 0) {
 			switch (key) {
 			case 1:
 				userManage();
-				/*
-				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-				 * break; case 7: load(); break;
-				 */
+				break;
+			case 2:
+				couponManage();
+				break;
+//			case 3: 로그확인
+//			case 4: 기구관리
 			default:
-				System.out.println("잘못 선택하였습니다.");
+				view.showMessage("종료합니다.");
 				break;
 			}
 		}
 		Gym.logoutUser();
-		System.out.println("종료합니다...");
+		System.out.println("종료합니다.");
 	}
 
 	public boolean loginAdmin() {
@@ -73,7 +104,7 @@ public class AdminController {
 		
 		// 로그인 검증
 		Admin loginSuccess = adminService.adminLogin(userId, password);
-		
+
 		if (loginSuccess != null) {
 			view.showMessage("로그인 성공!");
 			Gym.setCurrentUser(loginSuccess);
@@ -89,49 +120,130 @@ public class AdminController {
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectUserManageMenu())) != 0) {
 			switch (key) {
 			case 1:
-				/*
-				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-				 * break; case 7: load(); break;
-				 */
+				memberList();
+				break;
+			case 2:
+				UserAttendanceByDay();
+				break;
+			case 3:
+				listUserAttendanceAll();
+				break;
+			case 4:
+				listUserAttendanceByDay();
+				break;
+			case 5:
+				getRank();
+				break;
 			default:
-				System.out.println("잘못 선택하였습니다.");
+				view.showMessage("종료합니다.");
 				break;
 			}
 		}
-		Gym.logoutUser();
-		System.out.println("종료합니다...");
+//		Gym.logoutUser();
+		view.showMessage("종료합니다.");
 	}
 
-	/*----------쿠폰 조회------*/
-	public void findAllCoupon() {
-		Collection<Coupon> coupons = adminService.findAllCoupon();
-		if (coupons == null) {
-			view.showMessage("쿠폰정보가 없습니다.");
-		} else {
-			for (Coupon coupon : coupons) {
-				view.showMessage(coupon.toString());
+	public void addAdmin() {
+		String adminId;
+		while (true) {
+			// 🔹 View에서 아이디 입력 받기
+			adminId = view.getInput("ID 입력: ");
+
+			// ID 유효성 검사
+			if (!userService.isValidId(adminId)) {
+				view.showMessage("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
+				continue;
 			}
+
+			// 🔹 아이디 중복 검사
+			if (userService.checkId(adminId)) {
+				break;
+			}
+			view.showMessage("이미 존재하는 ID입니다. 다시 입력해주세요.");
+		}
+
+		// 나머지 회원 정보 입력
+		String name = view.getInput("이름 입력: ");
+		String password;
+
+		while (true) {
+			password = view.getInput("비밀번호 입력: ");
+
+			// 비밀번호 유효성 검사
+			if (!userService.isValidPw(password)) {
+				view.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+				continue;
+			}
+			break;
+		}
+
+		String code = view.getInput("관리자 코드 입력: ");
+		if (!code.equals(EnvConfig.get("ADMIN_CODE"))) {
+			view.getInput("관리자 코드가 틀렸습니다.");
+			return;
+		}
+
+		// DTO 생성 및 회원가입 진행
+		UserSignUpDTO userDTO = new UserSignUpDTO(adminId, password, name);
+		adminService.addAdmin(userDTO);
+		view.showMessage("회원가입 완료!");
+	}
+
+	// 쿠폰관리
+	public void couponManage() {
+		int key = 0;
+		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectCouponManageMenu())) != 0) {
+			switch (key) {
+			case 1:
+				addCoupon(); // 쿠폰발급
+				break;
+			case 2:
+				findAllCoupon(); // 쿠폰조회
+				break;
+			case 3:
+				deleteCoupon(); // 쿠폰삭제
+				break;
+			default:
+				view.showMessage("종료합니다.");
+				break;
+			}
+		}
+//		Gym.logoutUser();
+		couponService.save(); // 쿠폰관리 끝날 시 자동저장
+		view.showMessage("종료합니다.");
+	}
+
+	public void findAllCoupon() {
+		Collection<Coupon> coupons = couponService.findAllCoupons();
+
+		if (coupons == null || coupons.isEmpty()) {
+			view.showMessage("쿠폰정보가 없습니다.");
+			return;
+		}
+		for (Coupon coupon : coupons) {
+			view.showMessage(coupon.toString());
 		}
 	};
 
 	public void addCoupon() {
-		// 쿠폰넘버, 코인 입력받고
 		String couponNumber = view.getInput("생성할 쿠폰 번호 입력 : ");
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
 		// 트루면
-		if (adminService.addCoupon(couponNumber, coinAmount)) {
+		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
 			view.showMessage("쿠폰 생성이 완료됐습니다.");
-		} else {
-			view.showMessage("이미 존재하는 쿠폰번호입니다.");
+			return;
 		}
+		view.showMessage("이미 존재하는 쿠폰번호입니다.");
 	};
 
 	public void deleteCoupon() {
 		String delCouponNum = view.getInput("삭제할 쿠폰 번호 입력 : ");
-		String result = adminService.deleteCoupon(delCouponNum);
-		view.showMessage(result);
-
+		Coupon coupon = couponService.deleteCoupon(delCouponNum);
+		if (coupon == null) {
+			view.showMessage("삭제 실패 - 없는 쿠폰번호 입니다.");
+			return;
+		}
+		view.showMessage(coupon.toString() + "삭제");
 	};
 
 	public void getRank() {

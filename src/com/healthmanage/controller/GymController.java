@@ -20,12 +20,12 @@ public class GymController {
 	
 	public void start() {
 		gymService.load();
-		gymService.adminInit();
+		//gymService.adminInit();
 		int key = 0;
 		while ((key = Integer.parseInt(view.selectMenu())) != 0) {
 			switch (key) {
 			case 1 :
-				adminController.start();
+				adminController.entry();
 				break;
 			case 2 :
 				userController.entry();

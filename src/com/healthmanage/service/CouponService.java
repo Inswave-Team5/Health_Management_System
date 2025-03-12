@@ -51,14 +51,15 @@ public class CouponService {
 	}
 
 	public Coupon createCoupon(String number, int coinAmount) {
-		Coupon coupon = null;
-		if (Gym.coupons.containsKey(number)) {
-			coupon = Gym.coupons.put(number, new Coupon(number, coinAmount));
-			if(coupon != null) {
-				logger.addLog(number + "번의 쿠폰이 추가되었습니다.");			
-			}
-		}
-		return coupon;
+	    if (Gym.coupons.containsKey(number)) {
+	        return null;  // 이미 존재하는 경우 null 반환
+	    }
+	    Coupon newCoupon = new Coupon(number, coinAmount);
+	    Gym.coupons.put(number, newCoupon);
+
+	    logger.addLog(number + "번 쿠폰이 추가되었습니다.");
+
+	    return newCoupon;  // 새로 생성된 쿠폰 반환
 	}
 
 	public Coupon deleteCoupon(String number) {

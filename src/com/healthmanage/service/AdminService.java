@@ -20,6 +20,7 @@ import com.healthmanage.model.User;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AdminDAO;
+import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Admin;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
@@ -56,12 +57,6 @@ public class AdminService {
 			instance = new AdminService();
 		}
 		return instance;
-	}
-
-	// 회원 이름순 정렬 후 전체조회
-	public Collection<User> memberList() {
-		List<User> users = Sort.sortUser(Gym.users.values());
-		return users;
 	}
 
 	public void load() {
@@ -112,19 +107,34 @@ public class AdminService {
 //	}
 
 	public Admin adminLogin(String adminId, String pw) {
-		if (!Gym.users.containsKey(adminId)) {
+		if (!Gym.admins.containsKey(adminId)) {
 			return null;
 		}
 		Admin admin = Gym.admins.get(adminId);
-
 		boolean isPasswordValid = SHA256.verifyPassword(pw, admin.getSalt(), admin.getPassword());
-
 		if (isPasswordValid) {
 			logger.addLog(adminId + "님이 로그인 하셨습니다.");
 			return admin;
 		} else {
 			return null;
 		}
+	}
+
+	public Admin addAdmin(UserSignUpDTO userDTO) {
+		if (Gym.admins.containsKey(userDTO.getUserId())) {
+			logger.addLog("회원가입 실패: 이미 존재하는 아이디 (" + userDTO.getUserId() + ")");
+			return null;
+		}
+
+		String salt = SHA256.generateSalt();
+		String hashedPw = SHA256.hashPassword(userDTO.getPassword(), salt);
+		Admin newAdmin = new Admin(userDTO.getUserId(), hashedPw, userDTO.getName(), salt);
+
+		Gym.admins.put(userDTO.getUserId(), newAdmin);
+
+		logger.addLog("아이디 : " + newAdmin.getUserId() + " | 이름 : " + newAdmin.getName() + "님이 회원가입하셨습니다.");
+
+		return newAdmin;
 	}
 
 	// 영어 소문자+숫자, 5~12자
