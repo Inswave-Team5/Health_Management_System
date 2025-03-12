@@ -22,7 +22,7 @@ public class AdminView extends View {
 
     public String selectUserManageMenu() {
         return getMenuInput("MEMBER MANAGEMENT", 
-                        "[1] 전체 조회\n" +
+                        "[1] 전체 조회 (이름순)\n" +
                         "[2] 개인회원 출결 (날짜별)\n" +
                         "[3] 개인회원 출결 (전체)\n" +
                         "[4] 전체 회원 출결 (날짜별)\n" +
