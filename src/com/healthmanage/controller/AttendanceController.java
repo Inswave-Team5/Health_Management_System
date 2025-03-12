@@ -2,94 +2,159 @@ package com.healthmanage.controller;
 
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.AttendanceService;
-import com.healthmanage.view.View;
+import com.healthmanage.utils.Time;
+import com.healthmanage.view.UserView;
 
+import static com.healthmanage.utils.Validations.validateYearMonth;
+import static com.healthmanage.utils.Validations.validateYearMonthDay;
 
 public class AttendanceController {
-    AttendanceService attendanceService;
-    String userId = Gym.getCurrentUser().getUserId();
-    private View view;
+    private final AttendanceService attendanceService;
+    private final UserView view;
+    Time time;
+
 
     public AttendanceController() {
         attendanceService = AttendanceService.getInstance();
-        this.view = new View();
+        this.view = new UserView();
+        this.time = Time.getInstance();
     }
 
-    public void start() {
-        int key = 0;
-        while ((key = Integer.parseInt(view.selectMenu())) != 0) {
+    public void attendanceEntry() {
+        int key=0;
+        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.AttendanceSelectMenu())) != 0) {
+            view.showMessage(key + "번 입력되었습니다.");
             switch (key) {
-                /*
-                 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-                 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-                 * break; case 7: load(); break;
-                 */
+                case 1:
+                    setEnterTime();
+                    break;
+                case 2:
+                    setLeaveTime();
+                    break;
+                case 3:
+                    listAttendanceAll();
+                    break;
+                case 0:
+                    return;
                 default:
-                    System.out.println("잘못 선택하였습니다.");
+                    view.showMessage("잘못 선택하였습니다.");
                     break;
             }
         }
-        System.out.println("종료합니다...");
+    }
+
+
+    public void timeEntry() {
+        int key=0;
+        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.TimeSelectMenu())) != 0) {
+
+            view.showMessage(key + "번 입력되었습니다.");
+
+            switch (key) {
+                case 1:
+                    getTodayWorkOutTime();
+                    break;
+                case 2:
+                    getDayWorkOutTime();
+                    break;
+                case 3:
+                    getMonthTotalWorkOutTime();
+                    break;
+                case 4:
+                    getWorkOutTime();
+                    break;
+                case 0:
+                    return;
+                default:
+                    view.showMessage("잘못 선택하였습니다.");
+                    break;
+            }
+        }
     }
 
     public void setEnterTime(){
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()) {
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        attendanceService.setEnterTime(userId);
+        attendanceService.setEnterTime(Gym.getCurrentUser().getUserId());
         view.showMessage("입장이 완료되었습니다!");
     }
 
     public void setLeaveTime(){
-        String userId = Gym.getCurrentUser().getUserId();
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        attendanceService.setLeaveTime(userId);
+        attendanceService.setLeaveTime(Gym.getCurrentUser().getUserId());
         view.showMessage("퇴장이 완료되었습니다!");
     }
 
     //전체 입/퇴장 기록 조회
     public void listAttendanceAll(){
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        attendanceService.listAttendanceAll(userId);
+        attendanceService.listAttendanceAll(Gym.getCurrentUser().getUserId());
     }
 
     //전체 누적 운동시간 조회
     public void getWorkOutTime(){
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        String totalTime = attendanceService.getTotalWorkOutTime(userId);
+        String totalTime = attendanceService.getTotalWorkOutTime(Gym.getCurrentUser().getUserId());
         view.showMessage("[전체 누적 운동시간]" + totalTime);
+    }
+
+    //오늘 운동시간 조회
+    public void getTodayWorkOutTime(){
+        if(!Gym.isLoggedIn()){
+            view.showMessage("로그인 후 이용가능합니다!");
+            System.exit(0);
+        }
+        String today = time.currentDay();
+        view.showMessage("[오늘의 운동시간] " + attendanceService.getDayWorkOutTime(Gym.getCurrentUser().getUserId(), today)); ;
     }
 
     //단일(날짜 선택) 운동시간 조회
     public void getDayWorkOutTime(){
-        if(Gym.isLoggedIn()){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             System.exit(0);
         }
-        String day = view.getInput("날짜 입력 (입력 형식 : MM-dd) : ");
-        String workOutTimeByDay = attendanceService.getDayWorkOutTime(userId, day);
-        view.showMessage("["+day+"]" + workOutTimeByDay);
+        while(true){
+            String day = (view.getInput("날짜 입력 (입력 형식 : yyyy-MM-dd) : "));
+            if (validateYearMonthDay(day)) {
+                String workOutTimeByDay = attendanceService.getDayWorkOutTime(Gym.getCurrentUser().getUserId(), day);
+                view.showMessage("["+day+"]" + workOutTimeByDay);
+                break;  // 유효한 입력이 들어오면 반복문 종료
+            } else {
+                view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
     }
 
     //월별 누적 운동시간 조회
-    public void getMonthTotalWorkOutTime(String userId){
-        if(Gym.isLoggedIn()){
+    public void getMonthTotalWorkOutTime(){
+        if(!Gym.isLoggedIn()){
             view.showMessage("로그인 후 이용가능합니다!");
             System.exit(0);
         }
-        String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
-        String workOutTimeByMonth = attendanceService.getMonthTotalWorkOutTime(userId, month);
-        view.showMessage("[" + month + "월 누적 운동시간]" + workOutTimeByMonth);
+
+        while(true){
+            String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
+            if (validateYearMonth(month)) {
+                String workOutTimeByMonth = attendanceService.getMonthTotalWorkOutTime(Gym.getCurrentUser().getUserId(), month);
+                view.showMessage("[" + month + "월 누적 운동시간]" + workOutTimeByMonth);
+
+                break;  // 유효한 입력이 들어오면 반복문 종료
+            } else {
+                view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
     }
 
 }

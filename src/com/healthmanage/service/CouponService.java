@@ -50,14 +50,15 @@ public class CouponService {
 		return Gym.coupons.get(number);
 	}
 
-	public boolean createCoupon(String number, int coinAmount) {
+	public Coupon createCoupon(String number, int coinAmount) {
+		Coupon coupon = null;
 		if (Gym.coupons.containsKey(number)) {
-			return false;
+			coupon = Gym.coupons.put(number, new Coupon(number, coinAmount));
+			if(coupon != null) {
+				logger.addLog(number + "번의 쿠폰이 추가되었습니다.");			
+			}
 		}
-		Coupon coupon = new Coupon(number, coinAmount);
-		Gym.coupons.put(number, coupon);
-		logger.addLog(number + "번의 쿠폰이 추가되었습니다.");
-		return true;
+		return coupon;
 	}
 
 	public Coupon deleteCoupon(String number) {

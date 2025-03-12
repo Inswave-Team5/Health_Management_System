@@ -7,8 +7,8 @@ public class User extends Person implements Serializable{
 	private int coin;
 	private int remainTime;
 	
-	public User(String userId, String password, String name) {
-		super(name, password, userId);
+	public User(String userId, String password, String name, String salt) {
+		super(name, password, userId, salt);
 		this.coin = 0;
 		this.remainTime = 0;
 	}
