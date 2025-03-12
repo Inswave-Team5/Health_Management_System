@@ -61,6 +61,13 @@ public class AdminController {
 			switch (key) {
 			case 1:
 				userManage();
+				break;
+			case 2:
+				couponManage();
+				break;
+//			case 3: 로그확인
+//			case 4: 기구관리
+				
 				/*
 				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
 				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
@@ -72,7 +79,7 @@ public class AdminController {
 			}
 		}
 		Gym.logoutUser();
-		System.out.println("종료합니다...");
+		System.out.println("종료합니다.");
 	}
 
 	public boolean loginAdmin() {
@@ -102,22 +109,45 @@ public class AdminController {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectUserManageMenu())) != 0) {
 			switch (key) {
-			case 1:
-				/*
-				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-				 * break; case 7: load(); break;
-				 */
+			case 1: memberList();
+					break;
+			case 2: UserAttendanceByDay();
+					break;
+			case 3: listUserAttendanceAll();
+					break;
+			case 4: listUserAttendanceByDay();
+					break;
+			case 5: getRank();
+					break;
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
 			}
 		}
 		Gym.logoutUser();
-		System.out.println("종료합니다...");
+		System.out.println("종료합니다.");
+	}
+	
+	// 쿠폰관리
+	public void couponManage() {
+		int key = 0;
+		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectCouponManageMenu())) != 0) {
+			switch (key) {
+			case 1: addCoupon();		//쿠폰발급
+					break;
+			case 2: findAllCoupon();	//쿠폰조회
+					break;
+			case 3: deleteCoupon();		//쿠폰삭제
+					break;
+			default:
+				System.out.println("잘못 선택하였습니다.");
+				break;
+			}
+		}
+		Gym.logoutUser();
+		System.out.println("종료합니다.");
 	}
 
-	/*----------쿠폰 조회------*/
 	public void findAllCoupon() {
 		Collection<Coupon> coupons = couponService.findAllCoupons();
 
@@ -131,7 +161,6 @@ public class AdminController {
 	};
 
 	public void addCoupon() {
-		// 쿠폰넘버, 코인 입력받고
 		String couponNumber = view.getInput("생성할 쿠폰 번호 입력 : ");
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
 		// 트루면
