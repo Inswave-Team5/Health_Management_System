@@ -137,25 +137,6 @@ public class AdminService {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
 	}
 
-	public Collection<Coupon> findAllCoupon() {
-		return couponservice.findAllCoupons();
-	}
-
-	public boolean addCoupon(String number, int coinAmount) {
-		if (couponservice.createCoupon(number, coinAmount) == null) {
-			return false;
-		}
-		return true;
-	}
-
-	public String deleteCoupon(String number) {
-		Coupon coupon = couponservice.deleteCoupon(number);
-		if (coupon == null) {
-			return "삭제 실패 - 없는 쿠폰번호 입니다.";
-		}
-		return coupon.toString() + "삭제";
-	}
-
 	// 회원 운동시간 누적기준 정렬
 	public Map<String, String> getRank() {
 		// attendance list 받아오기
