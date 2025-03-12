@@ -14,14 +14,15 @@ import com.healthmanage.view.View;
 public class AttendanceService {
     private View view;
     private static AttendanceService instance;
-    private Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
+    public static Map<String, List<Attendance>> attendanceList; //user 의 출근시간 기록
     private Time time;
     private LogService logger;
 
     public AttendanceService() {
-        view = new View();
-        time = Time.getInstance();
-        logger = LogService.getInstance();
+    	this.attendanceList = new HashMap<>();
+    	this.view = new View();
+    	this.time = Time.getInstance();
+    	this.logger = LogService.getInstance();
     }
 
     public static AttendanceService getInstance() {

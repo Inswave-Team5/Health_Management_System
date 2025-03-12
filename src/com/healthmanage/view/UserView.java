@@ -18,7 +18,7 @@ public class UserView extends View {
     }
 
     public String selectLogin() {
-        return getMenuInput("LOGIN / SIGN UP",
+        return getMenuInput("USERMODE LOGIN / SIGN UP",
                         "[1] 로그인\n" +
                         "[2] 회원가입\n" +
                         "[0] 종료");
