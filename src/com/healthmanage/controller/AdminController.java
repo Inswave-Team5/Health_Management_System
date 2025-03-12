@@ -1,6 +1,7 @@
 package com.healthmanage.controller;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import com.healthmanage.model.Admin;
@@ -9,29 +10,40 @@ import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
 import com.healthmanage.service.CouponService;
-import com.healthmanage.utils.SHA256;
+import com.healthmanage.service.UserService;
 import com.healthmanage.view.AdminView;
 
 public class AdminController {
 	private AdminView view;
 	private AdminService adminService;
 	private CouponService couponService;
+	private UserService userService;
 
 	AdminController() {
 		this.view = new AdminView();
 		this.adminService = AdminService.getInstance();
-		this.couponService = couponService.getInstance();
+		this.couponService = CouponService.getInstance();
+		this.userService = UserService.getInstance();
 	}
-	/*----------유저 정보 조회----*/
 
+	public void findUserId(String userId) {
+		String user = userService.findUserId(userId);
+		if (user == null) {
+			view.showMessage("일치하는 회원이 없습니다! 다시 검색해주세요.");
+			return;
+		}
+		view.showMessage(user);
+	}
+
+	/*----------유저 정보 조회----*/
 	public void memberList() {
-		Collection<User> users = adminService.memberList();
-		if (users == null) {
+		List<User> users = userService.findAllUserSortName();
+		if (users == null || users.isEmpty()) {
 			view.showMessage("등록된 회원이 없습니다.");
-		} else {
-			for (User user : users) {
-				view.showMessage(user.toString());
-			}
+			return;
+		}
+		for (User user : users) {
+			view.showMessage(user.toString());
 		}
 	}
 
@@ -135,7 +147,7 @@ public class AdminController {
 		Coupon coupon = couponService.deleteCoupon(delCouponNum);
 		if (coupon == null) {
 			view.showMessage("삭제 실패 - 없는 쿠폰번호 입니다.");
-			return; 
+			return;
 		}
 		view.showMessage(coupon.toString() + "삭제");
 	};
