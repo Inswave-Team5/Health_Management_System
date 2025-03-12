@@ -35,7 +35,8 @@ public class UserController {
 				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
-		};
+		}
+		;
 		userService.save();
 		start();
 	}
@@ -67,6 +68,7 @@ public class UserController {
 				break;
 			case 7:
 				// 비밀번호 변경
+				passwordChange();
 				break;
 			case 0:
 				// 로그아웃
@@ -175,6 +177,38 @@ public class UserController {
 		}
 	}
 
+	public void passwordChange() {
+		User currentUser = (User) Gym.getCurrentUser();
+
+		if (currentUser == null) {
+			userView.showMessage("로그인된 사용자가 없습니다.");
+			return;
+		}
+
+		String currentPw = userView.getInput("현재 비밀번호를 입력하세요:");
+		changeUserPassword(currentUser.getUserId(), currentPw);
+	}
+
+	public void changeUserPassword(String memberNum, String pw) {
+
+		if (!userService.verifyPassword(memberNum, pw)) {
+			userView.showMessage("비밀번호가 올바르지 않습니다.");
+			return;
+		}
+
+		String newPw = userView.getInput("새로운 비밀번호를 입력하세요:");
+		String newPw2 = userView.getInput("새로운 비밀번호를 다시 한번 입력하세요:");
+
+		if (!newPw.equals(newPw2)) {
+			userView.showMessage("비밀번호가 일치하지 않습니다. 다시 시도하세요.");
+			return;
+		}
+
+		userService.updatePassword(memberNum, newPw);
+		userView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
+
+	}
+
 	public void couponUser() {
 		try {
 			String couponNumber = userView.getInput("쿠폰번호 입력: ");
@@ -206,6 +240,15 @@ public class UserController {
 		return userService.isValidPw(password);
 	}
 
+<<<<<<< HEAD
+=======
+	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
+	public boolean isValidCouponNumber(String couponNumber) {
+		String regex = "^[A-Z0-9]{8}$";
+		return couponNumber != null && couponNumber.matches(regex);
+	}
+
+>>>>>>> d087b7cbb8a1bb12f697e6901acfd37b9c88f0a2
 	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
 	private boolean isValidMoneyInput(String money) {
 		try {

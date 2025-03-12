@@ -84,6 +84,25 @@ public class UserService {
 		}
 	}
 
+	public boolean verifyPassword(String memberNum, String pw) {
+		User user = Gym.users.get(memberNum);
+		if (user == null) {
+			return false;
+		}
+		return SHA256.verifyPassword(pw, user.getSalt(), user.getPassword());
+	}
+
+	public void updatePassword(String memberNum, String newPw) {
+		User user = (User)Gym.getCurrentUser();
+		if (user == null) {
+			return;
+		}
+		String newSalt = SHA256.generateSalt();
+		String newHashedPw = SHA256.hashPassword(newPw, newSalt);
+		user.setPassword(newHashedPw, newSalt);
+		logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
+	}
+
 	// 영어 소문자+숫자, 5~12자
 	public boolean isValidId(String userId) {
 		return Pattern.matches("^[a-z0-9]{5,12}$", userId);
@@ -116,13 +135,11 @@ public class UserService {
 
 	// 회원 전체조회
 	private Collection<User> findAllUser() {
-		return Gym.users.values(); 
+		return Gym.users.values();
 	}
-	
+
 	// 회원 이름순 정렬 후 전체조회
-	public List<User> findAllUserSortName() {	    
-	    return findAllUser().stream()
-        .sorted(Comparator.comparing(User::getName))
-        .collect(Collectors.toList());
+	public List<User> findAllUserSortName() {
+		return findAllUser().stream().sorted(Comparator.comparing(User::getName)).collect(Collectors.toList());
 	}
 }
