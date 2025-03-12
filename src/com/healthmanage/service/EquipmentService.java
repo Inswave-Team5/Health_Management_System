@@ -1,14 +1,13 @@
 package com.healthmanage.service;
 
-import com.healthmanage.model.Equipment;
-import com.healthmanage.model.Equipments.EquipmentFactory;
-import com.healthmanage.model.Gym;
-import com.healthmanage.view.UserView;
-import com.healthmanage.view.View;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.healthmanage.model.Equipment;
+import com.healthmanage.model.Gym;
+import com.healthmanage.model.Equipments.EquipmentFactory;
+import com.healthmanage.view.UserView;
 
 public class EquipmentService {
     private static EquipmentService instance;

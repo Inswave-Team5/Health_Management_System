@@ -1,11 +1,11 @@
 package com.healthmanage.controller;
 
+import java.util.List;
+
 import com.healthmanage.model.Equipment;
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.EquipmentService;
 import com.healthmanage.view.UserView;
-
-import java.util.List;
 
 public class EquipmentController {
     private final EquipmentService equipmentService;

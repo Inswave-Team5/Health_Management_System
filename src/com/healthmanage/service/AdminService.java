@@ -1,38 +1,23 @@
 package com.healthmanage.service;
 
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import com.healthmanage.model.Admin;
-import com.healthmanage.model.Attendance;
-import com.healthmanage.model.Coupon;
-import com.healthmanage.model.Gym;
-import com.healthmanage.model.Person;
-import com.healthmanage.model.User;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AdminDAO;
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Admin;
-import com.healthmanage.model.Coupon;
+import com.healthmanage.model.Attendance;
 import com.healthmanage.model.Gym;
-import com.healthmanage.model.Person;
 import com.healthmanage.model.User;
-import com.healthmanage.view.AdminView;
-import com.healthmanage.utils.FileIO;
-
 import com.healthmanage.utils.SHA256;
-
 import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
+import com.healthmanage.view.AdminView;
 
 public class AdminService {
 	private CouponService couponservice;
