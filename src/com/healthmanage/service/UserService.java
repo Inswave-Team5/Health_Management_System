@@ -63,7 +63,6 @@ public class UserService {
 		User newUser = new User(userDTO.getUserId(), hashedPw, userDTO.getName(), salt);
 
 		Gym.users.put(userDTO.getUserId(), newUser);
-
 		logger.addLog("아이디 : " + newUser.getUserId() + " | 이름 : " + newUser.getName() + "님이 회원가입하셨습니다.");
 
 		return newUser;

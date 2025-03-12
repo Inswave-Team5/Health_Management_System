@@ -50,9 +50,6 @@ public class CouponService {
 	}
 
 	public Coupon createCoupon(String number, int coinAmount) {
-	    if (Gym.coupons.containsKey(number)) {
-	        return null;  // 이미 존재하는 경우 null 반환
-	    }
 	    Coupon newCoupon = new Coupon(number, coinAmount);
 	    Gym.coupons.put(number, newCoupon);
 
