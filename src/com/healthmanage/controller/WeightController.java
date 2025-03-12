@@ -4,6 +4,8 @@ import com.healthmanage.model.Gym;
 import com.healthmanage.service.WeightService;
 import com.healthmanage.view.UserView;
 
+import static com.healthmanage.utils.Validations.*;
+
 
 public class WeightController {
     private final WeightService weightService;
@@ -51,8 +53,7 @@ public class WeightController {
                     listWeightByDay();
                     break;
                 case 0:
-                    weightEntry();
-                    break;
+                    return;
                 default:
                     view.showMessage("잘못 선택하였습니다.");
                     break;
@@ -67,8 +68,17 @@ public class WeightController {
             return;
         }
 
-        String weight = view.getInput("몸무게 입력 : ");
-        weightService.addWeight(Gym.getCurrentUser().getUserId(), weight);
+        String weight;
+        while (true) {
+            weight = view.getInput("몸무게 입력 : ");
+            if (validatePositiveDecimal(weight)) {
+                weightService.addWeight(Gym.getCurrentUser().getUserId(), weight);
+                break;  // 유효한 입력이 들어오면 반복문 종료
+            } else {
+                view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
+
     }
 
     public void listWeight(){
@@ -86,8 +96,16 @@ public class WeightController {
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
-        weightService.ListWeightByMonth(Gym.getCurrentUser().getUserId(), month);
+
+        while(true){
+            String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
+            if (validateYearMonth(month)) {
+                weightService.ListWeightByMonth(Gym.getCurrentUser().getUserId(), month);
+                break;  // 유효한 입력이 들어오면 반복문 종료
+            } else {
+                view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
     }
 
     public void listWeightByDay(){
@@ -96,8 +114,16 @@ public class WeightController {
             view.showMessage("로그인 후 이용가능합니다!");
             return;
         }
-        String day = (view.getInput("날짜 입력 (입력 형식 : yyyy-MM-dd) : "));
-        weightService.ListWeightByMonth(Gym.getCurrentUser().getUserId(), day);
+
+        while(true){
+            String day = (view.getInput("날짜 입력 (입력 형식 : yyyy-MM-dd) : "));
+            if (validateYearMonthDay(day)) {
+                weightService.ListWeightByDay(Gym.getCurrentUser().getUserId(), day);
+                break;  // 유효한 입력이 들어오면 반복문 종료
+            } else {
+                view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
     }
 
 }

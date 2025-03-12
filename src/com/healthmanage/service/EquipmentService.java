@@ -2,6 +2,8 @@ package com.healthmanage.service;
 
 import com.healthmanage.model.Equipment;
 import com.healthmanage.model.Equipments.EquipmentFactory;
+import com.healthmanage.model.Gym;
+import com.healthmanage.view.UserView;
 import com.healthmanage.view.View;
 
 import java.util.ArrayList;
@@ -12,9 +14,11 @@ public class EquipmentService {
     private static EquipmentService instance;
     private HashMap<String, List<Equipment>> userWorkoutHistory = new HashMap<>();;
     private LogService logger;
-    
+    private UserView view;
+
     private EquipmentService() {
-    	this.logger = LogService.getInstance();
+    	view = new UserView();
+        this.logger = LogService.getInstance();
     }
 
     public static EquipmentService getInstance() {
@@ -24,11 +28,10 @@ public class EquipmentService {
         return instance;
     }
 
-    public void addWorkoutRecord(String userId, String name, int val1, int val2) {
-//        workoutRecords.add(new WorkoutRecord(userId, equipment));
+    public void addWorkoutRecord(String name, int val1, int val2) {
         Equipment userEquipment = EquipmentFactory.createEquipment(name, val1, val2);
-        userWorkoutHistory.putIfAbsent(userId, new ArrayList<>());
-        userWorkoutHistory.get(userId).add(userEquipment);
+        userWorkoutHistory.putIfAbsent(Gym.getCurrentUser().getUserId(), new ArrayList<>());
+        userWorkoutHistory.get(Gym.getCurrentUser().getUserId()).add(userEquipment);
     }
 
     public List<Equipment> getUserWorkoutHistory(String userId) {

@@ -5,6 +5,9 @@ import com.healthmanage.service.AttendanceService;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.UserView;
 
+import static com.healthmanage.utils.Validations.validateYearMonth;
+import static com.healthmanage.utils.Validations.validateYearMonthDay;
+
 public class AttendanceController {
     private final AttendanceService attendanceService;
     private final UserView view;
@@ -69,8 +72,6 @@ public class AttendanceController {
         }
     }
 
-
-
     public void setEnterTime(){
         if(!Gym.isLoggedIn()) {
             view.showMessage("로그인 후 이용가능합니다!");
@@ -124,9 +125,16 @@ public class AttendanceController {
             view.showMessage("로그인 후 이용가능합니다!");
             System.exit(0);
         }
-        String day = view.getInput("날짜 입력 (입력 형식 : MM-dd) : ");
-        String workOutTimeByDay = attendanceService.getDayWorkOutTime(Gym.getCurrentUser().getUserId(), day);
-        view.showMessage("["+day+"]" + workOutTimeByDay);
+        while(true){
+            String day = (view.getInput("날짜 입력 (입력 형식 : yyyy-MM-dd) : "));
+            if (validateYearMonthDay(day)) {
+                String workOutTimeByDay = attendanceService.getDayWorkOutTime(Gym.getCurrentUser().getUserId(), day);
+                view.showMessage("["+day+"]" + workOutTimeByDay);
+                break;  // 유효한 입력이 들어오면 반복문 종료
+            } else {
+                view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
     }
 
     //월별 누적 운동시간 조회
@@ -135,9 +143,18 @@ public class AttendanceController {
             view.showMessage("로그인 후 이용가능합니다!");
             System.exit(0);
         }
-        String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
-        String workOutTimeByMonth = attendanceService.getMonthTotalWorkOutTime(Gym.getCurrentUser().getUserId(), month);
-        view.showMessage("[" + month + "월 누적 운동시간]" + workOutTimeByMonth);
+
+        while(true){
+            String month = (view.getInput("월 입력 (입력 형식 : yyyy-MM) : "));
+            if (validateYearMonth(month)) {
+                String workOutTimeByMonth = attendanceService.getMonthTotalWorkOutTime(Gym.getCurrentUser().getUserId(), month);
+                view.showMessage("[" + month + "월 누적 운동시간]" + workOutTimeByMonth);
+
+                break;  // 유효한 입력이 들어오면 반복문 종료
+            } else {
+                view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+            }
+        }
     }
 
 }

@@ -43,13 +43,10 @@ public class UserController {
 	public void start() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
-
 			userView.showMessage(key + "번 입력되었습니다.");
-
 			switch (key) {
 			case 1:
 				attendanceController.attendanceEntry();
-
 				break;
 			case 2:
 				attendanceController.timeEntry();
@@ -127,24 +124,24 @@ public class UserController {
 
 		// 나머지 회원 정보 입력
 		String name = userView.getInput("이름 입력: ");
+		String password;
 
 		while (true) {
-			String password = userView.getInput("비밀번호 입력: ");
+			password = userView.getInput("비밀번호 입력: ");
 
 			// 비밀번호 유효성 검사
 			if (!userService.isValidPw(password)) {
 				userView.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
 				continue;
-			} else {
-				// DTO 생성 및 회원가입 진행
-				UserSignUpDTO userDTO = new UserSignUpDTO(userId, password, name);
-				User user = userService.addUser(userDTO);
-				if (user != null) {
-					userView.showMessage(user.getName() + "님 회원가입 완료되었습니다!");
-					break;
-				}
 			}
+
+			break;
 		}
+
+		// DTO 생성 및 회원가입 진행
+		UserSignUpDTO userDTO = new UserSignUpDTO(userId, password, name);
+		userService.addUser(userDTO);
+		userView.showMessage("회원가입 완료!");
 	}
 
 	public boolean loginUser() {
@@ -178,8 +175,18 @@ public class UserController {
 	}
 
 	public void couponUser() {
-		String couponNumber = userView.getInput("쿠폰번호 입력: ");
-		userView.showMessage(userService.useCoupon(couponNumber));
+		try {
+			String couponNumber = userView.getInput("쿠폰번호 입력: ");
+			if (!isValidCouponNumber(couponNumber)) {
+				userView.showMessage("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
+				return;
+			}
+
+			String resultMessage = userService.useCoupon(couponNumber);
+			userView.showMessage(resultMessage);
+		} catch (Exception e) {
+			userView.showMessage("오류가 발생했습니다: " + e.getMessage());
+		}
 	}
 
 	public void addCoinUser() {
@@ -193,6 +200,23 @@ public class UserController {
 		userView.showMessage(resultMessage);
 	}
 
+	// 아이디 입력 안했을 경우
+	private boolean isValidIdInput(String userId) {
+		return userService.isValidId(userId);
+	}
+
+	// 패스워드 입력 안했을 경우
+	private boolean isValidPasswordInput(String password) {
+		return userService.isValidPw(password);
+	}
+
+	
+	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
+	public boolean isValidCouponNumber(String couponNumber) {
+		String regex = "^[A-Z0-9]{8}$";
+		return couponNumber != null && couponNumber.matches(regex);
+	}
+
 	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
 	private boolean isValidMoneyInput(String money) {
 		try {
@@ -202,16 +226,16 @@ public class UserController {
 			return false; // 숫자가 아닌 경우 false 반환
 		}
 	}
-	
+
 	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
-		private boolean isValidCoinInput(String coin) {
-			try {
-				int vaildatedCoin = Integer.parseInt(coin);
-				return vaildatedCoin > 1; // 1원 이상인지 확인
-			} catch (NumberFormatException e) {
-				return false; // 숫자가 아닌 경우 false 반환
-			}
+	private boolean isValidCoinInput(String coin) {
+		try {
+			int vaildatedCoin = Integer.parseInt(coin);
+			return vaildatedCoin > 1; // 1원 이상인지 확인
+		} catch (NumberFormatException e) {
+			return false; // 숫자가 아닌 경우 false 반환
 		}
+	}
 
 	public void withdrawUser() {
 		String receiverId = userView.getInput("받는 사람 ID 입력: ");
@@ -220,7 +244,7 @@ public class UserController {
 			userView.showMessage("수신자를 찾을 수 없습니다.");
 			return;
 		}
-		
+
 		String coin = userView.getInput("이체할 코인 입력: ");
 		if (!isValidCoinInput(coin)) {
 			userView.showMessage("숫자로 된 올바른 코인을 입력해주세요. (1개 이상)");
@@ -228,5 +252,4 @@ public class UserController {
 		}
 		userView.showMessage(userService.withdrawCoin(Integer.parseInt(coin), receiver));
 	}
-
 }
