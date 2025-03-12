@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Admin;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
@@ -46,7 +47,7 @@ public class AdminController {
 			view.showMessage(user.toString());
 		}
 	}
-	
+
 	public void entry() {
 		int key = 0;
 		while (!Gym.isLoggedIn() && (key = Integer.parseInt(view.selectEntryMenu())) != 0) {
@@ -55,13 +56,14 @@ public class AdminController {
 				loginAdmin();
 				break;
 			case 2:
-				//addAdmin();
+				// addAdmin();
 				break;
 			default:
 				view.showMessage("잘못 선택하였습니다.");
 				break;
 			}
-		};
+		}
+		;
 		start();
 	}
 
@@ -77,7 +79,6 @@ public class AdminController {
 				break;
 //			case 3: 로그확인
 //			case 4: 기구관리
-
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
@@ -114,16 +115,21 @@ public class AdminController {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectUserManageMenu())) != 0) {
 			switch (key) {
-			case 1: memberList();
-					break;
-			case 2: UserAttendanceByDay();
-					break;
-			case 3: listUserAttendanceAll();
-					break;
-			case 4: listUserAttendanceByDay();
-					break;
-			case 5: getRank();
-					break;
+			case 1:
+				memberList();
+				break;
+			case 2:
+				UserAttendanceByDay();
+				break;
+			case 3:
+				listUserAttendanceAll();
+				break;
+			case 4:
+				listUserAttendanceByDay();
+				break;
+			case 5:
+				getRank();
+				break;
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
@@ -132,18 +138,62 @@ public class AdminController {
 		Gym.logoutUser();
 		System.out.println("종료합니다.");
 	}
-	
+
+	public void addAdmin() {
+		String adminId;
+		while (true) {
+			// 🔹 View에서 아이디 입력 받기
+			adminId = view.getInput("ID 입력: ");
+
+			// ID 유효성 검사
+			if (!userService.isValidId(adminId)) {
+				view.showMessage("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
+				continue;
+			}
+
+			// 🔹 아이디 중복 검사
+			if (userService.checkId(adminId)) {
+				break;
+			}
+			view.showMessage("이미 존재하는 ID입니다. 다시 입력해주세요.");
+		}
+
+		// 나머지 회원 정보 입력
+		String name = view.getInput("이름 입력: ");
+		String password;
+
+		while (true) {
+			password = view.getInput("비밀번호 입력: ");
+
+			// 비밀번호 유효성 검사
+			if (!userService.isValidPw(password)) {
+				view.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+				continue;
+			}
+
+			break;
+		}
+
+		// DTO 생성 및 회원가입 진행
+		UserSignUpDTO userDTO = new UserSignUpDTO(adminId, password, name);
+		adminService.addAdmin(userDTO);
+		view.showMessage("회원가입 완료!");
+	}
+
 	// 쿠폰관리
 	public void couponManage() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectCouponManageMenu())) != 0) {
 			switch (key) {
-			case 1: addCoupon();		//쿠폰발급
-					break;
-			case 2: findAllCoupon();	//쿠폰조회
-					break;
-			case 3: deleteCoupon();		//쿠폰삭제
-					break;
+			case 1:
+				addCoupon(); // 쿠폰발급
+				break;
+			case 2:
+				findAllCoupon(); // 쿠폰조회
+				break;
+			case 3:
+				deleteCoupon(); // 쿠폰삭제
+				break;
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
