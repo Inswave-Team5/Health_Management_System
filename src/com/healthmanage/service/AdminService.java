@@ -205,8 +205,12 @@ public class AdminService {
 	public void listUserAttendanceAll(String memberNum) {
 		adminView.showMessage("[" + findName(memberNum) + "의 출결 기록]");
 		List<String> attendanceList = attendanceService.listUserAttendaceAll(memberNum);
-		for (String attendance : attendanceList) {
-			adminView.showMessage(attendance);
+		if(attendanceList==null|| attendanceList.isEmpty()){
+			adminView.showMessage("기록이 없습니다.");
+		}else{
+			for (String attendance : attendanceList) {
+				adminView.showMessage(attendance);
+			}
 		}
 	}
 
@@ -214,8 +218,12 @@ public class AdminService {
 	public void listAllUsersAttendanceByDay(String date) {
 		adminView.showMessage("[" + date + "]");
 		HashMap<String, String> map = attendanceService.listAllAttendanceByDay(date);
-		for (String key : map.keySet()) {
-			adminView.showMessage("[" + findName(key) + "]" + map.get(key));
+		if(map==null||map.isEmpty()){
+			adminView.showMessage("기록이 없습니다.");
+		}else{
+			for (String key : map.keySet()) {
+				adminView.showMessage("[" + findName(key) + "]" + map.get(key));
+		}
 		}
 	}
 

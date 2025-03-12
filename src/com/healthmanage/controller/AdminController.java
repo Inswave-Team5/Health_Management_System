@@ -8,7 +8,7 @@ import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
-import com.healthmanage.utils.SHA256;
+import com.healthmanage.utils.Validations;
 import com.healthmanage.view.AdminView;
 
 public class AdminController {
@@ -149,23 +149,57 @@ public class AdminController {
 
 	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void UserAttendanceByDay() {
-		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
-		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+		String id;
+		while(true){
+				String tmp = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+			if(Gym.users.containsKey(tmp)){
+				id = tmp;
+				break;
+			}else{
+				view.showMessage("없는 아이디입니다. 다시 입력해주세요.");
+			}
+		}
 
-		adminService.UserAttendanceByDay(id, date);
+		while(true){
+			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+
+			if(Validations.validatePositiveDecimal(date)){
+				view.showMessage(adminService.UserAttendanceByDay(id, date));
+				break;
+			}else{
+				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+			}
+		}
 	}
 
-	// 개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
+	// 개인 회원 출결 전체 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
 	public void listUserAttendanceAll() {
-		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
 
-		adminService.listUserAttendanceAll(id);
+		while(true){
+			String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+
+			if(Gym.users.containsKey(id)){
+				adminService.listUserAttendanceAll(id);
+				break;
+			}else{
+				view.showMessage("없는 아이디입니다. 다시 입력해주세요.");
+			}
+		}
+
 	}
 
 	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void listUserAttendanceByDay() {
-		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+		while(true){
+			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-		adminService.listAllUsersAttendanceByDay(date);
+			if(Validations.validatePositiveDecimal(date)){
+				adminService.listAllUsersAttendanceByDay(date);
+				break;
+			}else{
+				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+			}
+		}
+
 	}
 }

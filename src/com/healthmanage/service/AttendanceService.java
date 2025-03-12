@@ -74,7 +74,7 @@ public class AttendanceService {
                 }
             }
         }else{
-            view.showMessage("기록이 없습니다!");
+            return "기록이 없습니다.";
         }
         return attendacneByDay;
     }
