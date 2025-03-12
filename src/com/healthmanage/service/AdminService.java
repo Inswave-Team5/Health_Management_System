@@ -106,10 +106,10 @@ public class AdminService {
 		return true;
 	}
 
-	public void memberDelete(String memberNum) { // 삭제
-		Gym.users.remove(memberNum);
-		logger.addLog(memberNum + "님의 User정보가 삭제되었습니다.");
-	}
+//	public void memberDelete(String memberNum) { // 삭제
+//		Gym.users.remove(memberNum);
+//		logger.addLog(memberNum + "님의 User정보가 삭제되었습니다.");
+//	}
 
 	public Admin adminLogin(String adminId, String pw) {
 		if (!Gym.users.containsKey(adminId)) {

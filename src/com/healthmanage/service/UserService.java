@@ -100,21 +100,8 @@ public class UserService {
 		return coinService.addCoin(money);
 	}
 
-	public String withdrawCoin(String coin, String senderId, String receiverId) {
-		User sender = Gym.users.get(senderId);
-		User receiver = Gym.users.get(receiverId);
-
-		if (sender == null || receiver == null) {
-			return "송신자 또는 수신자를 찾을 수 없습니다.";
-		}
-
-		String result = coinService.withdraw(coin, sender, receiver);
-
-		if (result.equals("이체되었습니다.")) {
-			Gym.users.get(sender.getUserId()).setCoin(sender.getCoin());
-			Gym.users.get(receiver.getUserId()).setCoin(receiver.getCoin());
-		}
-
-		return result;
+	public String withdrawCoin(int coin, User receiver) {
+		User sender = Gym.users.get(((User)Gym.getCurrentUser()).getUserId());
+		return coinService.withdraw(coin, sender, receiver);
 	}
 }

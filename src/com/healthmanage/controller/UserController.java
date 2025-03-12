@@ -43,13 +43,10 @@ public class UserController {
 	public void start() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
-
 			userView.showMessage(key + "번 입력되었습니다.");
-
 			switch (key) {
 			case 1:
 				attendanceController.attendanceEntry();
-
 				break;
 			case 2:
 				attendanceController.timeEntry();
@@ -178,31 +175,31 @@ public class UserController {
 	}
 
 	public void couponUser() {
-		 try {
-		        String couponNumber = userView.getInput("쿠폰번호 입력: ");
-		        if (!isValidCouponNumber(couponNumber)) {
-		            userView.showMessage("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
-		            return;
-		        }
+		try {
+			String couponNumber = userView.getInput("쿠폰번호 입력: ");
+			if (!isValidCouponNumber(couponNumber)) {
+				userView.showMessage("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
+				return;
+			}
 
-		        String resultMessage = userService.useCoupon(couponNumber);
-		        userView.showMessage(resultMessage);
-		    } catch (Exception e) {
-		        userView.showMessage("오류가 발생했습니다: " + e.getMessage());
-		    }
+			String resultMessage = userService.useCoupon(couponNumber);
+			userView.showMessage(resultMessage);
+		} catch (Exception e) {
+			userView.showMessage("오류가 발생했습니다: " + e.getMessage());
+		}
 	}
 
 	public void addCoinUser() {
 		String inputMoney = userView.getInput("충전금액 입력: ");
 		// 🔹 Controller에서 입력값 검증 (Validation)
-		if (!isValidCoinInput(inputMoney)) {
+		if (!isValidMoneyInput(inputMoney)) {
 			userView.showMessage("숫자로 된 올바른 충전 금액을 입력해주세요. (1000원 이상)");
 			return;
 		}
 		String resultMessage = userService.addCoin(Integer.parseInt(inputMoney));
 		userView.showMessage(resultMessage);
 	}
-
+	
 	// 아이디 입력 안했을 경우
 	private boolean isValidIdInput(String userId) {
 		return userService.isValidId(userId);
@@ -212,55 +209,47 @@ public class UserController {
 	private boolean isValidPasswordInput(String password) {
 		return userService.isValidPw(password);
 	}
-
-	private boolean isValidCoinInput(String money) {
-		try {
-			int coin = Integer.parseInt(money);
-			return coin > 1000; // 1원 이상인지 확인
-		} catch (NumberFormatException e) {
-			return false; // 숫자가 아닌 경우 false 반환
-		}
-	}
 	
-	 // 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
+	
+	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
 	public boolean isValidCouponNumber(String couponNumber) {
 	    String regex = "^[A-Z0-9]{8}$";
 	    return couponNumber != null && couponNumber.matches(regex);
 	}
 
-	public void withdrawUser() {
-
+	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
+	private boolean isValidMoneyInput(String money) {
 		try {
-			String senderId = userView.getInput("보내는 사람 ID 입력: ");
-			if (senderId.isEmpty()) {
-				throw new IllegalArgumentException("보내는 사람 ID는 비워둘 수 없습니다.");
-			}if (!userService.isValidId(senderId)) {
-				throw new IllegalArgumentException("ID 형식이 올바르지 않습니다.");
-			}
-
-			String receiverId = userView.getInput("받는 사람 ID 입력: ");
-			if (receiverId.isEmpty()) {
-				throw new IllegalArgumentException("받는 사람 ID는 비워둘 수 없습니다.");
-			}if (!userService.isValidId(receiverId)) {
-				throw new IllegalArgumentException("ID 형식이 올바르지 않습니다.");
-			}
-
-			String coin = userView.getInput("이체할 코인 입력: ");
-			try {
-				int coinInput = Integer.parseInt(coin);
-				if (coinInput <= 0) {
-					throw new IllegalArgumentException("이체할 코인은 0보다 커야 합니다.");
-				}
-			} catch (NumberFormatException e) {
-				throw new IllegalArgumentException("유효한 숫자를 입력해주세요.");
-			}
-			userView.showMessage(userService.withdrawCoin(coin, senderId, receiverId));
-
-		} catch (IllegalArgumentException e) {
-			userView.showMessage("입력 오류: " + e.getMessage());
-		} catch (Exception e) {
-			userView.showMessage("알 수 없는 오류가 발생했습니다: " + e.getMessage());
+			int vaildatedMoney = Integer.parseInt(money);
+			return vaildatedMoney > 1000; // 1원 이상인지 확인
+		} catch (NumberFormatException e) {
+			return false; // 숫자가 아닌 경우 false 반환
 		}
+	}
 
+	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
+	private boolean isValidCoinInput(String coin) {
+		try {
+			int vaildatedCoin = Integer.parseInt(coin);
+			return vaildatedCoin > 1; // 1원 이상인지 확인
+		} catch (NumberFormatException e) {
+			return false; // 숫자가 아닌 경우 false 반환
+		}
+	}
+
+	public void withdrawUser() {
+		String receiverId = userView.getInput("받는 사람 ID 입력: ");
+		User receiver = Gym.users.get(receiverId);
+		if (receiver == null) {
+			userView.showMessage("수신자를 찾을 수 없습니다.");
+			return;
+		}
+		
+		String coin = userView.getInput("이체할 코인 입력: ");
+		if (!isValidCoinInput(coin)) {
+			userView.showMessage("숫자로 된 올바른 코인을 입력해주세요. (1개 이상)");
+			return;
+		}
+		userView.showMessage(userService.withdrawCoin(Integer.parseInt(coin), receiver));
 	}
 }

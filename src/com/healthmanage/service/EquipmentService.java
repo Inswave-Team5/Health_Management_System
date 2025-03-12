@@ -31,14 +31,7 @@ public class EquipmentService {
         userWorkoutHistory.get(userId).add(userEquipment);
     }
 
-    public void getUserWorkoutHistory(String userId) {
-        List<Equipment> History = userWorkoutHistory.get(userId);
-        List<Equipment> userHistory = new ArrayList<Equipment>();
-        for (Equipment record : History) {
-            userHistory.add(record);
-        }
-        for(Equipment userRecord : userHistory){
-            view.showMessage(userRecord.toString());
-        }
+    public List<Equipment> getUserWorkoutHistory(String userId) {
+        return userWorkoutHistory.get(userId);
     }
 }

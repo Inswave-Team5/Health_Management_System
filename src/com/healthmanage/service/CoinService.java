@@ -32,15 +32,14 @@ public class CoinService {
 	}
 
 	// 이체(출금)한 유저, 이체받을(입금) 유저, 코인 파일에 저장
-	public String withdraw(String coin, User sender, User receiver) { // 유저 간 계좌 이체
-		int rcoin = Integer.parseInt(coin);
-		if (rcoin > 0 && sender.getCoin() >= rcoin) {
-			sender.setCoin(sender.getCoin() - rcoin);
-			receiver.setCoin(receiver.getCoin() + rcoin);
+	public String withdraw(int coin, User sender, User receiver) { // 유저 간 계좌 이체
+		if (sender.getCoin() >= coin) {
+			sender.setCoin(sender.getCoin() - coin);
+			receiver.setCoin(receiver.getCoin() + coin);
 			logger.addLog(sender.getUserId() + "님이 " + receiver.getUserId() + "님에게 " + coin + "원 이체하셨습니다.");
-			return "이체되었습니다.";
+			return "이체되었습니다. 현재코인 : "+sender.getCoin();
 		} else {
-			return "입력하신 코인을 다시 확인해주세요.";
+			return "코인이 부족합니다. 현재코인 : "+ sender.getCoin();
 		}
 	}
 
