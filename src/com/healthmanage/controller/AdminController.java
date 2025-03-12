@@ -53,7 +53,13 @@ public class AdminController {
 
 	public void entry() {
 		int key = 0;
-		while (!Gym.isLoggedIn() && (key = Integer.parseInt(view.selectEntryMenu())) != 0) {
+		while (!Gym.isLoggedIn()) {
+			try {
+				key = Integer.parseInt(view.selectEntryMenu());				
+			}catch(NumberFormatException e) {
+				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
 			switch (key) {
 			case 1:
 				loginAdmin();
@@ -61,6 +67,9 @@ public class AdminController {
 			case 2:
 				addAdmin();
 				break;
+			case 0:
+				view.showAlert("종료합니다.");
+				return;
 			default:
 				view.showAlert("잘못 선택하였습니다.");
 				break;
