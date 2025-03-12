@@ -96,8 +96,9 @@ public class AdminController {
 			case 2:
 				couponManage();
 				break;
-//			case 3: 로그확인
-//			case 4: 기구관리
+			case 3: 
+				System.out.println("개발중입니다.");
+				break;
 			case 0:
 				Gym.logoutUser();
 				view.showAlert("종료합니다.");
