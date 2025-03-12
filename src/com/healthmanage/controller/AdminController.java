@@ -55,8 +55,8 @@ public class AdminController {
 		int key = 0;
 		while (!Gym.isLoggedIn()) {
 			try {
-				key = Integer.parseInt(view.selectEntryMenu());				
-			}catch(NumberFormatException e) {
+				key = Integer.parseInt(view.selectEntryMenu());
+			} catch (NumberFormatException e) {
 				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
 				continue;
 			}
@@ -74,17 +74,18 @@ public class AdminController {
 				view.showAlert("잘못 선택하였습니다.");
 				break;
 			}
-		};
+		}
+		;
 		adminService.save();// 회원가입된 관리자 저장
 		start();
 	}
 
 	public void start() {
 		int key = 0;
-		while (Gym.isLoggedIn())  {
+		while (Gym.isLoggedIn()) {
 			try {
 				key = Integer.parseInt(view.selectAdminMenu());
-			}catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
 				continue;
 			}
@@ -112,13 +113,12 @@ public class AdminController {
 		String userId = view.getInput("ID 입력: ");
 		String password = view.getInput("비밀번호 입력: ");
 
-		//유효성 검사
+		// 유효성 검사
 		if (!adminService.isValidId(userId) || !adminService.isValidPw(password)) {
-            view.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
-            return false;
-        }
-		
-		
+			view.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+			return false;
+		}
+
 		// 로그인 검증
 		Admin loginSuccess = adminService.adminLogin(userId, password);
 
@@ -134,10 +134,10 @@ public class AdminController {
 
 	public void userManage() {
 		int key = 0;
-		while (Gym.isLoggedIn())  {
+		while (Gym.isLoggedIn()) {
 			try {
-				key = Integer.parseInt(view.selectUserManageMenu());				
-			}catch(NumberFormatException e) {
+				key = Integer.parseInt(view.selectUserManageMenu());
+			} catch (NumberFormatException e) {
 				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
 				continue;
 			}
@@ -216,7 +216,13 @@ public class AdminController {
 	// 쿠폰관리
 	public void couponManage() {
 		int key = 0;
-		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectCouponManageMenu())) != 0) {
+		while (Gym.isLoggedIn()) {
+			try {
+				key = Integer.parseInt(view.selectCouponManageMenu());
+			} catch (NumberFormatException e) {
+				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
 			switch (key) {
 			case 1:
 				addCoupon(); // 쿠폰발급
@@ -227,14 +233,15 @@ public class AdminController {
 			case 3:
 				deleteCoupon(); // 쿠폰삭제
 				break;
-			default:
+			case 0:
 				view.showAlert("종료합니다.");
+				couponService.save(); // 쿠폰관리 끝날 시 자동저장
+				break;
+			default:
+				System.out.println("잘못 선택하였습니다.");
 				break;
 			}
 		}
-//		Gym.logoutUser();
-		couponService.save(); // 쿠폰관리 끝날 시 자동저장
-		view.showAlert("종료합니다.");
 	}
 
 	public void findAllCoupon() {
@@ -257,11 +264,11 @@ public class AdminController {
 		}
 		if (Gym.coupons.containsKey(couponNumber)) {
 			view.showAlert("이미 존재하는 쿠폰번호입니다.");
-	        return;  // 이미 존재하는 경우 null 반환
-	    }
+			return; // 이미 존재하는 경우 null 반환
+		}
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
 		// 트루면
-		
+
 		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
 			view.showAlert("쿠폰 생성이 완료됐습니다.");
 		}
@@ -293,23 +300,23 @@ public class AdminController {
 	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void UserAttendanceByDay() {
 		String id;
-		while(true){
-				String tmp = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
-			if(Gym.users.containsKey(tmp)){
+		while (true) {
+			String tmp = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+			if (Gym.users.containsKey(tmp)) {
 				id = tmp;
 				break;
-			}else{
+			} else {
 				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
 				return;
 			}
 		}
-		while(true){
+		while (true) {
 			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-			if(Validations.validatePositiveDecimal(date)){
+			if (Validations.validatePositiveDecimal(date)) {
 				view.showMessage(adminService.UserAttendanceByDay(id, date));
 				break;
-			}else{
+			} else {
 				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
 			}
 		}
@@ -318,13 +325,13 @@ public class AdminController {
 	// 개인 회원 출결 전체 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
 	public void listUserAttendanceAll() {
 
-		while(true){
+		while (true) {
 			String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
 
-			if(Gym.users.containsKey(id)){
+			if (Gym.users.containsKey(id)) {
 				adminService.listUserAttendanceAll(id);
 				break;
-			}else{
+			} else {
 				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
 				return;
 			}
@@ -334,21 +341,22 @@ public class AdminController {
 
 	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void listUserAttendanceByDay() {
-		while(true){
+		while (true) {
 			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-			if(Validations.validatePositiveDecimal(date)){
+			if (Validations.validatePositiveDecimal(date)) {
 				adminService.listAllUsersAttendanceByDay(date);
 				break;
-			}else{
+			} else {
 				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
 			}
 		}
 
 	}
+
 	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
-		public boolean isValidCouponNumber(String couponNumber) {
-			String regex = "^[A-Z0-9]{8}$";
-			return couponNumber != null && couponNumber.matches(regex);
-		}
+	public boolean isValidCouponNumber(String couponNumber) {
+		String regex = "^[A-Z0-9]{8}$";
+		return couponNumber != null && couponNumber.matches(regex);
+	}
 }
