@@ -134,7 +134,13 @@ public class AdminController {
 
 	public void userManage() {
 		int key = 0;
-		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectUserManageMenu())) != 0) {
+		while (Gym.isLoggedIn())  {
+			try {
+				key = Integer.parseInt(view.selectUserManageMenu());				
+			}catch(NumberFormatException e) {
+				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
 			switch (key) {
 			case 1:
 				memberList();
@@ -151,13 +157,14 @@ public class AdminController {
 			case 5:
 				getRank();
 				break;
-			default:
+			case 0:
 				view.showAlert("종료합니다.");
+				return;
+			default:
+				System.out.println("잘못 선택하였습니다.");
 				break;
 			}
 		}
-//		Gym.logoutUser();
-		view.showAlert("종료합니다.");
 	}
 
 	public void addAdmin() {
