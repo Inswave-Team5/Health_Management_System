@@ -11,6 +11,7 @@ import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
+import com.healthmanage.utils.Validations;
 import com.healthmanage.service.CouponService;
 import com.healthmanage.service.UserService;
 import com.healthmanage.view.AdminView;
@@ -38,6 +39,7 @@ public class AdminController {
 	}
 
 	/*----------유저 정보 조회----*/
+
 	public void memberList() {
 		List<User> users = userService.findAllUserSortName();
 		if (users == null || users.isEmpty()) {
@@ -93,6 +95,13 @@ public class AdminController {
 		String userId = view.getInput("ID 입력: ");
 		String password = view.getInput("비밀번호 입력: ");
 
+		//유효성 검사
+		if (!adminService.isValidId(userId) || !adminService.isValidPw(password)) {
+            view.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+            return false;
+        }
+		
+		
 		// 로그인 검증
 		Admin loginSuccess = adminService.adminLogin(userId, password);
 
@@ -167,7 +176,7 @@ public class AdminController {
 			}
 			break;
 		}
-		
+
 		String code = view.getInput("관리자 코드 입력: ");
 		if (!code.equals(EnvConfig.get("ADMIN_CODE"))) {
 			view.getInput("관리자 코드가 틀렸습니다.");
@@ -252,23 +261,58 @@ public class AdminController {
 
 	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void UserAttendanceByDay() {
-		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
-		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+		String id;
+		while(true){
+				String tmp = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+			if(Gym.users.containsKey(tmp)){
+				id = tmp;
+				break;
+			}else{
+				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
+				return;
+			}
+		}
+		while(true){
+			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-		adminService.UserAttendanceByDay(id, date);
+			if(Validations.validatePositiveDecimal(date)){
+				view.showMessage(adminService.UserAttendanceByDay(id, date));
+				break;
+			}else{
+				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+			}
+		}
 	}
 
-	// 개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
+	// 개인 회원 출결 전체 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
 	public void listUserAttendanceAll() {
-		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
 
-		adminService.listUserAttendanceAll(id);
+		while(true){
+			String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+
+			if(Gym.users.containsKey(id)){
+				adminService.listUserAttendanceAll(id);
+				break;
+			}else{
+				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
+				return;
+			}
+		}
+
 	}
 
 	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void listUserAttendanceByDay() {
-		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+		while(true){
+			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-		adminService.listAllUsersAttendanceByDay(date);
+			if(Validations.validatePositiveDecimal(date)){
+				adminService.listAllUsersAttendanceByDay(date);
+				break;
+			}else{
+				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+			}
+		}
+
 	}
 }
