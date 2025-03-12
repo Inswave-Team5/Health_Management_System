@@ -1,6 +1,5 @@
 package com.healthmanage.model;
 
-
 import com.healthmanage.utils.Time;
 
 public class Attendance {
@@ -39,7 +38,6 @@ public class Attendance {
     public String getWorkOutTime() {
         return workOutTime;
     }
-
 
     public void setLeaveTime(String leaveTime) {
         this.leaveTime = leaveTime;

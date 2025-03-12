@@ -1,6 +1,5 @@
 package com.healthmanage.model;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Gym {
@@ -10,11 +9,7 @@ public class Gym {
 	// Map<String, Machine> machines;
 	private static Person currentUser;
 
-	Gym() {
-		/*users = new HashMap<String, User>();
-		admins = new HashMap<String, Admin>();
-		coupons = new HashMap<String, Coupon>();*/
-	}
+	Gym() {}
 
 	public static void setCurrentUser(Person user) {
 		currentUser = user;

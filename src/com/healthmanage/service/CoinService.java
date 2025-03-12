@@ -1,9 +1,10 @@
 package com.healthmanage.service;
 
-import com.healthmanage.model.User;
 import java.io.PrintWriter;
+
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.model.Gym;
+import com.healthmanage.model.User;
 
 public class CoinService {
 	private static CoinService instance;

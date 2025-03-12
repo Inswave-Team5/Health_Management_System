@@ -13,7 +13,6 @@ public class User extends Person implements Serializable{
 		this.remainTime = 0;
 	}
 	
-
 	public int getCoin() {
 		return coin;
 	}
@@ -29,6 +28,9 @@ public class User extends Person implements Serializable{
 	public void setRemainTime(int remainTime) {
 		this.remainTime = remainTime;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "User [userId=" + userId +  ", name=" + name + ", coin=" + coin + ",  remainTime=" + remainTime +"]";
+	}
 }

@@ -1,7 +1,6 @@
 package com.healthmanage.service;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.CouponDAO;
