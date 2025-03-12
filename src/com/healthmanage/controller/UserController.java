@@ -35,8 +35,8 @@ public class UserController {
 				userView.showMessage("잘못 선택하였습니다.");
 				break;
 			}
-		}
-		;
+		};
+		userService.save();
 		start();
 	}
 
@@ -100,6 +100,7 @@ public class UserController {
 				break;
 			}
 		}
+		userService.save();
 		System.out.println("종료합니다...");
 	}
 

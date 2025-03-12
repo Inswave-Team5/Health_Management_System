@@ -105,9 +105,7 @@ public class AdminService {
 			return null;
 		}
 		Admin admin = Gym.admins.get(adminId);
-
-		boolean isPasswordValid = SHA256.verifyPassword(pw, "", admin.getPassword());
-
+		boolean isPasswordValid = SHA256.verifyPassword(pw, admin.getSalt(), admin.getPassword());
 		if (isPasswordValid) {
 			logger.addLog(adminId + "님이 로그인 하셨습니다.");
 			return admin;
