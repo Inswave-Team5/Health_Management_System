@@ -23,7 +23,13 @@ public class UserController {
 
 	public void entry() {
 		int key = 0;
-		while (!Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectLogin())) != 0) {
+		while (!Gym.isLoggedIn()) {
+			try {
+				key = Integer.parseInt(userView.selectLogin());
+			}catch(NumberFormatException e) {
+				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
 			switch (key) {
 			case 1:
 				loginUser();
@@ -31,12 +37,14 @@ public class UserController {
 			case 2:
 				registerUser();
 				break;
+			case 0:
+				userView.showAlert("종료합니다.");
+				return;
 			default:
 				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
-		}
-		;
+		};
 		userService.save();
 		start();
 	}
