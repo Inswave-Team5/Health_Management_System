@@ -1,12 +1,13 @@
 package com.healthmanage.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.healthmanage.model.Weight;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
-
-import java.util.*;
-
-
 
 public class WeightService {
     private Map<String, List<Weight>> weightList = new HashMap<>(); //각 사용자의 몸무게 기록을 담을 map

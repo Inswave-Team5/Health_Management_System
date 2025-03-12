@@ -1,12 +1,12 @@
 package com.healthmanage.controller;
 
+import static com.healthmanage.utils.Validations.validateYearMonth;
+import static com.healthmanage.utils.Validations.validateYearMonthDay;
+
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.AttendanceService;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.UserView;
-
-import static com.healthmanage.utils.Validations.validateYearMonth;
-import static com.healthmanage.utils.Validations.validateYearMonthDay;
 
 public class AttendanceController {
     private final AttendanceService attendanceService;
