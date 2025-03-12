@@ -23,8 +23,6 @@ public class AdminService {
 	private CouponService couponservice;
 	private AttendanceService attendanceService;
 	private static AdminService instance;
-	private List<Attendance> attendanceList = new ArrayList<>();
-
 	private AdminView adminView;
 	private Time time;
 	private AdminDAO adminDAO;
@@ -35,6 +33,8 @@ public class AdminService {
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
 		this.time = Time.getInstance();
+		this.adminView = new AdminView();
+		this.attendanceService = AttendanceService.getInstance();
 	}
 
 	public static AdminService getInstance() {
@@ -99,36 +99,6 @@ public class AdminService {
 	public boolean isValidPw(String adminPw) {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
 	}
-
-	// 회원 운동시간 누적기준 정렬
-	public Map<String, String> getRank() {
-		// attendance list 받아오기
-
-		// 시간 계산하기
-		Map<String, String> tmpList = new HashMap<>();
-
-		for (int i = 0; i < attendanceList.size(); i++) {
-			String tmpId = attendanceList.get(i).getUserId();
-			String tmpTime = attendanceList.get(i).getWorkOutTime();
-
-			if (!tmpList.containsKey(tmpId)) {
-				tmpList.put(tmpId, tmpTime);
-			} else {
-				String existingTime = tmpList.get(tmpId);
-				Duration duration1 = time.totalDuration(existingTime);
-				Duration duration2 = time.totalDuration(tmpTime);
-
-				tmpList.replace(tmpId, duration1.plus(duration2).toString());
-			}
-
-		}
-
-		// attendance list 넘겨주기
-		Map<String, String> sortedList = Sort.sortRank2(tmpList);
-
-		return sortedList;
-	}
-
 	// 회원 아이디로 이름찾기
 	public String findName(String memberNum) {
 		if (Gym.users.containsKey(memberNum)) {

@@ -7,7 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.AttDAO;
 import com.healthmanage.model.Attendance;
+import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
 
@@ -17,12 +20,15 @@ public class AttendanceService {
     public static Map<String, List<Attendance>> attendanceList; //user 의 출근시간 기록
     private Time time;
     private LogService logger;
+    private AttDAO attDAO;
 
     public AttendanceService() {
     	this.attendanceList = new HashMap<>();
     	this.view = new View();
     	this.time = Time.getInstance();
     	this.logger = LogService.getInstance();
+//        attDAO = new AttDAO();
+        load();
     }
 
     public static AttendanceService getInstance() {
@@ -43,6 +49,16 @@ public class AttendanceService {
         attendanceList.get(userId).add(attendance);
         logger.addLog(userId+"님이"+ date + enterTime+"에 입장하셨습니다.");
     }
+    
+    public void load() {
+    	attDAO.loadAtts(EnvConfig.get("ATT_FILE"));
+		logger.addLog(EnvConfig.get("ATT_FILE") + " File LOAD");
+    }
+    
+    public void save() {
+    	attDAO.saveAtts();
+		logger.addLog(EnvConfig.get("ATT_FILE") + " File SAVE");
+	}
 
     //퇴근 시간 기록
     public void setLeaveTime(String userId){
@@ -173,5 +189,34 @@ public class AttendanceService {
         // 누적된 시간을 "HH:mm:ss" 형식으로 변환하여 반환
         return time.transTimeFormat(totalDuration);
     }
+    
+	// 회원 운동시간 누적기준 정렬
+//	public Map<String, String> getRank() {
+//		// attendance list 받아오기
+//
+//		// 시간 계산하기
+//		Map<String, String> tmpList = new HashMap<>();
+//
+//		for (int i = 0; i < attendanceList.size(); i++) {
+//			String tmpId = attendanceList.get(i).getUserId();
+//			String tmpTime = attendanceList.get(i).getWorkOutTime();
+//
+//			if (!tmpList.containsKey(tmpId)) {
+//				tmpList.put(tmpId, tmpTime);
+//			} else {
+//				String existingTime = tmpList.get(tmpId);
+//				Duration duration1 = time.totalDuration(existingTime);
+//				Duration duration2 = time.totalDuration(tmpTime);
+//
+//				tmpList.replace(tmpId, duration1.plus(duration2).toString());
+//			}
+//
+//		}
+
+		// attendance list 넘겨주기
+//		Map<String, String> sortedList = Sort.sortRank2(tmpList);
+//
+//		return sortedList;
+//	}
 
 }

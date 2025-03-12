@@ -317,7 +317,7 @@ public class AdminController {
 		while (true) {
 			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-			if (Validations.validatePositiveDecimal(date)) {
+			if (Validations.validateYearMonthDay(date)) {
 				view.showMessage(adminService.UserAttendanceByDay(id, date));
 				break;
 			} else {
@@ -348,7 +348,7 @@ public class AdminController {
 		while (true) {
 			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-			if (Validations.validatePositiveDecimal(date)) {
+			if (Validations.validateYearMonthDay(date)) {
 				adminService.listAllUsersAttendanceByDay(date);
 				break;
 			} else {
