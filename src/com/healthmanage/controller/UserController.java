@@ -199,7 +199,7 @@ public class UserController {
 		String resultMessage = userService.addCoin(Integer.parseInt(inputMoney));
 		userView.showMessage(resultMessage);
 	}
-	
+
 	// 아이디 입력 안했을 경우
 	private boolean isValidIdInput(String userId) {
 		return userService.isValidId(userId);
@@ -209,12 +209,12 @@ public class UserController {
 	private boolean isValidPasswordInput(String password) {
 		return userService.isValidPw(password);
 	}
-	
+
 	
 	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
 	public boolean isValidCouponNumber(String couponNumber) {
-	    String regex = "^[A-Z0-9]{8}$";
-	    return couponNumber != null && couponNumber.matches(regex);
+		String regex = "^[A-Z0-9]{8}$";
+		return couponNumber != null && couponNumber.matches(regex);
 	}
 
 	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
@@ -244,7 +244,7 @@ public class UserController {
 			userView.showMessage("수신자를 찾을 수 없습니다.");
 			return;
 		}
-		
+
 		String coin = userView.getInput("이체할 코인 입력: ");
 		if (!isValidCoinInput(coin)) {
 			userView.showMessage("숫자로 된 올바른 코인을 입력해주세요. (1개 이상)");
