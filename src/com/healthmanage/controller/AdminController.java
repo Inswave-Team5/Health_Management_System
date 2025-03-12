@@ -62,8 +62,8 @@ public class AdminController {
 				view.showMessage("잘못 선택하였습니다.");
 				break;
 			}
-		}
-		;
+		};
+		adminService.save();// 회원가입된 관리자 저장
 		start();
 	}
 
@@ -80,7 +80,7 @@ public class AdminController {
 //			case 3: 로그확인
 //			case 4: 기구관리
 			default:
-				System.out.println("잘못 선택하였습니다.");
+				view.showMessage("종료합니다.");
 				break;
 			}
 		}
@@ -131,12 +131,12 @@ public class AdminController {
 				getRank();
 				break;
 			default:
-				System.out.println("잘못 선택하였습니다.");
+				view.showMessage("종료합니다.");
 				break;
 			}
 		}
-		Gym.logoutUser();
-		System.out.println("종료합니다.");
+//		Gym.logoutUser();
+		view.showMessage("종료합니다.");
 	}
 
 	public void addAdmin() {
@@ -195,12 +195,13 @@ public class AdminController {
 				deleteCoupon(); // 쿠폰삭제
 				break;
 			default:
-				System.out.println("잘못 선택하였습니다.");
+				view.showMessage("종료합니다.");
 				break;
 			}
 		}
-		Gym.logoutUser();
-		System.out.println("종료합니다.");
+//		Gym.logoutUser();
+		couponService.save(); // 쿠폰관리 끝날 시 자동저장
+		view.showMessage("종료합니다.");
 	}
 
 	public void findAllCoupon() {
