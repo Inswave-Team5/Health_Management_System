@@ -2,9 +2,6 @@ package com.healthmanage.controller;
 
 import static com.healthmanage.utils.Validations.validateYearMonth;
 import static com.healthmanage.utils.Validations.validateYearMonthDay;
-
-import javax.swing.JSpinner.NumberEditor;
-
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.AttendanceService;
 import com.healthmanage.utils.Time;
@@ -52,7 +49,6 @@ public class AttendanceController {
             }
         }
     }
-
 
     public void timeEntry() {
         int key=0;

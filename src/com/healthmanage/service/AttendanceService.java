@@ -23,21 +23,25 @@ public class AttendanceService {
     private AttDAO attDAO;
 
     public AttendanceService() {
+    	load();
     	this.attendanceList = new HashMap<>();
     	this.view = new View();
     	this.time = Time.getInstance();
     	this.logger = LogService.getInstance();
-//        attDAO = new AttDAO();
+        attDAO = new AttDAO();
         load();
     }
+    
+    public Map<String, List<Attendance>> getAttendanceList() {
+		return attendanceList;
+	}
 
-    public static AttendanceService getInstance() {
+	public static AttendanceService getInstance() {
         if (instance == null) {
             instance = new AttendanceService();
         }
         return instance;
     }
-
     //출근 시간 기록
     public void setEnterTime(String userId){
         String date = time.currentDay();

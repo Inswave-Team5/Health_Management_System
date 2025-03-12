@@ -12,7 +12,7 @@ public class Attendance implements Serializable {
 	private String workOutTime;
 	private Time time;
 	// private String status; - 현재 출근중인지 상태확인(부가기능)
-
+	
 	public Attendance(String userId, String date, String enterTime) {
 		this.userId = userId;
 		this.date = date;

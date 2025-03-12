@@ -119,7 +119,7 @@ public class FileIO {
 			fis = new FileInputStream(file);
 			bis = new BufferedInputStream(fis);
 			ois = new ObjectInputStream(bis);
-
+			
 			return (Map<String, List<Attendance>>) ois.readObject();
 
 		} catch (Exception e) {

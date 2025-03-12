@@ -11,6 +11,7 @@ import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
+import com.healthmanage.service.AttendanceService;
 import com.healthmanage.utils.Validations;
 import com.healthmanage.service.CouponService;
 import com.healthmanage.service.UserService;
@@ -21,6 +22,7 @@ public class AdminController {
 	private AdminService adminService;
 	private CouponService couponService;
 	private UserService userService;
+	private AttendanceService attendanceService;
 
 	AdminController() {
 		this.view = new AdminView();
@@ -155,9 +157,9 @@ public class AdminController {
 			case 4:
 				listUserAttendanceByDay();
 				break;
-			case 5:
-				getRank();
-				break;
+//			case 5:
+//				getRank();
+//				break;
 			case 0:
 				view.showAlert("종료합니다.");
 				return;
@@ -288,18 +290,18 @@ public class AdminController {
 		view.showAlert(coupon.toString() + "삭제");
 	};
 
-	public void getRank() {
-		Map<String, String> ranks = adminService.getRank();
-		if (ranks == null) {
-			view.showAlert("랭킹정보가 없습니다.");
-		} else {
-			int cnt = 1;
-			for (Map.Entry<String, String> entry : ranks.entrySet()) {
-				view.showRank(cnt, entry.getKey(), entry.getValue());
-				cnt++;
-			}
-		}
-	}
+//	public void getRank() {
+//		Map<String, String> ranks = attendanceService.getRank();
+//		if (ranks == null) {
+//			view.showAlert("랭킹정보가 없습니다.");
+//		} else {
+//			int cnt = 1;
+//			for (Map.Entry<String, String> entry : ranks.entrySet()) {
+//				view.showRank(cnt, entry.getKey(), entry.getValue());
+//				cnt++;
+//			}
+//		}
+//	}
 
 	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void UserAttendanceByDay() {
@@ -340,7 +342,6 @@ public class AdminController {
 				return;
 			}
 		}
-
 	}
 
 	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
@@ -355,7 +356,6 @@ public class AdminController {
 				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
 			}
 		}
-
 	}
 
 	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
