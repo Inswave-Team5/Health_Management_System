@@ -35,7 +35,8 @@ public class UserController {
 				userView.showMessage("잘못 선택하였습니다.");
 				break;
 			}
-		};
+		}
+		;
 		userService.save();
 		start();
 	}
@@ -67,6 +68,9 @@ public class UserController {
 				break;
 			case 7:
 				// 비밀번호 변경
+				String memberNum = userView.getInput("아이디를 입력하세요:");
+				String currentPw = userView.getInput("현재 비밀번호를 입력하세요:");
+				changeUserPassword(memberNum, currentPw);
 				break;
 			case 0:
 				// 로그아웃
@@ -175,6 +179,24 @@ public class UserController {
 		}
 	}
 
+
+	public void changeUserPassword(String memberNum, String pw) {
+		if (!userService.isValidUserId(memberNum)) {
+			userView.showMessage("유효하지 않은 사용자 ID입니다.");
+			return;
+		}
+
+		if (!userService.verifyPassword(memberNum, pw)) {
+			userView.showMessage("비밀번호가 올바르지 않습니다.");
+			return;
+		}
+
+		String newPw = userView.getInput("새로운 비밀번호를 입력하세요.");
+		userService.updatePassword(memberNum, newPw);
+
+		userView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
+	}
+
 	public void couponUser() {
 		try {
 			String couponNumber = userView.getInput("쿠폰번호 입력: ");
@@ -211,7 +233,6 @@ public class UserController {
 		return userService.isValidPw(password);
 	}
 
-	
 	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
 	public boolean isValidCouponNumber(String couponNumber) {
 		String regex = "^[A-Z0-9]{8}$";
