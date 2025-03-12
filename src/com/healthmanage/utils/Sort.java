@@ -18,12 +18,6 @@ public class Sort {
              .sorted(Comparator.comparing(Coupon::getNumber))
              .collect(Collectors.toList());
  }
-
- public static List<User> sortUser(Collection<User> list) {
-     return list.stream()
-             .sorted(Comparator.comparing(User::getName))
-             .collect(Collectors.toList());
- }
  
  public static List<Duration> sortRank(Collection<Duration> list) {
     return list.stream()
