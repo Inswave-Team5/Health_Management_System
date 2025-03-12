@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import com.healthmanage.config.EnvConfig;
 import com.healthmanage.model.Attendance;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
@@ -14,7 +15,7 @@ import com.healthmanage.view.View;
 public class AttendanceService {
     private View view;
     private static AttendanceService instance;
-    private Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
+    public static Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
     private Time time;
     private LogService logger;
 

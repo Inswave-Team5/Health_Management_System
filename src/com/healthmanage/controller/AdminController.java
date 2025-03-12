@@ -6,27 +6,30 @@ import java.util.Map;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dto.UserSignUpDTO;
-import com.healthmanage.model.Admin;
-import com.healthmanage.model.Coupon;
-import com.healthmanage.model.Gym;
-import com.healthmanage.model.User;
+import com.healthmanage.model.*;
 import com.healthmanage.service.AdminService;
+import com.healthmanage.service.MachineService;
 import com.healthmanage.utils.Validations;
 import com.healthmanage.service.CouponService;
 import com.healthmanage.service.UserService;
 import com.healthmanage.view.AdminView;
+
+import static com.healthmanage.utils.Validations.validNumber;
+import static com.healthmanage.utils.Validations.validateMachineType;
 
 public class AdminController {
 	private AdminView view;
 	private AdminService adminService;
 	private CouponService couponService;
 	private UserService userService;
+	private MachineService machineService;
 
 	AdminController() {
 		this.view = new AdminView();
 		this.adminService = AdminService.getInstance();
 		this.couponService = CouponService.getInstance();
 		this.userService = UserService.getInstance();
+		this.machineService = MachineService.getInstance();
 	}
 
 	public void findUserId(String userId) {
@@ -97,7 +100,7 @@ public class AdminController {
 				couponManage();
 				break;
 			case 3: 
-				System.out.println("개발중입니다.");
+				machineManage();
 				break;
 			case 0:
 				Gym.logoutUser();
@@ -308,17 +311,17 @@ public class AdminController {
 				break;
 			} else {
 				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
-				return;
 			}
 		}
 		while (true) {
 			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-			if (Validations.validatePositiveDecimal(date)) {
+			if (Validations.validateYearMonthDay(date)) {
 				view.showMessage(adminService.UserAttendanceByDay(id, date));
 				break;
 			} else {
 				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+				return;
 			}
 		}
 	}
@@ -354,6 +357,69 @@ public class AdminController {
 		}
 
 	}
+
+	public void machineManage() {
+		int key = 0;
+		while (Gym.isLoggedIn()) {
+			try {
+				key = Integer.parseInt(view.selectMachineManageMenu());
+			} catch (NumberFormatException e) {
+				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
+			switch (key) {
+				case 1:
+					machineService.listMachines();
+					break;
+				case 2:
+					addMachine();
+					break;
+				case 3:
+					deleteMachine();
+					break;
+				case 0:
+					view.showAlert("종료합니다.");
+					return;
+				default:
+					System.out.println("잘못 선택하였습니다.");
+					break;
+			}
+		}
+	}
+
+	//머신 추가
+	public void addMachine() {
+		String name = view.getInput("등록할 머신 이름 입력해주세요 : ");
+		String type;
+		while(true) {
+			type = view.getInput("등록할 머신 타입을 입력해주세요 (유산소/근력) : ");
+			if(validateMachineType(type)) {
+				machineService.addMachine(name, type);
+				view.showMessage("등록이 완료되었습니다.");
+				break;
+			}else{
+				view.showMessage("잘못된 입력입니다. [유산소] [근력] 중에 타입을 입력해주세요.");
+			}
+
+		}
+
+	}
+
+	public void deleteMachine() {
+		machineService.listMachines();
+		String id;
+		while (true) {
+			id = view.getInput("삭제할 머신의 번호를 입력해주세요 : ");
+			if(validNumber(id)){
+				machineService.removeMachine(id);
+				view.showMessage("삭제가 완료되었습니다.");
+				break;
+			}else{
+				view.showMessage("잘못된 머신 번호입니다. 다시 입력해주세요.");
+			}
+		}
+	}
+
 
 	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
 	public boolean isValidCouponNumber(String couponNumber) {

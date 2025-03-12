@@ -13,14 +13,14 @@ public class UserController {
 	private final UserView userView;
 	AttendanceController attendanceController;
 	WeightController weightController;
-	EquipmentController equipmentController;
+	MachineController machineController;
 
 	public UserController() {
 		this.userService = UserService.getInstance();
 		this.userView = new UserView();
 		this.attendanceController = new AttendanceController();
 		this.weightController = new WeightController();
-		this.equipmentController = new EquipmentController();
+		this.machineController = new MachineController();
 	}
 
 	public void entry() {
@@ -73,7 +73,7 @@ public class UserController {
 				weightController.weightEntry();
 				break;
 			case 4:
-				equipmentController.equipmentEntry();
+				machineController.machineEntry();
 				break;
 			case 5:
 				// 쿠폰등록
