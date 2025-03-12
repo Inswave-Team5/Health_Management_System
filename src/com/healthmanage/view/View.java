@@ -26,9 +26,12 @@ public class View {
         System.out.print(">> ");
         return scan.nextLine();
     }
-
-    public void showMessage(String message) {
+    public void showAlert(String message) {
         System.out.println("\n[💬 알림] " + message);
+    }
+    
+    public void showMessage(String message) {
+        System.out.println(message);
     }
 
     public String selectMenu() {

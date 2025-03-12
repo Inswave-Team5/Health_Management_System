@@ -32,7 +32,7 @@ public class UserController {
 				registerUser();
 				break;
 			default:
-				userView.showMessage("잘못 선택하였습니다.");
+				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
 		};
@@ -43,7 +43,7 @@ public class UserController {
 	public void start() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
-			userView.showMessage(key + "번 입력되었습니다.");
+			userView.showAlert(key + "번 입력되었습니다.");
 			switch (key) {
 			case 1:
 				attendanceController.attendanceEntry();
@@ -73,7 +73,7 @@ public class UserController {
 				Gym.logoutUser();
 				break;
 			default:
-				userView.showMessage("잘못 선택하였습니다.");
+				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
 		}
@@ -84,7 +84,7 @@ public class UserController {
 	public void coinEntry() {
 		int key = 0;
 		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.coinSelectMenu())) != 0) {
-			userView.showMessage(key + "번 입력되었습니다.");
+			userView.showAlert(key + "번 입력되었습니다.");
 			switch (key) {
 			case 1:
 				addCoinUser();
@@ -96,7 +96,7 @@ public class UserController {
 				start();
 				break;
 			default:
-				userView.showMessage("잘못 선택하였습니다.");
+				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
 		}
@@ -112,7 +112,7 @@ public class UserController {
 
 			// ID 유효성 검사
 			if (!userService.isValidId(userId)) {
-				userView.showMessage("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
+				userView.showAlert("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
 				continue;
 			}
 
@@ -120,7 +120,7 @@ public class UserController {
 			if (userService.checkId(userId)) {
 				break;
 			}
-			userView.showMessage("이미 존재하는 ID입니다. 다시 입력해주세요.");
+			userView.showAlert("이미 존재하는 ID입니다. 다시 입력해주세요.");
 		}
 
 		// 나머지 회원 정보 입력
@@ -132,7 +132,7 @@ public class UserController {
 
 			// 비밀번호 유효성 검사
 			if (!userService.isValidPw(password)) {
-				userView.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+				userView.showAlert("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
 				continue;
 			}
 
@@ -142,7 +142,7 @@ public class UserController {
 		// DTO 생성 및 회원가입 진행
 		UserSignUpDTO userDTO = new UserSignUpDTO(userId, password, name);
 		userService.addUser(userDTO);
-		userView.showMessage("회원가입 완료!");
+		userView.showAlert("회원가입 완료!");
 	}
 
 	public boolean loginUser() {
@@ -151,14 +151,14 @@ public class UserController {
 
 		// 유효성 검사
 		if (!userService.isValidId(userId) || !userService.isValidPw(password)) {
-			userView.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+			userView.showAlert("ID 또는 비밀번호 형식이 올바르지 않습니다.");
 			return false;
 		}
 
 		// 유저 정보 가져오기
 		User user = Gym.users.get(userId);
 		if (user == null) {
-			userView.showMessage("로그인 실패. 존재하지 않는 아이디입니다.");
+			userView.showAlert("로그인 실패. 존재하지 않는 아이디입니다.");
 			return false;
 		}
 
@@ -166,11 +166,11 @@ public class UserController {
 		User loginSuccess = userService.userLogin(userId, password);
 
 		if (loginSuccess != null) {
-			userView.showMessage("로그인 성공!");
+			userView.showAlert("로그인 성공!");
 			Gym.setCurrentUser(loginSuccess);
 			return true;
 		} else {
-			userView.showMessage("로그인 실패. 비밀번호를 확인하세요.");
+			userView.showAlert("로그인 실패. 비밀번호를 확인하세요.");
 			return false;
 		}
 	}
@@ -179,14 +179,14 @@ public class UserController {
 		try {
 			String couponNumber = userView.getInput("쿠폰번호 입력: ");
 			if (!isValidCouponNumber(couponNumber)) {
-				userView.showMessage("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
+				userView.showAlert("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
 				return;
 			}
 
 			String resultMessage = userService.useCoupon(couponNumber);
 			userView.showMessage(resultMessage);
 		} catch (Exception e) {
-			userView.showMessage("오류가 발생했습니다: " + e.getMessage());
+			userView.showAlert("오류가 발생했습니다: " + e.getMessage());
 		}
 	}
 
@@ -194,7 +194,7 @@ public class UserController {
 		String inputMoney = userView.getInput("충전금액 입력: ");
 		// 🔹 Controller에서 입력값 검증 (Validation)
 		if (!isValidMoneyInput(inputMoney)) {
-			userView.showMessage("숫자로 된 올바른 충전 금액을 입력해주세요. (1000원 이상)");
+			userView.showAlert("숫자로 된 올바른 충전 금액을 입력해주세요. (1000원 이상)");
 			return;
 		}
 		String resultMessage = userService.addCoin(Integer.parseInt(inputMoney));
@@ -242,13 +242,13 @@ public class UserController {
 		String receiverId = userView.getInput("받는 사람 ID 입력: ");
 		User receiver = Gym.users.get(receiverId);
 		if (receiver == null) {
-			userView.showMessage("수신자를 찾을 수 없습니다.");
+			userView.showAlert("수신자를 찾을 수 없습니다.");
 			return;
 		}
 
 		String coin = userView.getInput("이체할 코인 입력: ");
 		if (!isValidCoinInput(coin)) {
-			userView.showMessage("숫자로 된 올바른 코인을 입력해주세요. (1개 이상)");
+			userView.showAlert("숫자로 된 올바른 코인을 입력해주세요. (1개 이상)");
 			return;
 		}
 		userView.showMessage(userService.withdrawCoin(Integer.parseInt(coin), receiver));

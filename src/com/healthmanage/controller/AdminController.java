@@ -31,7 +31,7 @@ public class AdminController {
 	public void findUserId(String userId) {
 		String user = userService.findUserId(userId);
 		if (user == null) {
-			view.showMessage("일치하는 회원이 없습니다! 다시 검색해주세요.");
+			view.showAlert("일치하는 회원이 없습니다! 다시 검색해주세요.");
 			return;
 		}
 		view.showMessage(user);
@@ -41,7 +41,7 @@ public class AdminController {
 	public void memberList() {
 		List<User> users = userService.findAllUserSortName();
 		if (users == null || users.isEmpty()) {
-			view.showMessage("등록된 회원이 없습니다.");
+			view.showAlert("등록된 회원이 없습니다.");
 			return;
 		}
 		for (User user : users) {
@@ -60,7 +60,7 @@ public class AdminController {
 				addAdmin();
 				break;
 			default:
-				view.showMessage("잘못 선택하였습니다.");
+				view.showAlert("잘못 선택하였습니다.");
 				break;
 			}
 		};
@@ -81,12 +81,12 @@ public class AdminController {
 //			case 3: 로그확인
 //			case 4: 기구관리
 			default:
-				view.showMessage("종료합니다.");
+				view.showAlert("종료합니다.");
 				break;
 			}
 		}
 		Gym.logoutUser();
-		System.out.println("종료합니다.");
+		view.showAlert("종료합니다.");
 	}
 
 	public boolean loginAdmin() {
@@ -97,11 +97,11 @@ public class AdminController {
 		Admin loginSuccess = adminService.adminLogin(userId, password);
 
 		if (loginSuccess != null) {
-			view.showMessage("로그인 성공!");
+			view.showAlert("로그인 성공!");
 			Gym.setCurrentUser(loginSuccess);
 			return true;
 		} else {
-			view.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
+			view.showAlert("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
 			return false;
 		}
 	}
@@ -126,12 +126,12 @@ public class AdminController {
 				getRank();
 				break;
 			default:
-				view.showMessage("종료합니다.");
+				view.showAlert("종료합니다.");
 				break;
 			}
 		}
 //		Gym.logoutUser();
-		view.showMessage("종료합니다.");
+		view.showAlert("종료합니다.");
 	}
 
 	public void addAdmin() {
@@ -142,7 +142,7 @@ public class AdminController {
 
 			// ID 유효성 검사
 			if (!userService.isValidId(adminId)) {
-				view.showMessage("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
+				view.showAlert("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
 				continue;
 			}
 
@@ -150,7 +150,7 @@ public class AdminController {
 			if (userService.checkId(adminId)) {
 				break;
 			}
-			view.showMessage("이미 존재하는 ID입니다. 다시 입력해주세요.");
+			view.showAlert("이미 존재하는 ID입니다. 다시 입력해주세요.");
 		}
 
 		// 나머지 회원 정보 입력
@@ -162,7 +162,7 @@ public class AdminController {
 
 			// 비밀번호 유효성 검사
 			if (!userService.isValidPw(password)) {
-				view.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+				view.showAlert("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
 				continue;
 			}
 			break;
@@ -177,7 +177,7 @@ public class AdminController {
 		// DTO 생성 및 회원가입 진행
 		UserSignUpDTO userDTO = new UserSignUpDTO(adminId, password, name);
 		adminService.addAdmin(userDTO);
-		view.showMessage("회원가입 완료!");
+		view.showAlert("회원가입 완료!");
 	}
 
 	// 쿠폰관리
@@ -195,20 +195,20 @@ public class AdminController {
 				deleteCoupon(); // 쿠폰삭제
 				break;
 			default:
-				view.showMessage("종료합니다.");
+				view.showAlert("종료합니다.");
 				break;
 			}
 		}
 //		Gym.logoutUser();
 		couponService.save(); // 쿠폰관리 끝날 시 자동저장
-		view.showMessage("종료합니다.");
+		view.showAlert("종료합니다.");
 	}
 
 	public void findAllCoupon() {
 		Collection<Coupon> coupons = couponService.findAllCoupons();
 
 		if (coupons == null || coupons.isEmpty()) {
-			view.showMessage("쿠폰정보가 없습니다.");
+			view.showAlert("쿠폰정보가 없습니다.");
 			return;
 		}
 		for (Coupon coupon : coupons) {
@@ -221,26 +221,26 @@ public class AdminController {
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
 		// 트루면
 		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
-			view.showMessage("쿠폰 생성이 완료됐습니다.");
+			view.showAlert("쿠폰 생성이 완료됐습니다.");
 			return;
 		}
-		view.showMessage("이미 존재하는 쿠폰번호입니다.");
+		view.showAlert("이미 존재하는 쿠폰번호입니다.");
 	};
 
 	public void deleteCoupon() {
 		String delCouponNum = view.getInput("삭제할 쿠폰 번호 입력 : ");
 		Coupon coupon = couponService.deleteCoupon(delCouponNum);
 		if (coupon == null) {
-			view.showMessage("삭제 실패 - 없는 쿠폰번호 입니다.");
+			view.showAlert("삭제 실패 - 없는 쿠폰번호 입니다.");
 			return;
 		}
-		view.showMessage(coupon.toString() + "삭제");
+		view.showAlert(coupon.toString() + "삭제");
 	};
 
 	public void getRank() {
 		Map<String, String> ranks = adminService.getRank();
 		if (ranks == null) {
-			view.showMessage("랭킹정보가 없습니다.");
+			view.showAlert("랭킹정보가 없습니다.");
 		} else {
 			int cnt = 1;
 			for (Map.Entry<String, String> entry : ranks.entrySet()) {
