@@ -55,8 +55,13 @@ public class AttendanceController {
 
     public void timeEntry() {
         int key=0;
-        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.TimeSelectMenu())) != 0) {
-
+        while (Gym.isLoggedIn()) {
+        	try {
+        		key = Integer.parseInt(view.TimeSelectMenu());        		
+        	}catch(NumberFormatException e) {
+        		view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+        	}
             view.showMessage(key + "번 입력되었습니다.");
 
             switch (key) {
@@ -73,6 +78,7 @@ public class AttendanceController {
                     getWorkOutTime();
                     break;
                 case 0:
+                	view.showAlert("종료합니다.");
                     return;
                 default:
                     view.showMessage("잘못 선택하였습니다.");
