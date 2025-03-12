@@ -39,17 +39,16 @@ public class CoinService {
 		int price = coin * 1000;
 		try {
 			PrintWriter pw = new PrintWriter(EnvConfig.get("RECEIPT_PATH"));
-			pw.println("┌───────────────────────────────┐");
-			pw.println("│            [영 수 증]           │");
-			pw.println("├────────────┬─────┬──────┬─────┤");
-			pw.printf("│ %-10s │ %3s │ %4d │ %4d │\n", userName, userId);
-			pw.println("├────────────┼─────┼──────┼─────┤");
-			pw.printf("│ %-25s %6d │\n", "충전코인", "금액", coin, price);
-			pw.printf("│ %-25s %6d │\n", "CASH", inputMoney);
-			pw.printf("│ %-25s %6d │\n", "CHANGE", change);
-			pw.println("├────────────┴─────┴──────┴─────┤");
-			pw.printf("│ %-25s %6d │\n", "현재 보유 코인", coinAmount);
-			pw.println("└───────────────────────────────┘");
+			pw.println("┌────────────────────────────┐");
+			pw.println("│        [ 영 수 증 ]         │");
+			pw.println("├────────────────────────────┤");
+			pw.printf("│ %-8s : %16s │\n", "충전코인", String.format("%,d", coin));
+			pw.printf("│ %-8s : %16s │\n", "금액", String.format("%,d", price));
+			pw.printf("│ %-8s : %16s │\n", "CASH", String.format("%,d", inputMoney));
+			pw.printf("│ %-8s : %16s │\n", "CHANGE", String.format("%,d", change));
+			pw.println("├────────────────────────────┤");
+			pw.printf("│ %-8s : %16s │\n", "Total", String.format("%,d", coinAmount));
+			pw.println("└────────────────────────────┘");
 			pw.println();
 			pw.close();
 		} catch (Exception e) {
