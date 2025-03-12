@@ -9,7 +9,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.healthmanage.model.Attendance;
 
 public class FileIO {
 	public static void createFile(String filePath) {
@@ -84,6 +87,40 @@ public class FileIO {
 			ois = new ObjectInputStream(bis);
 
 			return (Map<String, T>) ois.readObject();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			try {
+				ois.close();
+				bis.close();
+				fis.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+	}
+	
+	public static Map<String, List<Attendance>> infoAttLoad(String filePath) {
+		System.out.println(filePath);
+		File file = new File(filePath);
+		
+		// 파일이 존재하는지 확인
+        if (!file.exists() || file.length() == 0) {
+            System.out.println("⚠️ 파일이 존재하지 않습니다: " + filePath);
+            return new HashMap<String, List<Attendance>	>(); // 기본 객체 반환 (또는 예외 발생 가능)
+        }
+		
+		FileInputStream fis = null;
+		BufferedInputStream bis = null;
+		ObjectInputStream ois = null;
+		try {
+			fis = new FileInputStream(file);
+			bis = new BufferedInputStream(fis);
+			ois = new ObjectInputStream(bis);
+
+			return (Map<String, List<Attendance>>) ois.readObject();
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -9,11 +9,13 @@ public class GymService {
 	private CouponService couponService;
 	private UserService userService;
 	private AdminService adminService;
+	private AttendanceService attendanceService;
 
 	public GymService() {
 		this.couponService = CouponService.getInstance();
 		this.userService = UserService.getInstance();
 		this.adminService = AdminService.getInstance();
+		this.attendanceService = AttendanceService.getInstance();
 	}
 
 	public void load() {
@@ -26,6 +28,7 @@ public class GymService {
 		this.couponService.save();
 		this.userService.save();
 		this.adminService.save();
+		attendanceService.save();
 	}
 
 	public void adminInit() {
