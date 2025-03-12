@@ -81,7 +81,13 @@ public class AdminController {
 
 	public void start() {
 		int key = 0;
-		while (Gym.isLoggedIn() && (key = Integer.parseInt(view.selectAdminMenu())) != 0) {
+		while (Gym.isLoggedIn())  {
+			try {
+				key = Integer.parseInt(view.selectAdminMenu());
+			}catch(NumberFormatException e) {
+				view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
 			switch (key) {
 			case 1:
 				userManage();
@@ -91,13 +97,15 @@ public class AdminController {
 				break;
 //			case 3: 로그확인
 //			case 4: 기구관리
-			default:
+			case 0:
+				Gym.logoutUser();
 				view.showAlert("종료합니다.");
+				return;
+			default:
+				System.out.println("잘못 선택하였습니다.");
 				break;
 			}
 		}
-		Gym.logoutUser();
-		view.showAlert("종료합니다.");
 	}
 
 	public boolean loginAdmin() {
