@@ -71,29 +71,6 @@ public class AdminService {
 		logger.addLog(EnvConfig.get("ADMIN_FILE") + " File SAVE");
 	}
 
-	public boolean pwChange(String memberNum, String pw) { // 비밀번호 수정
-
-		User user = Gym.users.get(memberNum);
-		if (user == null) {
-			adminView.showMessage("사용자를 찾을 수 없습니다.");
-			return false;
-		}
-
-		if (!SHA256.verifyPassword(pw, user.getSalt(), user.getPassword())) {
-			adminView.showMessage("비밀번호가 올바르지 않습니다.");
-			return false;
-		}
-
-		String newPw = adminView.getInput("새로운 비밀번호를 입력하세요.");
-		String newSalt = SHA256.generateSalt();
-		String newHashedPw = SHA256.hashPassword(newPw, newSalt);
-
-		user.setPassword(newHashedPw, newSalt);
-
-		adminView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
-		logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
-		return true;
-	}
 
 //	public void memberDelete(String memberNum) { // 삭제
 //		Gym.users.remove(memberNum);

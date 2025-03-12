@@ -87,55 +87,24 @@ public class UserService {
 		}
 	}
 
-//	public boolean pwChange(String memberNum, String pw) { // 비밀번호 수정
-//
-//		User user = Gym.users.get(memberNum);
-//		if (user == null) {
-//			adminView.showMessage("사용자를 찾을 수 없습니다.");
-//			return false;
-//		}
-//
-//		if (!SHA256.verifyPassword(pw, user.getSalt(), user.getPassword())) {
-//			adminView.showMessage("비밀번호가 올바르지 않습니다.");
-//			return false;
-//		}
-//
-//		String newPw = adminView.getInput("새로운 비밀번호를 입력하세요.");
-//		String newSalt = SHA256.generateSalt();
-//		String newHashedPw = SHA256.hashPassword(newPw, newSalt);
-//
-//		user.setPassword(newHashedPw, newSalt);
-//
-//		adminView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
-//		logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
-//		return true;
-//	}
-	
-	
-	public boolean isValidUserId(String memberNum) {
-	    return Gym.users.containsKey(memberNum);
-	}
-
 	public boolean verifyPassword(String memberNum, String pw) {
-	    User user = Gym.users.get(memberNum);
-	    if (user == null) {
-	        return false;
-	    }
-	    return SHA256.verifyPassword(pw, user.getSalt(), user.getPassword());
+		User user = Gym.users.get(memberNum);
+		if (user == null) {
+			return false;
+		}
+		return SHA256.verifyPassword(pw, user.getSalt(), user.getPassword());
 	}
 
 	public void updatePassword(String memberNum, String newPw) {
-	    User user = Gym.users.get(memberNum);
-	    if (user == null) {
-	        return;
-	    }
-	    String newSalt = SHA256.generateSalt();
-	    String newHashedPw = SHA256.hashPassword(newPw, newSalt);
-	    user.setPassword(newHashedPw, newSalt);
-	    logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
+		User user = (User)Gym.getCurrentUser();
+		if (user == null) {
+			return;
+		}
+		String newSalt = SHA256.generateSalt();
+		String newHashedPw = SHA256.hashPassword(newPw, newSalt);
+		user.setPassword(newHashedPw, newSalt);
+		logger.addLog(memberNum + "님의 비밀번호가 변경되었습니다.");
 	}
-
-	
 
 	// 영어 소문자+숫자, 5~12자
 	public boolean isValidId(String userId) {
