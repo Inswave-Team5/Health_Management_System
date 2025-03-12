@@ -35,6 +35,8 @@ public class AdminService {
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
 		this.time = Time.getInstance();
+		this.adminView = new AdminView();
+		this.attendanceService = AttendanceService.getInstance();
 	}
 
 	public static AdminService getInstance() {

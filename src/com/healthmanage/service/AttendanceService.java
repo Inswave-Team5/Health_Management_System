@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.AttDAO;
 import com.healthmanage.model.Attendance;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
@@ -15,14 +16,17 @@ import com.healthmanage.view.View;
 public class AttendanceService {
     private View view;
     private static AttendanceService instance;
-    public static Map<String, List<Attendance>> attendanceList = new HashMap<>(); //user 의 출근시간 기록
+    public static Map<String, List<Attendance>> attendanceList;//user 의 출근시간 기록
     private Time time;
     private LogService logger;
+    private AttDAO attDAO;
 
     public AttendanceService() {
         view = new View();
         time = Time.getInstance();
         logger = LogService.getInstance();
+        attDAO = new AttDAO();
+        load();
     }
 
     public static AttendanceService getInstance() {
@@ -43,6 +47,16 @@ public class AttendanceService {
         attendanceList.get(userId).add(attendance);
         logger.addLog(userId+"님이"+ date + enterTime+"에 입장하셨습니다.");
     }
+    
+    public void load() {
+    	attDAO.loadAtts(EnvConfig.get("ATT_FILE"));
+		logger.addLog(EnvConfig.get("ATT_FILE") + " File LOAD");
+    }
+    
+    public void save() {
+    	attDAO.saveAtts();
+		logger.addLog(EnvConfig.get("ATT_FILE") + " File SAVE");
+	}
 
     //퇴근 시간 기록
     public void setLeaveTime(String userId){

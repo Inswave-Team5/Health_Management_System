@@ -44,6 +44,7 @@ public class AttendanceController {
                     break;
                 case 0:
                 	view.showAlert("종료합니다.");
+                	attendanceService.save();
                     return;
                 default:
                     view.showMessage("잘못 선택하였습니다.");
