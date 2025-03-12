@@ -236,7 +236,7 @@ public class AdminController {
 			case 0:
 				view.showAlert("종료합니다.");
 				couponService.save(); // 쿠폰관리 끝날 시 자동저장
-				break;
+				return;
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
