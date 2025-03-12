@@ -25,7 +25,7 @@ public class GymController {
 		while ((key = Integer.parseInt(view.selectMenu())) != 0) {
 			switch (key) {
 			case 1 :
-				adminController.start();
+				adminController.entry();
 				break;
 			case 2 :
 				userController.entry();

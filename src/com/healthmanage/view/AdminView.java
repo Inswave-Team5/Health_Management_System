@@ -7,6 +7,10 @@ public class AdminView extends View {
 		super();
 	}
 	
+	public String selectEntryMenu() {
+		return getInput("1. 로그인 2. 관리자등록 0. 종료");
+	}
+	
 	public String selectAdminMenu() {
 		return getInput("관리자 모드입니다. \n "
 				+ "1:회원관리 2:쿠폰관리 3:기구관리 0:종료");

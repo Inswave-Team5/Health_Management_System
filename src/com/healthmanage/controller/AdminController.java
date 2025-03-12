@@ -46,12 +46,22 @@ public class AdminController {
 			view.showMessage(user.toString());
 		}
 	}
-
+	
 	public void entry() {
-		while (!Gym.isLoggedIn()) {
-			loginAdmin();
-		}
-		;
+		int key = 0;
+		while (!Gym.isLoggedIn() && (key = Integer.parseInt(view.selectEntryMenu())) != 0) {
+			switch (key) {
+			case 1:
+				loginAdmin();
+				break;
+			case 2:
+				//addAdmin();
+				break;
+			default:
+				view.showMessage("잘못 선택하였습니다.");
+				break;
+			}
+		};
 		start();
 	}
 
@@ -67,12 +77,7 @@ public class AdminController {
 				break;
 //			case 3: 로그확인
 //			case 4: 기구관리
-				
-				/*
-				 * case 1: addBook(); break; case 2: removeBook(); break; case 3: searchBook();
-				 * break; case 4: listBook(); break; case 5: listISBN(); break; case 6: save();
-				 * break; case 7: load(); break;
-				 */
+
 			default:
 				System.out.println("잘못 선택하였습니다.");
 				break;
