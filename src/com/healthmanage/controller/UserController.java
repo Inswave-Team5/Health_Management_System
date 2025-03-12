@@ -178,11 +178,6 @@ public class UserController {
 	public void couponUser() {
 		try {
 			String couponNumber = userView.getInput("쿠폰번호 입력: ");
-			if (!isValidCouponNumber(couponNumber)) {
-				userView.showAlert("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
-				return;
-			}
-
 			String resultMessage = userService.useCoupon(couponNumber);
 			userView.showMessage(resultMessage);
 		} catch (Exception e) {
@@ -209,13 +204,6 @@ public class UserController {
 	// 패스워드 입력 안했을 경우
 	private boolean isValidPasswordInput(String password) {
 		return userService.isValidPw(password);
-	}
-
-	
-	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
-	public boolean isValidCouponNumber(String couponNumber) {
-		String regex = "^[A-Z0-9]{8}$";
-		return couponNumber != null && couponNumber.matches(regex);
 	}
 
 	// 🔹 숫자 여부 및 최소 금액 검증하는 함수

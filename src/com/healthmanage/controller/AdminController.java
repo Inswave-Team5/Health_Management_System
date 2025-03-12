@@ -227,13 +227,20 @@ public class AdminController {
 
 	public void addCoupon() {
 		String couponNumber = view.getInput("생성할 쿠폰 번호 입력 : ");
-		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
-		// 트루면
-		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
-			view.showAlert("쿠폰 생성이 완료됐습니다.");
+		if (!isValidCouponNumber(couponNumber)) {
+			view.showAlert("유효하지 않은 쿠폰번호 형식입니다. 8자리의 영문 대문자와 숫자로 입력해주세요.");
 			return;
 		}
-		view.showAlert("이미 존재하는 쿠폰번호입니다.");
+		if (Gym.coupons.containsKey(couponNumber)) {
+			view.showAlert("이미 존재하는 쿠폰번호입니다.");
+	        return;  // 이미 존재하는 경우 null 반환
+	    }
+		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
+		// 트루면
+		
+		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
+			view.showAlert("쿠폰 생성이 완료됐습니다.");
+		}
 	};
 
 	public void deleteCoupon() {
@@ -315,4 +322,9 @@ public class AdminController {
 		}
 
 	}
+	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
+		public boolean isValidCouponNumber(String couponNumber) {
+			String regex = "^[A-Z0-9]{8}$";
+			return couponNumber != null && couponNumber.matches(regex);
+		}
 }
