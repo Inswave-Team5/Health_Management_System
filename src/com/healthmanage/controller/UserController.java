@@ -26,7 +26,7 @@ public class UserController {
 		while (!Gym.isLoggedIn()) {
 			try {
 				key = Integer.parseInt(userView.selectLogin());
-			}catch(NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
 				continue;
 			}
@@ -44,14 +44,21 @@ public class UserController {
 				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
-		};
+		}
+		;
 		userService.save();
 		start();
 	}
 
 	public void start() {
 		int key = 0;
-		while (Gym.isLoggedIn() && (key = Integer.parseInt(userView.selectMenu())) != 0) {
+		while (Gym.isLoggedIn()) {
+			try {
+				key = Integer.parseInt(userView.selectMenu());
+			} catch (NumberFormatException e) {
+				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+			}
 			userView.showAlert(key + "번 입력되었습니다.");
 			switch (key) {
 			case 1:
@@ -81,14 +88,13 @@ public class UserController {
 			case 0:
 				// 로그아웃
 				Gym.logoutUser();
-				break;
+				System.out.println("종료합니다...");
+				return;
 			default:
 				userView.showAlert("잘못 선택하였습니다.");
 				break;
 			}
 		}
-		Gym.logoutUser();
-		System.out.println("종료합니다...");
 	}
 
 	public void coinEntry() {
