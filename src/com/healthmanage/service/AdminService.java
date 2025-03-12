@@ -1,45 +1,29 @@
 package com.healthmanage.service;
 
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import com.healthmanage.model.Admin;
-import com.healthmanage.model.Attendance;
-import com.healthmanage.model.Coupon;
-import com.healthmanage.model.Gym;
-import com.healthmanage.model.Person;
-import com.healthmanage.model.User;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AdminDAO;
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Admin;
-import com.healthmanage.model.Coupon;
+import com.healthmanage.model.Attendance;
 import com.healthmanage.model.Gym;
-import com.healthmanage.model.Person;
 import com.healthmanage.model.User;
-import com.healthmanage.view.AdminView;
-import com.healthmanage.utils.FileIO;
-
 import com.healthmanage.utils.SHA256;
-
 import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
+import com.healthmanage.view.AdminView;
 
 public class AdminService {
 	private CouponService couponservice;
 	private AttendanceService attendanceService;
 	private static AdminService instance;
 	private List<Attendance> attendanceList = new ArrayList<>();
-	private UserService userService;
 
 	private AdminView adminView;
 	private Time time;
@@ -51,7 +35,6 @@ public class AdminService {
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
 		this.time = Time.getInstance();
-		this.userService = UserService.getInstance();
 	}
 
 	public static AdminService getInstance() {
@@ -70,7 +53,6 @@ public class AdminService {
 		adminDAO.saveAdmins();
 		logger.addLog(EnvConfig.get("ADMIN_FILE") + " File SAVE");
 	}
-
 
 //	public void memberDelete(String memberNum) { // 삭제
 //		Gym.users.remove(memberNum);
@@ -118,6 +100,13 @@ public class AdminService {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
 	}
 
+	public boolean addCoupon(String number, int coinAmount) {
+		if (couponservice.createCoupon(number, coinAmount) == null) {
+			return false;
+		}
+		return true;
+	}
+
 	// 회원 운동시간 누적기준 정렬
 	public Map<String, String> getRank() {
 		// attendance list 받아오기
@@ -147,18 +136,32 @@ public class AdminService {
 		return sortedList;
 	}
 
+	// 회원 아이디로 이름찾기
+	public String findName(String memberNum) {
+		if (Gym.users.containsKey(memberNum)) {
+			return Gym.users.get(memberNum).getName();
+		} else {
+			adminView.showMessage("일치하는 회원이 없습니다! 다시 검색해주세요.");
+			return null;
+		}
+	}
+
 	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //회원 아이디와 날짜 입력 받고 회원 출결 출력
 	public String UserAttendanceByDay(String memberNum, String date) {
 		adminView.showMessage("[" + date + "]");
-		return "[" + userService.findUserId(memberNum) + "]" + attendanceService.getAttendacneByDay(memberNum, date);
+		return "[" + findName(memberNum) + "]" + attendanceService.getAttendacneByDay(memberNum, date);
 	}
 
 	// 개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
 	public void listUserAttendanceAll(String memberNum) {
-		adminView.showMessage("[" + userService.findUserId(memberNum) + "의 출결 기록]");
+		adminView.showMessage("[" + findName(memberNum) + "의 출결 기록]");
 		List<String> attendanceList = attendanceService.listUserAttendaceAll(memberNum);
-		for (String attendance : attendanceList) {
-			adminView.showMessage(attendance);
+		if(attendanceList==null|| attendanceList.isEmpty()){
+			adminView.showMessage("기록이 없습니다.");
+		}else{
+			for (String attendance : attendanceList) {
+				adminView.showMessage(attendance);
+			}
 		}
 	}
 
@@ -166,8 +169,12 @@ public class AdminService {
 	public void listAllUsersAttendanceByDay(String date) {
 		adminView.showMessage("[" + date + "]");
 		HashMap<String, String> map = attendanceService.listAllAttendanceByDay(date);
-		for (String key : map.keySet()) {
-			adminView.showMessage("[" + userService.findUserId(key) + "]" + map.get(key));
+		if(map==null||map.isEmpty()){
+			adminView.showMessage("기록이 없습니다.");
+		}else{
+			for (String key : map.keySet()) {
+				adminView.showMessage("[" + findName(key) + "]" + map.get(key));
+		}
 		}
 	}
 

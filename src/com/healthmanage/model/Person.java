@@ -3,9 +3,9 @@ package com.healthmanage.model;
 import java.io.Serializable;
 
 public class Person implements Serializable{
-	private String userId;
-	private String name;
-	private String password;
+	protected String userId;
+	protected String name;
+	protected String password;
 	private String salt;
 
 	Person(String name, String password, String userId, String salt) {
@@ -42,6 +42,6 @@ public class Person implements Serializable{
 
 	@Override
 	public String toString() {
-		return "[ userId=" + userId + ", name=" + name + ", password=" + password + " ]";
+		return "[ userId=" + userId + ", name=" + name + "]";
 	}
 }

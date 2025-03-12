@@ -11,6 +11,7 @@ import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.AdminService;
+import com.healthmanage.utils.Validations;
 import com.healthmanage.service.CouponService;
 import com.healthmanage.service.UserService;
 import com.healthmanage.view.AdminView;
@@ -31,17 +32,18 @@ public class AdminController {
 	public void findUserId(String userId) {
 		String user = userService.findUserId(userId);
 		if (user == null) {
-			view.showMessage("일치하는 회원이 없습니다! 다시 검색해주세요.");
+			view.showAlert("일치하는 회원이 없습니다! 다시 검색해주세요.");
 			return;
 		}
 		view.showMessage(user);
 	}
 
 	/*----------유저 정보 조회----*/
+
 	public void memberList() {
 		List<User> users = userService.findAllUserSortName();
 		if (users == null || users.isEmpty()) {
-			view.showMessage("등록된 회원이 없습니다.");
+			view.showAlert("등록된 회원이 없습니다.");
 			return;
 		}
 		for (User user : users) {
@@ -60,7 +62,7 @@ public class AdminController {
 				addAdmin();
 				break;
 			default:
-				view.showMessage("잘못 선택하였습니다.");
+				view.showAlert("잘못 선택하였습니다.");
 				break;
 			}
 		};
@@ -81,27 +83,34 @@ public class AdminController {
 //			case 3: 로그확인
 //			case 4: 기구관리
 			default:
-				view.showMessage("종료합니다.");
+				view.showAlert("종료합니다.");
 				break;
 			}
 		}
 		Gym.logoutUser();
-		System.out.println("종료합니다.");
+		view.showAlert("종료합니다.");
 	}
 
 	public boolean loginAdmin() {
 		String userId = view.getInput("ID 입력: ");
 		String password = view.getInput("비밀번호 입력: ");
 
+		//유효성 검사
+		if (!adminService.isValidId(userId) || !adminService.isValidPw(password)) {
+            view.showMessage("ID 또는 비밀번호 형식이 올바르지 않습니다.");
+            return false;
+        }
+		
+		
 		// 로그인 검증
 		Admin loginSuccess = adminService.adminLogin(userId, password);
 
 		if (loginSuccess != null) {
-			view.showMessage("로그인 성공!");
+			view.showAlert("로그인 성공!");
 			Gym.setCurrentUser(loginSuccess);
 			return true;
 		} else {
-			view.showMessage("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
+			view.showAlert("로그인 실패. 아이디 또는 비밀번호를 확인하세요.");
 			return false;
 		}
 	}
@@ -126,12 +135,12 @@ public class AdminController {
 				getRank();
 				break;
 			default:
-				view.showMessage("종료합니다.");
+				view.showAlert("종료합니다.");
 				break;
 			}
 		}
 //		Gym.logoutUser();
-		view.showMessage("종료합니다.");
+		view.showAlert("종료합니다.");
 	}
 
 	public void addAdmin() {
@@ -142,7 +151,7 @@ public class AdminController {
 
 			// ID 유효성 검사
 			if (!userService.isValidId(adminId)) {
-				view.showMessage("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
+				view.showAlert("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
 				continue;
 			}
 
@@ -150,7 +159,7 @@ public class AdminController {
 			if (userService.checkId(adminId)) {
 				break;
 			}
-			view.showMessage("이미 존재하는 ID입니다. 다시 입력해주세요.");
+			view.showAlert("이미 존재하는 ID입니다. 다시 입력해주세요.");
 		}
 
 		// 나머지 회원 정보 입력
@@ -162,12 +171,12 @@ public class AdminController {
 
 			// 비밀번호 유효성 검사
 			if (!userService.isValidPw(password)) {
-				view.showMessage("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
+				view.showAlert("비밀번호는 8~16자이며, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.");
 				continue;
 			}
 			break;
 		}
-		
+
 		String code = view.getInput("관리자 코드 입력: ");
 		if (!code.equals(EnvConfig.get("ADMIN_CODE"))) {
 			view.getInput("관리자 코드가 틀렸습니다.");
@@ -177,7 +186,7 @@ public class AdminController {
 		// DTO 생성 및 회원가입 진행
 		UserSignUpDTO userDTO = new UserSignUpDTO(adminId, password, name);
 		adminService.addAdmin(userDTO);
-		view.showMessage("회원가입 완료!");
+		view.showAlert("회원가입 완료!");
 	}
 
 	// 쿠폰관리
@@ -195,20 +204,20 @@ public class AdminController {
 				deleteCoupon(); // 쿠폰삭제
 				break;
 			default:
-				view.showMessage("종료합니다.");
+				view.showAlert("종료합니다.");
 				break;
 			}
 		}
 //		Gym.logoutUser();
 		couponService.save(); // 쿠폰관리 끝날 시 자동저장
-		view.showMessage("종료합니다.");
+		view.showAlert("종료합니다.");
 	}
 
 	public void findAllCoupon() {
 		Collection<Coupon> coupons = couponService.findAllCoupons();
 
 		if (coupons == null || coupons.isEmpty()) {
-			view.showMessage("쿠폰정보가 없습니다.");
+			view.showAlert("쿠폰정보가 없습니다.");
 			return;
 		}
 		for (Coupon coupon : coupons) {
@@ -221,26 +230,26 @@ public class AdminController {
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
 		// 트루면
 		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
-			view.showMessage("쿠폰 생성이 완료됐습니다.");
+			view.showAlert("쿠폰 생성이 완료됐습니다.");
 			return;
 		}
-		view.showMessage("이미 존재하는 쿠폰번호입니다.");
+		view.showAlert("이미 존재하는 쿠폰번호입니다.");
 	};
 
 	public void deleteCoupon() {
 		String delCouponNum = view.getInput("삭제할 쿠폰 번호 입력 : ");
 		Coupon coupon = couponService.deleteCoupon(delCouponNum);
 		if (coupon == null) {
-			view.showMessage("삭제 실패 - 없는 쿠폰번호 입니다.");
+			view.showAlert("삭제 실패 - 없는 쿠폰번호 입니다.");
 			return;
 		}
-		view.showMessage(coupon.toString() + "삭제");
+		view.showAlert(coupon.toString() + "삭제");
 	};
 
 	public void getRank() {
 		Map<String, String> ranks = adminService.getRank();
 		if (ranks == null) {
-			view.showMessage("랭킹정보가 없습니다.");
+			view.showAlert("랭킹정보가 없습니다.");
 		} else {
 			int cnt = 1;
 			for (Map.Entry<String, String> entry : ranks.entrySet()) {
@@ -252,23 +261,58 @@ public class AdminController {
 
 	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void UserAttendanceByDay() {
-		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
-		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+		String id;
+		while(true){
+				String tmp = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+			if(Gym.users.containsKey(tmp)){
+				id = tmp;
+				break;
+			}else{
+				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
+				return;
+			}
+		}
+		while(true){
+			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-		adminService.UserAttendanceByDay(id, date);
+			if(Validations.validatePositiveDecimal(date)){
+				view.showMessage(adminService.UserAttendanceByDay(id, date));
+				break;
+			}else{
+				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+			}
+		}
 	}
 
-	// 개인 회원 출결 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
+	// 개인 회원 출결 전체 조회 (전체) xxx - 입장 . 퇴근. //회원 아이디 입력 받고 회원 출결 출력
 	public void listUserAttendanceAll() {
-		String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
 
-		adminService.listUserAttendanceAll(id);
+		while(true){
+			String id = view.getInput("검색할 회원의 아이디를 입력해주세요: ");
+
+			if(Gym.users.containsKey(id)){
+				adminService.listUserAttendanceAll(id);
+				break;
+			}else{
+				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
+				return;
+			}
+		}
+
 	}
 
 	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void listUserAttendanceByDay() {
-		String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
+		while(true){
+			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
-		adminService.listAllUsersAttendanceByDay(date);
+			if(Validations.validatePositiveDecimal(date)){
+				adminService.listAllUsersAttendanceByDay(date);
+				break;
+			}else{
+				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
+			}
+		}
+
 	}
 }

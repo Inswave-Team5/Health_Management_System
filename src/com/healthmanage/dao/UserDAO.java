@@ -16,5 +16,4 @@ public class UserDAO {
 		Gym.users = (Map<String, User>)FileIO.infoLoad(filePath,User.class);
 		return Gym.users;
 	}
-
 }

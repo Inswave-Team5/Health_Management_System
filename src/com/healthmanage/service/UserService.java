@@ -1,6 +1,5 @@
 package com.healthmanage.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -13,7 +12,6 @@ import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.utils.SHA256;
-import com.healthmanage.utils.Sort;
 
 public class UserService {
 	private static UserService instance;
