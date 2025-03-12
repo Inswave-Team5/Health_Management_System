@@ -268,10 +268,10 @@ public class AdminController {
 				id = tmp;
 				break;
 			}else{
-				view.showMessage("없는 아이디입니다. 다시 입력해주세요.");
+				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
+				return;
 			}
 		}
-
 		while(true){
 			String date = view.getInput("조회할 날짜를 입력해주세요 (입력형식:yyyy-MM-dd): ");
 
@@ -294,7 +294,8 @@ public class AdminController {
 				adminService.listUserAttendanceAll(id);
 				break;
 			}else{
-				view.showMessage("없는 아이디입니다. 다시 입력해주세요.");
+				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
+				return;
 			}
 		}
 
