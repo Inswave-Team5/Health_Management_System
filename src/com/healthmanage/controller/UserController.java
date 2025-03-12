@@ -240,15 +240,12 @@ public class UserController {
 		return userService.isValidPw(password);
 	}
 
-<<<<<<< HEAD
-=======
 	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
 	public boolean isValidCouponNumber(String couponNumber) {
 		String regex = "^[A-Z0-9]{8}$";
 		return couponNumber != null && couponNumber.matches(regex);
 	}
 
->>>>>>> d087b7cbb8a1bb12f697e6901acfd37b9c88f0a2
 	// 🔹 숫자 여부 및 최소 금액 검증하는 함수
 	private boolean isValidMoneyInput(String money) {
 		try {
