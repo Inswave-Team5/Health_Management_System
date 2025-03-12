@@ -43,12 +43,12 @@ public class CoinService {
 			pw.println("┌────────────────────────────┐");
 			pw.println("│        [ 영 수 증 ]         │");
 			pw.println("├────────────────────────────┤");
-			pw.printf("│ %-8s : %16s │\n", "충전코인", String.format("%,d", coin));
-			pw.printf("│ %-8s : %16s │\n", "금액", String.format("%,d", price));
-			pw.printf("│ %-8s : %16s │\n", "CASH", String.format("%,d", inputMoney));
-			pw.printf("│ %-8s : %16s │\n", "CHANGE", String.format("%,d", change));
+			pw.printf("│ %-8s  %16s │\n", "충전코인", String.format("%,d", coin));
+			pw.printf("│ %-8s  %16s │\n", "금액", String.format("%,d", price));
+			pw.printf("│ %-8s  %16s │\n", "CASH", String.format("%,d", inputMoney));
+			pw.printf("│ %-8s  %16s │\n", "CHANGE", String.format("%,d", change));
 			pw.println("├────────────────────────────┤");
-			pw.printf("│ %-8s : %16s │\n", "Total", String.format("%,d", coinAmount));
+			pw.printf("│ %-8s  %16s │\n", "총 코인", String.format("%,d", coinAmount));
 			pw.println("└────────────────────────────┘");
 			pw.println();
 			pw.close();
