@@ -4,6 +4,13 @@ public class UserView extends View {
     public UserView() {
         super();
     }
+    
+    public String selectLogin() {
+        return getMenuInput("USERMODE LOGIN / SIGN UP",
+                        "[1] 로그인\n" +
+                        "[2] 회원가입\n" +
+                        "[0] 종료");
+    }
 
     public String selectMenu() {
         return getMenuInput("USER MODE", 
@@ -17,13 +24,6 @@ public class UserView extends View {
                         "[0] 로그아웃");
     }
 
-    public String selectLogin() {
-        return getMenuInput("USERMODE LOGIN / SIGN UP",
-                        "[1] 로그인\n" +
-                        "[2] 회원가입\n" +
-                        "[0] 종료");
-    }
-
     public String AttendanceSelectMenu() {
         return getMenuInput("CHECK-IN MENU",
                         "[1] 입장 등록\n" +
@@ -31,22 +31,7 @@ public class UserView extends View {
                         "[3] 나의 입퇴장 기록\n" +
                         "[0] 메인 메뉴");
     }
-
-    public String WeightSelectMenu() {
-        return getMenuInput("WEIGHT MANAGEMENT",
-                        "[1] 몸무게 등록\n" +
-                        "[2] 몸무게 조회\n" +
-                        "[0] 메인 메뉴");
-    }
-
-    public String WeightSelectCheckMenu() {
-        return getMenuInput("WEIGHT CHECK",
-                        "[1] 전체 조회\n" +
-                        "[2] 월별 조회\n" +
-                        "[3] 날짜 조회\n" +
-                        "[0] 뒤로 가기");
-    }
-
+    
     public String TimeSelectMenu() {
         return getMenuInput("WORKOUT TIME",
                         "[1] 오늘의 운동 시간\n" +
@@ -56,11 +41,26 @@ public class UserView extends View {
                         "[0] 메인 메뉴");
     }
 
+    public String WeightSelectMenu() {
+        return getMenuInput("WEIGHT MANAGEMENT",
+                        "[1] 몸무게 등록\n" +
+                        "[2] 몸무게 조회\n" +
+                        "[0] 메인 메뉴");
+    }
+    
     public String machineSelectMenu() {
         return getMenuInput("MACHINE MENU",
                 "[1] 기구 이용\n" +
                         "[2] 사용기록 조회\n" +
                         "[0] 메인 메뉴");
+    }
+
+    public String WeightSelectCheckMenu() {
+        return getMenuInput("WEIGHT CHECK",
+                        "[1] 전체 조회\n" +
+                        "[2] 월별 조회\n" +
+                        "[3] 날짜 조회\n" +
+                        "[0] 뒤로 가기");
     }
 
     public String machineListInsideMenu() {
@@ -76,7 +76,4 @@ public class UserView extends View {
                         "[2] 코인 선물\n" +
                         "[0] 메인 메뉴");
     }
-
-
-
 }

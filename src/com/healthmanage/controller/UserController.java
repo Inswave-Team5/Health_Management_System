@@ -5,6 +5,9 @@ import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 import com.healthmanage.service.UserService;
 import com.healthmanage.view.UserView;
+import com.healthmanage.view.enums.CoinMenu;
+import com.healthmanage.view.enums.LoginOption;
+import com.healthmanage.view.enums.UserMenu;
 
 public class UserController {
 	private final UserService userService;
@@ -21,108 +24,112 @@ public class UserController {
 		this.machineController = new MachineController();
 	}
 
-	public void entry() {
-		int key = 0;
-		while (!Gym.isLoggedIn()) {
-			try {
-				key = Integer.parseInt(userView.selectLogin());
-			} catch (NumberFormatException e) {
-				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
-				continue;
-			}
-			switch (key) {
-			case 1:
-				loginUser();
-				break;
-			case 2:
-				registerUser();
-				break;
-			case 0:
-				userView.showAlert("종료합니다.");
-				return;
-			default:
-				userView.showAlert("잘못 선택하였습니다.");
-				break;
-			}
-		}
-		
-		userService.save();
-		start();
-	}
+    public void entry() {
+        while (!Gym.isLoggedIn()) {
+            try {
+                int key = Integer.parseInt(userView.selectLogin());
+                LoginOption selectedOption = LoginOption.fromNumber(key); // 🔹 Enum 변환
+
+                if (selectedOption == null) {
+                    userView.showAlert("잘못된 선택입니다. 다시 입력해주세요.");
+                    continue;
+                }
+                userView.showAlert("선택한 메뉴: " + selectedOption.getDescription());
+
+                switch (selectedOption) {
+                    case LOGIN:
+                        loginUser();
+                        break;
+                    case SIGN_UP:
+                        registerUser();
+                        break;
+                    case EXIT:
+                        userView.showAlert("종료합니다.");
+                        return;
+                }
+            } catch (NumberFormatException e) {
+                userView.showAlert("숫자로 된 메뉴 번호를 입력해주세요.");
+            }
+        }
+        userService.save();
+        start();
+    }
+
 
 	public void start() {
-		int key = 0;
-		while (Gym.isLoggedIn()) {
-			try {
-				key = Integer.parseInt(userView.selectMenu());
-			} catch (NumberFormatException e) {
-				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
-				continue;
-			}
-			userView.showAlert(key + "번 입력되었습니다.");
-			switch (key) {
-			case 1:
-				attendanceController.attendanceEntry();
-				break;
-			case 2:
-				attendanceController.timeEntry();
-				break;
-			case 3:
-				weightController.weightEntry();
-				break;
-			case 4:
-				machineController.machineEntry();
-				break;
-			case 5:
-				// 쿠폰등록
-				couponUser();
-				break;
-			case 6:
-				// 코인
-				coinEntry();
-				break;
-			case 7:
-				// 비밀번호 변경
-				passwordChange();
-				break;
-			case 0:
-				// 로그아웃
-				Gym.logoutUser();
-				System.out.println("종료합니다...");
-				return;
-			default:
-				userView.showAlert("잘못 선택하였습니다.");
-				break;
-			}
-		}
+	    while (Gym.isLoggedIn()) {
+	        try {
+	            int key = Integer.parseInt(userView.selectMenu()); // 기존 방식 그대로 입력 받음
+	            UserMenu selectedMenu = UserMenu.fromNumber(key); // 입력값을 Enum으로 변환
+
+	            if (selectedMenu == null) {
+	                userView.showAlert("잘못된 선택입니다. 다시 입력해주세요.");
+	                continue;
+	            }
+	            userView.showAlert(selectedMenu.getNumber() + "번 입력되었습니다.");
+
+	            switch (selectedMenu) {
+	                case CHECK_IN:
+	                    attendanceController.attendanceEntry();
+	                    break;
+	                case WORKOUT_TIME:
+	                    attendanceController.timeEntry();
+	                    break;
+	                case WEIGHT_MANAGEMENT:
+	                    weightController.weightEntry();
+	                    break;
+	                case MACHINE_USE:
+	                    machineController.machineEntry();
+	                    break;
+	                case COUPON_USE:
+	                    couponUser();
+	                    break;
+	                case COIN_MANAGEMENT:
+	                    coinEntry();
+	                    break;
+	                case PASSWORD_CHANGE:
+	                    passwordChange();
+	                    break;
+	                case LOGOUT:
+	                    Gym.logoutUser();
+	                    System.out.println("종료합니다...");
+	                    return;
+	            }
+	        } catch (NumberFormatException e) {
+	            userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+	        }
+	    }
 	}
 
 	public void coinEntry() {
-		int key = 0;
-		while (Gym.isLoggedIn()) {
-			try {
-				key = Integer.parseInt(userView.coinSelectMenu(Gym.users.get(Gym.getCurrentUser().getUserId()).getCoin()));
-			} catch (NumberFormatException e) {
-				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
-				continue;
-			}
-			userView.showAlert(key + "번 입력되었습니다.");
-			switch (key) {
-			case 1:
-				addCoinUser();
-				break;
-			case 2:
-				withdrawUser();
-				break;
-			case 0:
-				userService.save();
-				userView.showAlert("종료합니다.");
-				return;
-			default:
-				userView.showAlert("잘못 선택하였습니다.");
-				break;
-			}
-		}
+	    while (Gym.isLoggedIn()) {
+	        try {
+	        	int key = Integer.parseInt(userView.coinSelectMenu(Gym.users.get(Gym.getCurrentUser().getUserId()).getCoin()));
+	            CoinMenu selectedMenu = CoinMenu.fromNumber(key);  // 🔹 Enum 변환
+
+	            if (selectedMenu == null) {
+	                userView.showAlert("잘못된 선택입니다. 다시 입력해주세요.");
+	                continue;
+	            }
+
+	            userView.showAlert("선택한 메뉴: " + selectedMenu.getDescription());
+
+	            switch (selectedMenu) {
+	                case COIN_CHARGE:
+	                    addCoinUser();
+	                    break;
+	                case COIN_TRANSFER:
+	                    withdrawUser();
+	                    break;
+	                case BACK:
+	                    userService.save();
+	                    userView.showAlert("이전 메뉴로 돌아갑니다.");
+	                    return;
+	            }
+	        } catch (NumberFormatException e) {
+	            userView.showAlert("숫자로 된 메뉴 번호를 입력해주세요.");
+	        }
+	    }
 	}
 
 	public void registerUser() {
