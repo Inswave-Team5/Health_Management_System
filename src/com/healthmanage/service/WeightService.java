@@ -19,7 +19,7 @@ public class WeightService {
     private LogService logger;
     private WeightDAO weightDAO;
 
-    public WeightService() {
+    private WeightService() {
         this.weightList = new HashMap<>();
         this.view = new View();
         this.time = Time.getInstance();

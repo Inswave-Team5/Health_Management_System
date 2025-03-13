@@ -17,7 +17,6 @@ public class MachineController {
     public MachineController() {
         this.machineService = MachineService.getInstance();
         this.view = new UserView();
-
     }
 
     public void machineEntry() {

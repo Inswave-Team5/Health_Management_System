@@ -21,7 +21,6 @@ public class GymService {
 		this.attendanceService = AttendanceService.getInstance();
 		this.weightService = WeightService.getInstance();
 		this.machineService = MachineService.getInstance();
-
 	}
 
 	public void load() {
