@@ -3,8 +3,7 @@ package com.healthmanage.service;
 import com.healthmanage.dto.MachineUsageDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.Machine;
-import com.healthmanage.model.MachineFactory;
-import com.healthmanage.model.Weight;
+import com.healthmanage.model.Machines.MachineFactory;
 import com.healthmanage.view.View;
 
 import java.util.ArrayList;

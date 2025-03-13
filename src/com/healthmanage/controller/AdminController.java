@@ -1,5 +1,6 @@
 package com.healthmanage.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -369,7 +370,7 @@ public class AdminController {
 			}
 			switch (key) {
 				case 1:
-					machineService.listMachines();
+					listMachine();
 					break;
 				case 2:
 					addMachine();
@@ -384,6 +385,14 @@ public class AdminController {
 					System.out.println("잘못 선택하였습니다.");
 					break;
 			}
+		}
+	}
+
+	//머신 현황
+	public void listMachine(){
+		List<Machine> machineList = machineService.listMachines();
+		for (Machine machine : machineList) {
+			view.showMessage(machine.toString());
 		}
 	}
 

@@ -2,7 +2,7 @@ package com.healthmanage.model;
 
 import com.healthmanage.view.View;
 
-public abstract class Machine {
+public class Machine {
     protected String machineId;     //머신 id
     protected String name;          //머신 이름
     protected String type;          //머신 타입 - 유산소 or 근력
@@ -29,21 +29,7 @@ public abstract class Machine {
 
     @Override
     public String toString() {
-        return "[" + machineId + "] 이름: " + name + ", 상태: " + (inUse ? "사용 중" : "사용 가능") + "]";
-    }
-}
-
-//유산소 운동기구
-class CardioMachine extends Machine {
-    public CardioMachine(String machineId, String name) {
-        super(machineId,"유산소", name);
-    }
-}
-
-//근력 운동기구
-class StrengthMachine extends Machine {
-    public StrengthMachine(String machineId, String name) {
-        super(machineId, "근력", name);
+        return "[" + machineId + "] <"+ type + "> 이름: " + name + ", 상태: " + (inUse ? "사용 중" : "사용 가능") ;
     }
 }
 
