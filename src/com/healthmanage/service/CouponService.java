@@ -1,13 +1,14 @@
 package com.healthmanage.service;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.stream.Collectors;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.CouponDAO;
 import com.healthmanage.model.Coupon;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
-import com.healthmanage.utils.Sort;
 
 public class CouponService {
 	private static CouponService instance;
@@ -25,9 +26,8 @@ public class CouponService {
 		return instance;
 	}
 
-	// 쿠폰번호로 정렬후 조회
 	public Collection<Coupon> findAllCoupons() {
-		Collection<Coupon> coupons = Sort.sortCoupon(Gym.coupons.values());
+		Collection<Coupon> coupons =Gym.coupons.values().stream().sorted(Comparator.comparing(Coupon::getNumber)).collect(Collectors.toList());
 		return coupons;
 	}
 

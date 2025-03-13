@@ -29,6 +29,7 @@ public class AdminController {
 		this.adminService = AdminService.getInstance();
 		this.couponService = CouponService.getInstance();
 		this.userService = UserService.getInstance();
+		this.attendanceService = AttendanceService.getInstance();
 	}
 
 	public void findUserId(String userId) {
@@ -157,9 +158,9 @@ public class AdminController {
 			case 4:
 				listUserAttendanceByDay();
 				break;
-//			case 5:
-//				getRank();
-//				break;
+			case 5:
+				getRank();
+				break;
 			case 0:
 				view.showAlert("종료합니다.");
 				return;
@@ -290,18 +291,18 @@ public class AdminController {
 		view.showAlert(coupon.toString() + "삭제");
 	};
 
-//	public void getRank() {
-//		Map<String, String> ranks = attendanceService.getRank();
-//		if (ranks == null) {
-//			view.showAlert("랭킹정보가 없습니다.");
-//		} else {
-//			int cnt = 1;
-//			for (Map.Entry<String, String> entry : ranks.entrySet()) {
-//				view.showRank(cnt, entry.getKey(), entry.getValue());
-//				cnt++;
-//			}
-//		}
-//	}
+	public void getRank() {
+		Map<String, String> ranks = attendanceService.getRank();
+		if (ranks == null) {
+			view.showAlert("랭킹정보가 없습니다.");
+		} else {
+			int cnt = 1;
+			for (Map.Entry<String, String> entry : ranks.entrySet()) {
+				view.showRank(cnt, entry.getKey(), entry.getValue());
+				cnt++;
+			}
+		}
+	}
 
 	// 개인 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
 	public void UserAttendanceByDay() {

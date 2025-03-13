@@ -1,16 +1,18 @@
 package com.healthmanage.service;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AttDAO;
 import com.healthmanage.model.Attendance;
-import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
 
@@ -23,7 +25,6 @@ public class AttendanceService {
     private AttDAO attDAO;
 
     public AttendanceService() {
-    	load();
     	this.attendanceList = new HashMap<>();
     	this.view = new View();
     	this.time = Time.getInstance();
@@ -196,31 +197,39 @@ public class AttendanceService {
     
 	// 회원 운동시간 누적기준 정렬
 //	public Map<String, String> getRank() {
-//		// attendance list 받아오기
-//
-//		// 시간 계산하기
 //		Map<String, String> tmpList = new HashMap<>();
 //
-//		for (int i = 0; i < attendanceList.size(); i++) {
-//			String tmpId = attendanceList.get(i).getUserId();
-//			String tmpTime = attendanceList.get(i).getWorkOutTime();
-//
-//			if (!tmpList.containsKey(tmpId)) {
-//				tmpList.put(tmpId, tmpTime);
-//			} else {
-//				String existingTime = tmpList.get(tmpId);
-//				Duration duration1 = time.totalDuration(existingTime);
-//				Duration duration2 = time.totalDuration(tmpTime);
-//
-//				tmpList.replace(tmpId, duration1.plus(duration2).toString());
-//			}
-//
+//		for (Map.Entry<String, List<Attendance>> entry : attendanceList.entrySet()) {
+//			String tmpId = entry.getKey();
+//			String tmpTime = instance.getTotalWorkOutTime(tmpId);
+//			tmpList.put(tmpId, tmpTime);
 //		}
-
-		// attendance list 넘겨주기
+//		// attendance list 넘겨주기
 //		Map<String, String> sortedList = Sort.sortRank2(tmpList);
-//
 //		return sortedList;
 //	}
+	public Map<String, String> getRank() {
+		Map<String, String> tmpList = new HashMap<>();
+
+		for (Map.Entry<String, List<Attendance>> entry : attendanceList.entrySet()) {
+			String tmpId = entry.getKey();
+			String tmpTime = instance.getTotalWorkOutTime(tmpId);
+			tmpList.put(tmpId, tmpTime);
+		}
+		// attendance list 넘겨주기
+		Map<String, String> sortedList = tmpList.entrySet().stream()
+				.sorted((e1, e2) -> {
+					try {
+						return LocalTime.parse(e2.getValue())
+								.compareTo(LocalTime.parse(e1.getValue()));
+					}
+					catch (Exception e) {
+						e.getStackTrace();
+						return 1;
+					}
+				})
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
+		return sortedList;
+	}
 
 }
