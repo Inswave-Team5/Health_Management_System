@@ -196,18 +196,6 @@ public class AttendanceService {
     }
     
 	// 회원 운동시간 누적기준 정렬
-//	public Map<String, String> getRank() {
-//		Map<String, String> tmpList = new HashMap<>();
-//
-//		for (Map.Entry<String, List<Attendance>> entry : attendanceList.entrySet()) {
-//			String tmpId = entry.getKey();
-//			String tmpTime = instance.getTotalWorkOutTime(tmpId);
-//			tmpList.put(tmpId, tmpTime);
-//		}
-//		// attendance list 넘겨주기
-//		Map<String, String> sortedList = Sort.sortRank2(tmpList);
-//		return sortedList;
-//	}
 	public Map<String, String> getRank() {
 		Map<String, String> tmpList = new HashMap<>();
 

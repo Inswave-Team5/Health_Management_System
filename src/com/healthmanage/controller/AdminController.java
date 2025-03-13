@@ -275,11 +275,7 @@ public class AdminController {
 			return; // 이미 존재하는 경우 null 반환
 		}
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
-		// 트루면
-		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
-			view.showAlert("쿠폰 생성이 완료됐습니다.");
-			return;
-		}
+
 		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
 			view.showAlert("쿠폰 생성이 완료됐습니다.");
 		}
