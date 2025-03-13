@@ -3,15 +3,18 @@ package com.healthmanage.service;
 import java.io.PrintWriter;
 
 import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.UserDAO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
 
 public class CoinService {
 	private static CoinService instance;
 	private LogService logger;
+	private UserDAO userDAO;
 
 	private CoinService() {
 		this.logger = LogService.getInstance();
+		this.userDAO = new UserDAO();
 	}
 
 	public static CoinService getInstance() {
@@ -21,7 +24,6 @@ public class CoinService {
 		return instance;
 	}
 
-
 	public String addCoin(int money) {
 		User user = (User) Gym.getCurrentUser();
 		if (user == null) {
@@ -30,11 +32,13 @@ public class CoinService {
 		int coin = money / 1000; // 1000원당 1코인
 		int change = money % 1000; // 거스름돈 (1000원 단위로 나누고 남은 금액)
 		user.setCoin(user.getCoin() + coin);
+
+		userDAO.saveUsers();
 		logger.addLog(user.getUserId() + "님에게 " + coin + " 코인이 충전되었습니다.");
 		writeCoinReceipt(user.getName(), user.getUserId(), money, coin, change, user.getCoin());
 		return coin + " 코인 충전 완료!";
 	}
-	
+
 	// 코인 충전 영수증 출력
 	public void writeCoinReceipt(String userName, String userId, int inputMoney, int coin, int change, int coinAmount) {
 		int price = coin * 1000;
@@ -62,10 +66,12 @@ public class CoinService {
 		if (sender.getCoin() >= coin) {
 			sender.setCoin(sender.getCoin() - coin);
 			receiver.setCoin(receiver.getCoin() + coin);
+			userDAO.saveUsers(); // 🔹 여기서 호출
+
 			logger.addLog(sender.getUserId() + "님이 " + receiver.getUserId() + "님에게 " + coin + "원 이체하셨습니다.");
-			return "이체되었습니다. 현재코인 : "+sender.getCoin();
+			return "이체되었습니다. 현재코인 : " + sender.getCoin();
 		} else {
-			return "코인이 부족합니다. 현재코인 : "+ sender.getCoin();
+			return "코인이 부족합니다. 현재코인 : " + sender.getCoin();
 		}
 	}
 

@@ -63,9 +63,9 @@ public class UserView extends View {
                         "[0] 메인 메뉴");
     }
 
-    public String coinSelectMenu() {
-        return getMenuInput("COIN MENU",
-                        "[1] 코인 충전\n" +
+    public String coinSelectMenu(int coin) {
+        return getMenuInput("COIN MENU", "현재 사용자의 coin : " + coin +
+                        "\n[1] 코인 충전\n" +
                         "[2] 코인 선물\n" +
                         "[0] 메인 메뉴");
     }

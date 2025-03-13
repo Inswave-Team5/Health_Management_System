@@ -1,7 +1,5 @@
 package com.healthmanage.controller;
 
-import javax.swing.JSpinner.NumberEditor;
-
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
@@ -103,8 +101,8 @@ public class UserController {
 		int key = 0;
 		while (Gym.isLoggedIn()) {
 			try {
-				key = Integer.parseInt(userView.coinSelectMenu());		
-			}catch(NumberFormatException e) {
+				key = Integer.parseInt(userView.coinSelectMenu(Gym.users.get(Gym.getCurrentUser().getUserId()).getCoin()));
+			} catch (NumberFormatException e) {
 				userView.showAlert("숫자로된 메뉴 번호를 입력해주세요");
 				continue;
 			}
@@ -271,7 +269,7 @@ public class UserController {
 	private boolean isValidMoneyInput(String money) {
 		try {
 			int vaildatedMoney = Integer.parseInt(money);
-			return vaildatedMoney > 1000; // 1원 이상인지 확인
+			return vaildatedMoney >= 1000; // 1원 이상인지 확인
 		} catch (NumberFormatException e) {
 			return false; // 숫자가 아닌 경우 false 반환
 		}
@@ -281,7 +279,7 @@ public class UserController {
 	private boolean isValidCoinInput(String coin) {
 		try {
 			int vaildatedCoin = Integer.parseInt(coin);
-			return vaildatedCoin > 1; // 1원 이상인지 확인
+			return vaildatedCoin >= 1; // 1원 이상인지 확인
 		} catch (NumberFormatException e) {
 			return false; // 숫자가 아닌 경우 false 반환
 		}
