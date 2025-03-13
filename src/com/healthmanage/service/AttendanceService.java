@@ -3,6 +3,7 @@ package com.healthmanage.service;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.AttDAO;
 import com.healthmanage.model.Attendance;
+import com.healthmanage.model.User;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
 
@@ -120,18 +122,22 @@ public class AttendanceService {
 
     //개인 회원 출결 조회 (전체)
     public List<String> listUserAttendaceAll(String userId) {
-        List<Attendance> userattendanceList = attendanceList.get(userId);
-        List<String> attendanceList = new ArrayList<>();
-        for(int i = 0; i < userattendanceList.size(); i++){
-            attendanceList.add("[" + userattendanceList.get(i).getDate() + "] " + userattendanceList.get(i).toStringAttendacne());
-        }
-        return attendanceList;
+        List<Attendance> userAttendanceList = attendanceList.getOrDefault(userId, new ArrayList<>());
+
+        return userAttendanceList.stream()
+                .sorted(Comparator
+                    .comparing(Attendance::getDate) // 날짜 기준 정렬
+                    .thenComparing(Attendance::getEnterTime)) // 같은 날짜 내에서는 입장시간 기준 정렬
+                .map(attendance -> "[" + attendance.getDate() + "] " + attendance.toStringAttendacne()) // 원하는 형식으로 변환
+                .collect(Collectors.toList());
     }
 
     //전체 운동시간 기록 조회(전체 출결 조회)
     public void listAttendanceAll(String userId){
         List<Attendance> userAttendanceList = attendanceList.get(userId);
-        view.showMessage("[전체 운동시간 기록]");
+        view.showMessage("====================================");
+        view.showMessage("         [전체 운동시간 기록]");
+        view.showMessage("====================================");
 
         if(userAttendanceList == null || userAttendanceList.isEmpty()){
             view.showMessage("아직 운동기록이 없습니다.");
