@@ -98,6 +98,7 @@ public class AdminService {
 	public boolean isValidPw(String adminPw) {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
 	}
+
 	// 회원 아이디로 이름찾기
 	public String findName(String memberNum) {
 		if (Gym.users.containsKey(memberNum)) {
