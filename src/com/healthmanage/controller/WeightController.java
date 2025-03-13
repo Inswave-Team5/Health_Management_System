@@ -9,7 +9,6 @@ import com.healthmanage.view.UserView;
 public class WeightController {
 	private final WeightService weightService;
 	private final UserView view;
-	UserController userController;
 
 	public WeightController() {
 

@@ -1,8 +1,8 @@
 package com.healthmanage.model;
 
-import com.healthmanage.view.View;
+import java.io.Serializable;
 
-public class Machine {
+public class Machine implements Serializable {
     protected String machineId;     //머신 id
     protected String name;          //머신 이름
     protected String type;          //머신 타입 - 유산소 or 근력
@@ -21,6 +21,10 @@ public class Machine {
 
     public String getName(){
         return name;
+    }
+
+    public String getType(){
+        return type;
     }
 
     public void setInUse(boolean inUse) {

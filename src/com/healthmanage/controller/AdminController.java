@@ -104,7 +104,7 @@ public class AdminController {
 				couponManage();
 				break;
 
-			case 3:
+			case 3: 
 				machineManage();
 				break;
 			case 0:
@@ -405,22 +405,39 @@ public class AdminController {
 		}
 	}
 
-	// 머신 추가
 	public void addMachine() {
-		String name = view.getInput("등록할 머신 이름 입력해주세요 : ");
-		String type;
-		while (true) {
-			type = view.getInput("등록할 머신 타입을 입력해주세요 (유산소/근력) : ");
-			if (validateMachineType(type)) {
-				machineService.addMachine(name, type);
-				view.showMessage("등록이 완료되었습니다.");
-				break;
-			} else {
-				view.showMessage("잘못된 입력입니다. [유산소] [근력] 중에 타입을 입력해주세요.");
+		view.showMessage("1.벤치프레스    2.덤벨       3.렛풀다운    4.레그컬        5.숄더프레스");
+		view.showMessage("6.스미스머신    7.계단오름    8.러닝머신    9.실내자전거    10.레그프레스");
+		view.showMessage("");
+
+		while(true) {
+			// 번호 입력받기
+			int input = Integer.parseInt(view.getInput("추가할 머신의 번호를 선택해주세요: "));
+
+			// 타입 자동 결정
+			String type = determineMachineType(input);
+
+			if (type == null) {
+				view.showMessage("잘못된 입력입니다. 번호를 다시 입력해주세요.");
+				continue;  // 잘못된 입력이면 다시 번호 선택하도록
 			}
 
-		}
+			// 머신 서비스에서 해당 번호에 맞는 머신 추가
+			machineService.addMachine(type, input);  // 타입과 번호 전달
 
+			view.showMessage("등록이 완료되었습니다.");
+			break;  // 등록 완료 후 종료
+		}
+	}
+
+	// 머신 타입 자동 결정
+	private String determineMachineType(int input) {
+		if (input >= 1 && input <= 6 || input == 10) {
+			return "근력";  // 번호 1~7은 근력
+		} else if (input >= 7 && input <= 9) {
+			return "유산소";  // 번호 8~10은 유산소
+		}
+		return null;  // 유효하지 않은 번호
 	}
 
 	public void deleteMachine() {
@@ -428,15 +445,16 @@ public class AdminController {
 		String id;
 		while (true) {
 			id = view.getInput("삭제할 머신의 번호를 입력해주세요 : ");
-			if (validNumber(id)) {
+			if(validNumber(id)){
 				machineService.removeMachine(id);
 				view.showMessage("삭제가 완료되었습니다.");
 				break;
-			} else {
+			}else{
 				view.showMessage("잘못된 머신 번호입니다. 다시 입력해주세요.");
 			}
 		}
 	}
+
 
 	// 쿠폰 번호는 8자리의 영문 대문자와 숫자로 구성되어야 함
 	public boolean isValidCouponNumber(String couponNumber) {
