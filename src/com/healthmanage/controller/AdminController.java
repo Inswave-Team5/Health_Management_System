@@ -82,6 +82,7 @@ public class AdminController {
 				break;
 			case 0:
 				view.showAlert("종료합니다.");
+				adminService.save();
 				return;
 			default:
 				view.showAlert("잘못 선택하였습니다.");
@@ -401,6 +402,7 @@ public class AdminController {
 				deleteMachine();
 				break;
 			case 0:
+				machineService.save();
 				view.showAlert("종료합니다.");
 				return;
 			default:

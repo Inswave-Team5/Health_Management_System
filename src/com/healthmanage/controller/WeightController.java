@@ -35,6 +35,7 @@ public class WeightController {
                     break;
                 case 0:
                 	view.showAlert("종료합니다.");
+                	weightService.save();
                     return;
                 default:
                     view.showMessage("잘못 선택하였습니다.");
@@ -58,6 +59,7 @@ public class WeightController {
 				listWeightByDay();
 				break;
 			case 0:
+				view.showAlert("종료합니다.");
 				return;
 			default:
 				view.showMessage("잘못 선택하였습니다.");

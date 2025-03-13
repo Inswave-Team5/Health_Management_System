@@ -71,6 +71,7 @@ public class UserController {
 	            switch (selectedMenu) {
 	                case CHECK_IN:
 	                    attendanceController.attendanceEntry();
+	                    userService.save();
 	                    break;
 	                case WORKOUT_TIME:
 	                    attendanceController.timeEntry();

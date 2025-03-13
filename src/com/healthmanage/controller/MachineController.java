@@ -41,6 +41,7 @@ public class MachineController {
                     break;
                 case 0:
                 	view.showAlert("종료합니다.");
+                	machineService.save();
     				return;
                 default:
                     view.showAlert("잘못 선택하였습니다.");
@@ -67,6 +68,7 @@ public class MachineController {
                     stopUsingMachine();
                     break;
                 case 0:
+                	machineService.save();
                 	view.showAlert("종료합니다.");
     				return;
                 default:
