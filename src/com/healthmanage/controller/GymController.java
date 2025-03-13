@@ -20,6 +20,8 @@ public class GymController {
 	
 	public void start() {
 		gymService.load();
+		gymService.UserInfoInit();
+		gymService.CouponInit();
 		//gymService.adminInit();
 		int key = 0;
 		while (true) {

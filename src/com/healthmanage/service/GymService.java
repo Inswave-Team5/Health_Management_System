@@ -3,6 +3,7 @@ package com.healthmanage.service;
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.model.Admin;
 import com.healthmanage.model.Gym;
+import com.healthmanage.utils.MockupCreator;
 import com.healthmanage.utils.SHA256;
 
 public class GymService {
@@ -40,5 +41,13 @@ public class GymService {
 		String hashedPassword = SHA256.hashPassword(adminPassword, salt);
 
 		Gym.admins.put(adminId, new Admin(adminName, hashedPassword, adminId, salt));
+	}
+	
+	public void UserInfoInit() {
+		MockupCreator.generateMockUsers();
+	}
+	public void CouponInit() {
+		MockupCreator.generateMockCoupons();
+		
 	}
 }
