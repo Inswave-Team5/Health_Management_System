@@ -56,10 +56,17 @@ public class UserView extends View {
                         "[0] 메인 메뉴");
     }
 
-    public String EquipmentSelectMenu() {
-        return getMenuInput("GYM EQUIPMENT",
-                        "[1] 기구 사용 등록\n" +
-                        "[2] 기구 사용 조회\n" +
+    public String machineSelectMenu() {
+        return getMenuInput("MACHINE MENU",
+                "[1] 기구 이용\n" +
+                        "[2] 사용기록 조회\n" +
+                        "[0] 메인 메뉴");
+    }
+
+    public String machineListInsideMenu() {
+        return getMenuInput("MACHINE MENU",
+                "[1] 사용 시작\n" +
+                        "[2] 사용 종료\n" +
                         "[0] 메인 메뉴");
     }
 
@@ -69,4 +76,7 @@ public class UserView extends View {
                         "[2] 코인 선물\n" +
                         "[0] 메인 메뉴");
     }
+
+
+
 }

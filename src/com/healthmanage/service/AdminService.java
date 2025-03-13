@@ -13,14 +13,12 @@ import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Admin;
 import com.healthmanage.model.Attendance;
 import com.healthmanage.model.Gym;
-import com.healthmanage.model.User;
 import com.healthmanage.utils.SHA256;
 import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.AdminView;
 
 public class AdminService {
-	private CouponService couponservice;
 	private AttendanceService attendanceService;
 	private static AdminService instance;
 	private List<Attendance> attendanceList = new ArrayList<>();
@@ -31,7 +29,6 @@ public class AdminService {
 	private LogService logger;
 
 	private AdminService() {
-		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
 		this.time = Time.getInstance();
@@ -100,13 +97,6 @@ public class AdminService {
 	// 8~16자, 대문자,숫자,소문자영문,특수문자 1개 이상 포함
 	public boolean isValidPw(String adminPw) {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
-	}
-
-	public boolean addCoupon(String number, int coinAmount) {
-		if (couponservice.createCoupon(number, coinAmount) == null) {
-			return false;
-		}
-		return true;
 	}
 
 	// 회원 운동시간 누적기준 정렬

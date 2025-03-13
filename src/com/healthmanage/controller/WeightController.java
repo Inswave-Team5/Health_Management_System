@@ -1,8 +1,6 @@
 package com.healthmanage.controller;
 
-import static com.healthmanage.utils.Validations.validatePositiveDecimal;
-import static com.healthmanage.utils.Validations.validateYearMonth;
-import static com.healthmanage.utils.Validations.validateYearMonthDay;
+import static com.healthmanage.utils.Validations.*;
 
 import com.healthmanage.model.Gym;
 import com.healthmanage.service.WeightService;

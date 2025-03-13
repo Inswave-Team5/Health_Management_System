@@ -1,13 +1,14 @@
 package com.healthmanage.model;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Gym {
 	public static Map<String, User> users;
 	public static Map<String, Admin> admins;
 	public static Map<String, Coupon> coupons;
-	// Map<String, Machine> machines;
 	private static Person currentUser;
+	public static Map<String, Machine> machines = new HashMap<>();
 
 	Gym() {}
 
