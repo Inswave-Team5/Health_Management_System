@@ -1,6 +1,8 @@
 package com.healthmanage.service;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dao.UserDAO;
@@ -63,15 +65,25 @@ public class CoinService {
 
 	// 이체(출금)한 유저, 이체받을(입금) 유저, 코인 파일에 저장
 	public String withdraw(int coin, User sender, User receiver) { // 유저 간 계좌 이체
-		if (sender.getCoin() >= coin) {
+		Map<String, User> backupUserInfos = new HashMap<String, User>(Gym.users);
+		try {
+			if (sender.getCoin() < coin) {
+				return "코인이 부족합니다. 현재코인 : " + sender.getCoin();
+			}
+			//출금처리
 			sender.setCoin(sender.getCoin() - coin);
+			//입금처리
 			receiver.setCoin(receiver.getCoin() + coin);
+			//파일저장
 			userDAO.saveUsers(); // 🔹 여기서 호출
-
+			//로그기록
 			logger.addLog(sender.getUserId() + "님이 " + receiver.getUserId() + "님에게 " + coin + "원 이체하셨습니다.");
 			return "이체되었습니다. 현재코인 : " + sender.getCoin();
-		} else {
-			return "코인이 부족합니다. 현재코인 : " + sender.getCoin();
+		} catch (Exception e) {
+			Gym.users = new HashMap<>(backupUserInfos);
+			logger.addLog(sender.getUserId() + "->" + receiver.getUserId() + " : " + coin + "원 이체 오류발생");
+			return "이체 실패! 오류 발생: " + e.getMessage();
 		}
+
 	}
 }
