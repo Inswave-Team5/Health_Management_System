@@ -38,6 +38,14 @@ public class AdminView extends View {
                         "[0] 종료");
     }
 
+    public String selectMachineManageMenu() {
+        return getMenuInput("MACHINE MANAGEMENT",
+                "[1] 머신 현황\n" +
+                        "[2] 머신 추가\n" +
+                        "[3] 머신 삭제\n" +
+                        "[0] 종료");
+    }
+
     public void showRank(int rank, String userId, String workOutTime) {
         System.out.println("\n===================================");
         System.out.printf("          🏆 랭킹 %d위%n", rank);
