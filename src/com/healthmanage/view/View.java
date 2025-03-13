@@ -10,9 +10,9 @@ public class View {
     }
 
     private void printHeader(String title) {
-        System.out.println("\n===================================");
-        System.out.printf("          %s%n", title);
-        System.out.println("===================================");
+        System.out.println("\n=========================================================");
+        System.out.printf("                       %s%n", title);
+        System.out.println("=========================================================");
     }
 
     public String getInput(String message) {
@@ -35,9 +35,6 @@ public class View {
     }
 
     public String selectMenu() {
-        return getMenuInput("MAIN MENU", 
-                        "[1] 관리자 모드\n" +
-                        "[2] 사용자 모드\n" +
-                        "[0] 종료");
+        return getMenuInput("MAIN MENU", "[1] 관리자 모드   [2] 사용자 모드   [0] 종료");
     }
 }

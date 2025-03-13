@@ -25,7 +25,7 @@ public class AdminService {
 	private LogService logger;
 
 	private AdminService() {
-		this.adminDAO = new AdminDAO();
+		this.adminDAO = AdminDAO.getInstance();
 		this.logger = LogService.getInstance();
 		this.adminView = new AdminView();
 		this.attendanceService = AttendanceService.getInstance();

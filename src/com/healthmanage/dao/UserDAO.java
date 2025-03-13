@@ -8,6 +8,16 @@ import com.healthmanage.model.User;
 import com.healthmanage.utils.FileIO;
 
 public class UserDAO {
+	private static UserDAO instance;
+	private UserDAO() {
+		
+	}
+	public static UserDAO getInstance() {
+		if(instance == null) {
+			instance = new UserDAO();
+		}
+		return instance;
+	}
 	public void saveUsers() {
 		FileIO.infoSave(Gym.users, EnvConfig.get("USER_FILE"));
 	}

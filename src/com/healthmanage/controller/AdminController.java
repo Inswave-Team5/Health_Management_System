@@ -53,6 +53,12 @@ public class AdminController {
 			view.showAlert("등록된 회원이 없습니다.");
 			return;
 		}
+		   // 🏋 GYM 회원 목록 출력
+	    view.showMessage("┌────────────────────────────────────────────────");
+	    view.showMessage("│                🏋 GYM 회원 목록 🏋              ");
+	    view.showMessage("├────────────┬───────────┬─────────────┬─────────");
+	    view.showMessage("│   🆔 ID       👤 이름       💰 코인      ⏳ 운동 ");
+	    view.showMessage("├────────────────────────────────────────────────");
 		for (User user : users) {
 			view.showMessage(user.toString());
 		}
@@ -76,6 +82,7 @@ public class AdminController {
 				break;
 			case 0:
 				view.showAlert("종료합니다.");
+				adminService.save();
 				return;
 			default:
 				view.showAlert("잘못 선택하였습니다.");
@@ -260,6 +267,12 @@ public class AdminController {
 			view.showAlert("쿠폰정보가 없습니다.");
 			return;
 		}
+	    // 📌 쿠폰 목록 출력 (헤더)
+	    view.showMessage("┌────────────────────────────────────");
+	    view.showMessage("│          🎟 쿠폰 목록 🎟         ");
+	    view.showMessage("├────────────┬──────────┬────────────");
+	    view.showMessage("│  쿠폰번호       사용여부       보상코인  ");
+	    view.showMessage("├────────────────────────────────────");
 		for (Coupon coupon : coupons) {
 			view.showMessage(coupon.toString());
 		}
@@ -323,6 +336,7 @@ public class AdminController {
 				break;
 			} else {
 				view.showMessage("없는 아이디입니다. 확인 후 다시 입력해주세요.");
+				return;
 			}
 		}
 		while (true) {
@@ -388,6 +402,7 @@ public class AdminController {
 				deleteMachine();
 				break;
 			case 0:
+				machineService.save();
 				view.showAlert("종료합니다.");
 				return;
 			default:

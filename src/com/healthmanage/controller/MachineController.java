@@ -22,8 +22,14 @@ public class MachineController {
 
     public void machineEntry() {
         int key = 0;
-        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.machineSelectMenu())) != 0) {
-            view.showMessage(key + "번 입력되었습니다.");
+        while (Gym.isLoggedIn()) {
+        	try {
+        		key = Integer.parseInt(view.machineSelectMenu());        		
+        	}catch (NumberFormatException e) {
+        		view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+        	}
+            view.showAlert(key + "번 입력되었습니다.");
             switch (key) {
                 case 1:
                     if (listMachine()) { // 기구가 있을 때만 machineListEntry 호출
@@ -34,9 +40,11 @@ public class MachineController {
                     getMachineUsage();
                     break;
                 case 0:
-                    return;
+                	view.showAlert("종료합니다.");
+                	machineService.save();
+    				return;
                 default:
-                    view.showMessage("잘못 선택하였습니다.");
+                    view.showAlert("잘못 선택하였습니다.");
                     break;
             }
         }
@@ -44,8 +52,14 @@ public class MachineController {
 
     public void machineListEntry() {
         int key = 0;
-        while (Gym.isLoggedIn() && (key = Integer.parseInt(view.machineListInsideMenu())) != 0) {
-            view.showMessage(key + "번 입력되었습니다.");
+        while (Gym.isLoggedIn()) {
+        	try {
+        		key = Integer.parseInt(view.machineListInsideMenu());        		        		
+        	}catch(NumberFormatException e) {
+        		view.showAlert("숫자로된 메뉴 번호를 입력해주세요");
+				continue;
+        	}
+            view.showAlert(key + "번 입력되었습니다.");
             switch (key) {
                 case 1:
                     startUsingMachine();
@@ -54,9 +68,11 @@ public class MachineController {
                     stopUsingMachine();
                     break;
                 case 0:
-                    return;
+                	machineService.save();
+                	view.showAlert("종료합니다.");
+    				return;
                 default:
-                    view.showMessage("잘못 선택하였습니다.");
+                    view.showAlert("잘못 선택하였습니다.");
                     break;
             }
         }
@@ -66,7 +82,7 @@ public class MachineController {
         view.showMessage("[헬스장 머신 현황]");
         List<Machine> machines = machineService.listMachines();
         if (machines.isEmpty()) {
-            view.showMessage("등록된 머신이 없습니다.");
+            view.showAlert("등록된 머신이 없습니다.");
             return false; // 머신이 없을 경우 false 반환
         }
         for (Machine machine : machines) {
@@ -84,7 +100,7 @@ public class MachineController {
                 machineService.startUsingMachine(id);
                 break;
             }else{
-                view.showMessage("잘못된 머신 번호입니다. 다시 입력해주세요.");
+                view.showAlert("잘못된 머신 번호입니다. 다시 입력해주세요.");
             }
         }
     }
@@ -97,8 +113,8 @@ public class MachineController {
             if (validNumber(id)) {
                 machineService.stopUsingMachine(id);
                 break;
-            } else {
-                view.showMessage("잘못된 머신 번호입니다. 다시 입력해주세요.");
+            }else{
+                view.showAlert("잘못된 머신 번호입니다. 다시 입력해주세요.");
             }
         }
 
@@ -110,8 +126,9 @@ public class MachineController {
             if (validatePositiveDecimal(tmp)) {
                 val1 = tmp;
                 break;
-            } else {
-                view.showMessage("잘못된 입력입니다. 양의 실수를 입력해주세요.");
+            }else{
+                view.showAlert("잘못된 입력입니다. 양의 실수를 입력해주세요.");
+
             }
         }
         while (true) {
@@ -119,14 +136,14 @@ public class MachineController {
             if (validatePositiveDecimal(tmp)) {
                 val2 = tmp;
                 break;
-            } else {
-                view.showMessage("잘못된 입력입니다. 양의 실수를 입력해주세요.");
+            }else{
+                view.showAlert("잘못된 입력입니다. 양의 실수를 입력해주세요.");
             }
         }
 
         // 사용 기록 등록
         machineService.addMachineUsage(id, val1, val2);
-        view.showMessage("사용기록이 정상 기록되었습니다.");
+        view.showAlert("사용기록이 정상 기록되었습니다.");
     }
 
     public void getMachineUsage(){

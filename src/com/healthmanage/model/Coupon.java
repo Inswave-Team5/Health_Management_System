@@ -14,7 +14,8 @@ public class Coupon implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Coupon [쿠폰번호=" + number + ", 사용여부=" + isUsed + ", 보상코인=" + coinAmount + "]";
+	    return String.format("│ %-10s │ %-6s │ %,8d 원 ",
+	        number, (isUsed ? "✅ 사용됨" : "❌ 미사용"), coinAmount);
 	}
 
 	public String getNumber() {

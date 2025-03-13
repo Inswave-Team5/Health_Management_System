@@ -9,6 +9,17 @@ import com.healthmanage.service.AttendanceService;
 import com.healthmanage.utils.FileIO;
 
 public class AttDAO {
+	private static AttDAO instance;
+	private AttDAO() {
+		
+	}
+	public static AttDAO getInstance() {
+		if(instance == null) {
+			instance = new AttDAO(); 
+		}
+		return instance;
+	}
+	
 	public void saveAtts() {
 		FileIO.infoSave(AttendanceService.attendanceList, EnvConfig.get("ATT_FILE"));
 	}

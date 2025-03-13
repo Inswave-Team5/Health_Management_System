@@ -14,11 +14,11 @@ public class CouponService {
 	private static CouponService instance;
 	private CouponDAO couponDAO;
 	private LogService logger;
+	
 	private CouponService() {
-		couponDAO = new CouponDAO();
-		logger = LogService.getInstance();
+		this.couponDAO = CouponDAO.getInstance();
+		this.logger = LogService.getInstance();
 	}
-
 	public static CouponService getInstance() {
 		if (instance == null) {
 			instance = new CouponService();

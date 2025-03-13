@@ -12,6 +12,11 @@ public class User extends Person implements Serializable{
 		this.coin = 0;
 		this.remainTime = 0;
 	}
+	public User(User user) {
+		super(user.name, user.password, user.userId, user.salt);
+		this.coin = 0;
+		this.remainTime = 0;
+	}
 	
 	public int getCoin() {
 		return coin;
@@ -31,6 +36,8 @@ public class User extends Person implements Serializable{
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId +  ", name=" + name + ", coin=" + coin + ",  remainTime=" + remainTime +"]";
+	    return String.format("│ %-10s │ %-8s │ %,9d 원 │ %4d 분  ",
+	        userId, name, coin, remainTime);
 	}
+
 }

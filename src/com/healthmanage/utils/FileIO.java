@@ -104,7 +104,6 @@ public class FileIO {
 	}
 
 	public static <T> Map<String, List<T>> infoMapLoad(String filePath) {
-		System.out.println(filePath);
 		File file = new File(filePath);
 
 		// 파일이 존재하는지 확인

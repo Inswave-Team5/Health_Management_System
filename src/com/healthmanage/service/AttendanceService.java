@@ -29,7 +29,7 @@ public class AttendanceService {
     	this.view = new View();
     	this.time = Time.getInstance();
     	this.logger = LogService.getInstance();
-        this.attDAO = new AttDAO();
+        this.attDAO = AttDAO.getInstance();
         load();
     }
     
