@@ -13,14 +13,12 @@ import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Admin;
 import com.healthmanage.model.Attendance;
 import com.healthmanage.model.Gym;
-import com.healthmanage.model.User;
 import com.healthmanage.utils.SHA256;
 import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.AdminView;
 
 public class AdminService {
-	private CouponService couponservice;
 	private AttendanceService attendanceService;
 	private static AdminService instance;
 	private List<Attendance> attendanceList = new ArrayList<>();
@@ -31,7 +29,6 @@ public class AdminService {
 	private LogService logger;
 
 	private AdminService() {
-		this.couponservice = CouponService.getInstance();
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
 		this.time = Time.getInstance();

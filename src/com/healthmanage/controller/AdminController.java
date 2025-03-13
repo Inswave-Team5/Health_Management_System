@@ -100,6 +100,7 @@ public class AdminController {
 			case 2:
 				couponManage();
 				break;
+
 			case 3: 
 				machineManage();
 				break;
@@ -173,6 +174,12 @@ public class AdminController {
 	}
 
 	public void addAdmin() {
+	    String code = view.getInput("관리자 코드 입력: ");
+	    if (!code.equals(EnvConfig.get("ADMIN_CODE"))) {
+	        view.showAlert("관리자 코드가 틀렸습니다. 다시 시도해주세요.");
+	        return; 
+	    }
+		
 		String adminId;
 		while (true) {
 			// 🔹 View에서 아이디 입력 받기
@@ -206,11 +213,6 @@ public class AdminController {
 			break;
 		}
 
-		String code = view.getInput("관리자 코드 입력: ");
-		if (!code.equals(EnvConfig.get("ADMIN_CODE"))) {
-			view.getInput("관리자 코드가 틀렸습니다.");
-			return;
-		}
 
 		// DTO 생성 및 회원가입 진행
 		UserSignUpDTO userDTO = new UserSignUpDTO(adminId, password, name);
@@ -286,7 +288,7 @@ public class AdminController {
 			view.showAlert("삭제 실패 - 없는 쿠폰번호 입니다.");
 			return;
 		}
-		view.showAlert(coupon.toString() + "삭제");
+		view.showAlert(coupon.toString()  + "\n쿠폰 삭제가 완료되었습니다.");
 	};
 
 	public void getRank() {
