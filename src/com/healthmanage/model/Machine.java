@@ -1,7 +1,5 @@
 package com.healthmanage.model;
 
-import com.healthmanage.view.View;
-
 public class Machine {
     protected String machineId;     //머신 id
     protected String name;          //머신 이름
