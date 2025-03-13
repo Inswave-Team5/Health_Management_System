@@ -14,15 +14,12 @@ import com.healthmanage.model.Admin;
 import com.healthmanage.model.Attendance;
 import com.healthmanage.model.Gym;
 import com.healthmanage.utils.SHA256;
-import com.healthmanage.utils.Sort;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.AdminView;
 
 public class AdminService {
 	private AttendanceService attendanceService;
 	private static AdminService instance;
-	private List<Attendance> attendanceList = new ArrayList<>();
-
 	private AdminView adminView;
 	private Time time;
 	private AdminDAO adminDAO;
@@ -97,35 +94,6 @@ public class AdminService {
 	// 8~16자, 대문자,숫자,소문자영문,특수문자 1개 이상 포함
 	public boolean isValidPw(String adminPw) {
 		return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", adminPw);
-	}
-
-	// 회원 운동시간 누적기준 정렬
-	public Map<String, String> getRank() {
-		// attendance list 받아오기
-
-		// 시간 계산하기
-		Map<String, String> tmpList = new HashMap<>();
-
-		for (int i = 0; i < attendanceList.size(); i++) {
-			String tmpId = attendanceList.get(i).getUserId();
-			String tmpTime = attendanceList.get(i).getWorkOutTime();
-
-			if (!tmpList.containsKey(tmpId)) {
-				tmpList.put(tmpId, tmpTime);
-			} else {
-				String existingTime = tmpList.get(tmpId);
-				Duration duration1 = time.totalDuration(existingTime);
-				Duration duration2 = time.totalDuration(tmpTime);
-
-				tmpList.replace(tmpId, duration1.plus(duration2).toString());
-			}
-
-		}
-
-		// attendance list 넘겨주기
-		Map<String, String> sortedList = Sort.sortRank2(tmpList);
-
-		return sortedList;
 	}
 
 	// 회원 아이디로 이름찾기

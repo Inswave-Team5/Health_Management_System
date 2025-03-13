@@ -45,7 +45,7 @@ public class UserController {
 				break;
 			}
 		}
-		;
+		
 		userService.save();
 		start();
 	}

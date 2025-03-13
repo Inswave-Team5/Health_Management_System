@@ -9,6 +9,7 @@ import com.healthmanage.config.EnvConfig;
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.*;
 import com.healthmanage.service.AdminService;
+import com.healthmanage.service.AttendanceService;
 import com.healthmanage.service.MachineService;
 import com.healthmanage.utils.Validations;
 import com.healthmanage.service.CouponService;
@@ -23,6 +24,7 @@ public class AdminController {
 	private AdminService adminService;
 	private CouponService couponService;
 	private UserService userService;
+	private AttendanceService attendanceService;
 	private MachineService machineService;
 
 	AdminController() {
@@ -30,6 +32,7 @@ public class AdminController {
 		this.adminService = AdminService.getInstance();
 		this.couponService = CouponService.getInstance();
 		this.userService = UserService.getInstance();
+		this.attendanceService = AttendanceService.getInstance();
 		this.machineService = MachineService.getInstance();
 	}
 
@@ -274,7 +277,6 @@ public class AdminController {
 			return; // 이미 존재하는 경우 null 반환
 		}
 		int coinAmount = Integer.parseInt(view.getInput("쿠폰 코인 입력 : "));
-		// 트루면
 
 		if (couponService.createCoupon(couponNumber, coinAmount) != null) {
 			view.showAlert("쿠폰 생성이 완료됐습니다.");
@@ -292,7 +294,7 @@ public class AdminController {
 	};
 
 	public void getRank() {
-		Map<String, String> ranks = adminService.getRank();
+		Map<String, String> ranks = attendanceService.getRank();
 		if (ranks == null) {
 			view.showAlert("랭킹정보가 없습니다.");
 		} else {
@@ -343,7 +345,6 @@ public class AdminController {
 				return;
 			}
 		}
-
 	}
 
 	// 전체 회원 출결 조회 (날짜 별로) xxx - 입장 . 퇴근. //날짜 입력 받고 회원 출결 출력
@@ -358,7 +359,6 @@ public class AdminController {
 				view.showMessage("잘못된 입력입니다. 다시 입력해주세요.");
 			}
 		}
-
 	}
 
 	public void machineManage() {
