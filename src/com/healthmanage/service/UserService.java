@@ -23,7 +23,7 @@ public class UserService {
 	private UserService() {
 		this.couponService = CouponService.getInstance();
 		this.coinService = CoinService.getInstance();
-		this.userDAO = new UserDAO();
+		this.userDAO = UserDAO.getInstance();
 		this.logger = LogService.getInstance();
 	}
 

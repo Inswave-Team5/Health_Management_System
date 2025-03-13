@@ -14,7 +14,7 @@ public class CoinService {
 
 	private CoinService() {
 		this.logger = LogService.getInstance();
-		this.userDAO = new UserDAO();
+		this.userDAO = UserDAO.getInstance();
 	}
 
 	public static CoinService getInstance() {
@@ -74,9 +74,4 @@ public class CoinService {
 			return "코인이 부족합니다. 현재코인 : " + sender.getCoin();
 		}
 	}
-
-//	// 코인 잔액 조회 -> user 필드의 getCoin() 사용
-//	public String getCoin(User user) {
-//		return "보유한 코인은 " + user.getCoin() + "입니다.";
-//	}
 }
