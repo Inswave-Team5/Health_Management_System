@@ -50,3 +50,5 @@ hs_err_pid*
 replay_pid*
 
 info*.txt
+
+receipt.txt
