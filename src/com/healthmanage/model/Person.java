@@ -6,7 +6,7 @@ public class Person implements Serializable{
 	protected String userId;
 	protected String name;
 	protected String password;
-	private String salt;
+	protected String salt;
 
 	Person(String name, String password, String userId, String salt) {
 		this.name = name;

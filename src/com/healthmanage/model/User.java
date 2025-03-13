@@ -12,6 +12,11 @@ public class User extends Person implements Serializable{
 		this.coin = 0;
 		this.remainTime = 0;
 	}
+	public User(User user) {
+		super(user.name, user.password, user.userId, user.salt);
+		this.coin = 0;
+		this.remainTime = 0;
+	}
 	
 	public int getCoin() {
 		return coin;
