@@ -183,12 +183,12 @@ public class AdminController {
 	}
 
 	public void addAdmin() {
-	    String code = view.getInput("관리자 코드 입력: ");
-	    if (!code.equals(EnvConfig.get("ADMIN_CODE"))) {
-	        view.showAlert("관리자 코드가 틀렸습니다. 다시 시도해주세요.");
-	        return; 
-	    }
-		
+		String code = view.getInput("관리자 코드 입력: ");
+		if (!code.equals(EnvConfig.get("ADMIN_CODE"))) {
+			view.showAlert("관리자 코드가 틀렸습니다. 다시 시도해주세요.");
+			return;
+		}
+
 		String adminId;
 		while (true) {
 			// 🔹 View에서 아이디 입력 받기
@@ -221,7 +221,6 @@ public class AdminController {
 			}
 			break;
 		}
-
 
 		// DTO 생성 및 회원가입 진행
 		UserSignUpDTO userDTO = new UserSignUpDTO(adminId, password, name);
@@ -302,19 +301,27 @@ public class AdminController {
 			view.showAlert("삭제 실패 - 없는 쿠폰번호 입니다.");
 			return;
 		}
-		view.showAlert(coupon.toString()  + "\n쿠폰 삭제가 완료되었습니다.");
+		view.showAlert(coupon.toString() + "\n쿠폰 삭제가 완료되었습니다.");
 	};
 
 	public void getRank() {
 		Map<String, String> ranks = attendanceService.getRank();
-		if (ranks == null) {
-			view.showAlert("랭킹정보가 없습니다.");
-		} else {
-			int cnt = 1;
-			for (Map.Entry<String, String> entry : ranks.entrySet()) {
-				view.showRank(cnt, entry.getKey(), entry.getValue());
-				cnt++;
-			}
+		if (ranks == null || ranks.isEmpty()) {
+			view.showAlert("랭킹 정보가 없습니다.");
+			return;
+		}
+
+		if (ranks.size() == 1) { // 회원이 한 명만 있을 경우
+			Map.Entry<String, String> entry = ranks.entrySet().iterator().next();
+			view.showRank(1, entry.getKey(), entry.getValue());
+			view.showAlert("현재 랭킹에 등록된 회원이 1명뿐입니다.");
+			return;
+		}
+
+		int cnt = 1;
+		for (Map.Entry<String, String> entry : ranks.entrySet()) {
+			view.showRank(cnt, entry.getKey(), entry.getValue());
+			cnt++;
 		}
 	}
 
@@ -384,49 +391,66 @@ public class AdminController {
 				continue;
 			}
 			switch (key) {
-				case 1:
-					listMachine();
-					break;
-				case 2:
-					addMachine();
-					break;
-				case 3:
-					deleteMachine();
-					break;
-				case 0:
-					view.showAlert("종료합니다.");
-					return;
-				default:
-					System.out.println("잘못 선택하였습니다.");
-					break;
+			case 1:
+				listMachine();
+				break;
+			case 2:
+				addMachine();
+				break;
+			case 3:
+				deleteMachine();
+				break;
+			case 0:
+				view.showAlert("종료합니다.");
+				return;
+			default:
+				System.out.println("잘못 선택하였습니다.");
+				break;
 			}
 		}
 	}
 
-	//머신 현황
-	public void listMachine(){
+	// 머신 현황
+	public void listMachine() {
 		List<Machine> machineList = machineService.listMachines();
 		for (Machine machine : machineList) {
 			view.showMessage(machine.toString());
 		}
 	}
 
-	//머신 추가
 	public void addMachine() {
-		String name = view.getInput("등록할 머신 이름 입력해주세요 : ");
-		String type;
+		view.showMessage("1.벤치프레스    2.덤벨       3.렛풀다운    4.레그컬        5.숄더프레스");
+		view.showMessage("6.스미스머신    7.계단오름    8.러닝머신    9.실내자전거    10.레그프레스");
+		view.showMessage("");
+
 		while(true) {
-			type = view.getInput("등록할 머신 타입을 입력해주세요 (유산소/근력) : ");
-			if(validateMachineType(type)) {
-				machineService.addMachine(name, type);
-				view.showMessage("등록이 완료되었습니다.");
-				break;
-			}else{
-				view.showMessage("잘못된 입력입니다. [유산소] [근력] 중에 타입을 입력해주세요.");
+			// 번호 입력받기
+			int input = Integer.parseInt(view.getInput("추가할 머신의 번호를 선택해주세요: "));
+
+			// 타입 자동 결정
+			String type = determineMachineType(input);
+
+			if (type == null) {
+				view.showMessage("잘못된 입력입니다. 번호를 다시 입력해주세요.");
+				continue;  // 잘못된 입력이면 다시 번호 선택하도록
 			}
 
-		}
+			// 머신 서비스에서 해당 번호에 맞는 머신 추가
+			machineService.addMachine(type, input);  // 타입과 번호 전달
 
+			view.showMessage("등록이 완료되었습니다.");
+			break;  // 등록 완료 후 종료
+		}
+	}
+
+	// 머신 타입 자동 결정
+	private String determineMachineType(int input) {
+		if (input >= 1 && input <= 6 || input == 10) {
+			return "근력";  // 번호 1~7은 근력
+		} else if (input >= 7 && input <= 9) {
+			return "유산소";  // 번호 8~10은 유산소
+		}
+		return null;  // 유효하지 않은 번호
 	}
 
 	public void deleteMachine() {

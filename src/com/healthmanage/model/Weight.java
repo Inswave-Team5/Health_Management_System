@@ -1,6 +1,8 @@
 package com.healthmanage.model;
 
-public class Weight {
+import java.io.Serializable;
+
+public class Weight implements Serializable {
 
     public String userId;   // 로그인한 userId
     public String date;     // 날짜 - 입력당시 날짜 자동 기입

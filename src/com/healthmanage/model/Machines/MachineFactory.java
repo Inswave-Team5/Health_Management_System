@@ -3,7 +3,7 @@ package com.healthmanage.model.Machines;
 import com.healthmanage.model.Machine;
 
 public abstract class MachineFactory {
-    public abstract Machine createMachine(String machineId, String name);
+    public abstract Machine createMachine(String machineId, int input);
 
     public static MachineFactory getFactory(String type) {
         if (type.equals("유산소")) {
@@ -18,14 +18,14 @@ public abstract class MachineFactory {
 // 구체적인 팩토리 (Cardio)
 class CardioMachineFactory extends MachineFactory {
     @Override
-    public Machine createMachine(String machineId, String name) {
-        switch(name.toLowerCase()) {
-            case "treadmill":
-                return new Treadmill(machineId, name);
-            case "stairclimber":
-                return new StairClimber(machineId, name);
-            case "stationarybike":
-                return new StationaryBike(machineId, name);
+    public Machine createMachine(String machineId, int input) {
+        switch(input) {
+            case 8:
+                return new Treadmill(machineId, "러닝머신");
+            case 7:
+                return new StairClimber(machineId, "계단오름");
+            case 9:
+                return new StationaryBike(machineId, "실내자전거");
 
             default:
                 return null;
@@ -36,22 +36,22 @@ class CardioMachineFactory extends MachineFactory {
 // 구체적인 팩토리 (Strength)
 class StrengthMachineFactory extends MachineFactory {
     @Override
-    public Machine createMachine(String machineId, String name) {
-        switch(name.toLowerCase()) {
-            case "benchpress":
-                return new BenchPress(machineId, name);
-            case "dumbbell":
-                return new LatPullDown(machineId, name);  // 무게, 반복 횟수
-            case "latpulldown":
-                return new Dumbbell(machineId, name);  // 무게, 반복 횟수
-            case "legcurl":
-                return new LegCurl(machineId, name);  // 무게, 반복 횟수
-            case "legpress":
-                return new LegPress(machineId, name);  // 무게, 반복 횟수
-            case "shoulderpress":
-                return new ShoulderPress(machineId, name);  // 무게, 반복 횟수
-            case "smithmachine":
-                return new SmithMachine(machineId, name);  // 무게, 반복 횟수
+    public Machine createMachine(String machineId, int input) {
+        switch(input) {
+            case 1:
+                return new BenchPress(machineId, "벤치프레스");
+            case 2:
+                return new LatPullDown(machineId, "덤벨");  // 무게, 반복 횟수
+            case 3:
+                return new Dumbbell(machineId, "렛풀다운");  // 무게, 반복 횟수
+            case 4:
+                return new LegCurl(machineId, "레그컬");  // 무게, 반복 횟수
+            case 10:
+                return new LegPress(machineId, "레그프레스");  // 무게, 반복 횟수
+            case 5:
+                return new ShoulderPress(machineId, "숄더프레스");  // 무게, 반복 횟수
+            case 6:
+                return new SmithMachine(machineId, "스미스머신");  // 무게, 반복 횟수
             default:
                 return null;
         }

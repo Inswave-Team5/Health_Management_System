@@ -94,7 +94,7 @@ public class MachineController {
         String id;
         while (true) {
             id = view.getInput("사용할 머신의 번호를 입력해주세요 : ");
-            if(validNumber(id)){
+            if(validNumber(id) && Gym.machines.containsKey(id)) {
                 machineService.startUsingMachine(id);
                 break;
             }else{
@@ -103,12 +103,12 @@ public class MachineController {
         }
     }
 
-    public void stopUsingMachine(){
+    public void stopUsingMachine() {
         listMachine();
         String id;
         while (true) {
             id = view.getInput("사용 종료할 머신의 번호를 입력해주세요 : ");
-            if(validNumber(id)){
+            if (validNumber(id)) {
                 machineService.stopUsingMachine(id);
                 break;
             }else{
@@ -121,22 +121,25 @@ public class MachineController {
         String val2;
         while (true) {
             String tmp = view.getInput("[무게/속도]를 입력해주세요 : ");
-            if(validatePositiveDecimal(tmp)){
+            if (validatePositiveDecimal(tmp)) {
                 val1 = tmp;
                 break;
             }else{
                 view.showAlert("잘못된 입력입니다. 양의 실수를 입력해주세요.");
+
             }
         }
         while (true) {
             String tmp = view.getInput("[횟수/시간]를 입력해주세요 : ");
-            if(validatePositiveDecimal(tmp)){
+            if (validatePositiveDecimal(tmp)) {
                 val2 = tmp;
                 break;
             }else{
                 view.showAlert("잘못된 입력입니다. 양의 실수를 입력해주세요.");
             }
         }
+
+        // 사용 기록 등록
         machineService.addMachineUsage(id, val1, val2);
         view.showAlert("사용기록이 정상 기록되었습니다.");
     }
@@ -145,7 +148,12 @@ public class MachineController {
         view.showMessage("[나의 머신 사용기록]");
         List<MachineUsageDTO> usageList = machineService.getMachineUsage();
         for(MachineUsageDTO usage : usageList) {
-            view.showMessage(usage.toString());
+
+            if(Gym.machines.get(usage.machineId).getType().equals("유산소")){
+                view.showMessage("[머신 이름] " + usage.machineName + ", [무게/속도] " + usage.val1 + "km/h, [횟수/시간] " + usage.val2 + "분");
+            }else {
+                view.showMessage("[머신 이름] " + usage.machineName + ", [무게/속도] " + usage.val1 + "kg, [횟수/시간] " + usage.val2 + "회");
+            }
         }
     }
 }

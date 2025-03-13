@@ -31,6 +31,7 @@ public class UserView extends View {
     public String WeightSelectMenu() {
         return getMenuInput("WEIGHT MANAGEMENT",
                 "[1] 몸무게 등록     [2] 몸무게 조회     [0] 메인 메뉴");
+
     }
 
     public String machineSelectMenu() {
@@ -46,6 +47,7 @@ public class UserView extends View {
     public String machineListInsideMenu() {
         return getMenuInput("MACHINE MENU",
                 "[1] 사용 시작     [2] 사용 종료     [0] 메인 메뉴");
+
     }
 
     public String coinSelectMenu(int coin) {

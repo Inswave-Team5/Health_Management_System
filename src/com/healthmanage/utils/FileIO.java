@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.healthmanage.model.Attendance;
+import com.healthmanage.model.Weight;
 
 public class FileIO {
 	public static void createFile(String filePath) {
@@ -101,17 +102,17 @@ public class FileIO {
 			}
 		}
 	}
-	
-	public static Map<String, List<Attendance>> infoAttLoad(String filePath) {
+
+	public static <T> Map<String, List<T>> infoMapLoad(String filePath) {
 		System.out.println(filePath);
 		File file = new File(filePath);
-		
+
 		// 파일이 존재하는지 확인
-        if (!file.exists() || file.length() == 0) {
-            System.out.println("⚠️ 파일이 존재하지 않습니다: " + filePath);
-            return new HashMap<String, List<Attendance>	>(); // 기본 객체 반환 (또는 예외 발생 가능)
-        }
-		
+		if (!file.exists() || file.length() == 0) {
+			System.out.println("⚠️ 파일이 존재하지 않습니다: " + filePath);
+			return new HashMap<String, List<T>>(); // 기본 객체 반환 (또는 예외 발생 가능)
+		}
+
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
 		ObjectInputStream ois = null;
@@ -119,8 +120,8 @@ public class FileIO {
 			fis = new FileInputStream(file);
 			bis = new BufferedInputStream(fis);
 			ois = new ObjectInputStream(bis);
-			
-			return (Map<String, List<Attendance>>) ois.readObject();
+
+			return (Map<String, List<T>>) ois.readObject();
 
 		} catch (Exception e) {
 			e.printStackTrace();
