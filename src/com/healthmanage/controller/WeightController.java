@@ -78,7 +78,7 @@ public class WeightController {
 
 		String weight;
 		while (true) {
-			weight = view.getInput("몸무게 입력 : ");
+			weight = view.getInput("몸무게 입력 (kg) : ");
 			if (validatePositiveDecimal(weight)) {
 				weightService.addWeight(Gym.getCurrentUser().getUserId(), weight);
 				break; // 유효한 입력이 들어오면 반복문 종료

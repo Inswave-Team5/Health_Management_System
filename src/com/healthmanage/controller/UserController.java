@@ -230,6 +230,7 @@ public class UserController {
 
 	public void couponUser() {
 		try {
+			userView.showMessage("📢 8자리의 쿠폰번호를 입력해주세요.");
 			String couponNumber = userView.getInput("쿠폰번호 입력: ");
 			String resultMessage = userService.useCoupon(couponNumber);
 			userView.showMessage(resultMessage);
