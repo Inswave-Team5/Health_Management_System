@@ -214,7 +214,7 @@ public class AttendanceService {
 	                    try {
 	                        totalDuration = totalDuration.plus(Duration.parse("PT" + att.getWorkOutTime().replace(":", "H") + "M"));
 	                    } catch (Exception e) {
-	                        System.out.println("🚨 오류 발생 (시간 파싱 실패): " + att.getWorkOutTime());
+	                        //System.out.println("🚨 오류 발생 (시간 파싱 실패): " + att.getWorkOutTime());
 	                    }
 	                }
 	            }

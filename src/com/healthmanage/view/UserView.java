@@ -19,7 +19,7 @@ public class UserView extends View {
 
     public String AttendanceSelectMenu() {
         return getMenuInput("CHECK-IN MENU",
-                "[1] 입장 등록   [2] 퇴장 등록   [3] 나의 입퇴장 기록   [0] 메인 메뉴");
+                "[1] 입장 등록   [2] 퇴장 등록   [3] 운동 기록 조회   [0] 메인 메뉴");
     }
 
     public String TimeSelectMenu() {
