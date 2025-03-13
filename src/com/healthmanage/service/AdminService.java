@@ -21,14 +21,12 @@ public class AdminService {
 	private AttendanceService attendanceService;
 	private static AdminService instance;
 	private AdminView adminView;
-	private Time time;
 	private AdminDAO adminDAO;
 	private LogService logger;
 
 	private AdminService() {
 		this.adminDAO = new AdminDAO();
 		this.logger = LogService.getInstance();
-		this.time = Time.getInstance();
 		this.adminView = new AdminView();
 		this.attendanceService = AttendanceService.getInstance();
 	}

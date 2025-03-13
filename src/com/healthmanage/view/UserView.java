@@ -53,7 +53,7 @@ public class UserView extends View {
                         "[2] 날짜별 조회\n" +
                         "[3] 월별 누적 조회\n" +
                         "[4] 전체 누적 조회\n" +
-                        "[0] 메인 메뉴");
+                        "[0] 뒤로 가기");
     }
 
     public String machineSelectMenu() {
@@ -67,7 +67,7 @@ public class UserView extends View {
         return getMenuInput("MACHINE MENU",
                 "[1] 사용 시작\n" +
                         "[2] 사용 종료\n" +
-                        "[0] 메인 메뉴");
+                        "[0] 뒤로 가기");
     }
 
     public String coinSelectMenu(int coin) {

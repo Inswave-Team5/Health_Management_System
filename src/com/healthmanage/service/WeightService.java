@@ -5,21 +5,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.healthmanage.config.EnvConfig;
+import com.healthmanage.dao.WeightDAO;
 import com.healthmanage.model.Weight;
 import com.healthmanage.utils.Time;
 import com.healthmanage.view.View;
 
 public class WeightService {
-    private Map<String, List<Weight>> weightList = new HashMap<>(); //각 사용자의 몸무게 기록을 담을 map
-    private static View view;
+    public static Map<String, List<Weight>> weightList; //각 사용자의 몸무게 기록을 담을 map
+    private View view;
     private static WeightService instance;
     private Time time;
     private LogService logger;
+    private WeightDAO weightDAO;
 
     public WeightService() {
-        view = new View();
+        this.weightList = new HashMap<>();
+        this.view = new View();
         this.time = Time.getInstance();
         this.logger = LogService.getInstance();
+        weightDAO = new WeightDAO();
+        load();
     }
     public static WeightService getInstance() {
         if (instance == null) {
@@ -40,6 +46,16 @@ public class WeightService {
         
         logger.addLog(userId +"님의 몸무게가 등록되었습니다. : " + weight+" kg");
         view.showMessage("몸무게가 정상 기록되었습니다!");
+    }
+
+    public void load() {
+        weightDAO.loadWeight(EnvConfig.get("WEIGHT_FILE"));
+        logger.addLog(EnvConfig.get("WEIGHT_FILE") + " File LOAD");
+    }
+
+    public void save() {
+        weightDAO.saveWeight();
+        logger.addLog(EnvConfig.get("WEIGHT_FILE") + " File SAVE");
     }
 
     //Weight 전체 조회 메서드 - 일단은 그냥 전체 기록 조회...

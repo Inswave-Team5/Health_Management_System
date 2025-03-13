@@ -10,25 +10,33 @@ public class GymService {
 	private UserService userService;
 	private AdminService adminService;
 	private AttendanceService attendanceService;
+	private WeightService weightService;
+	private MachineService machineService;
 
 	public GymService() {
 		this.couponService = CouponService.getInstance();
 		this.userService = UserService.getInstance();
 		this.adminService = AdminService.getInstance();
 		this.attendanceService = AttendanceService.getInstance();
+		this.weightService = WeightService.getInstance();
+		this.machineService = MachineService.getInstance();
+
 	}
 
 	public void load() {
 		this.couponService.load();
 		this.userService.load();
 		this.adminService.load();
+		this.machineService.load();
 	}
 
 	public void save() {
 		this.couponService.save();
 		this.userService.save();
 		this.adminService.save();
-		attendanceService.save();
+		this.attendanceService.save();
+		this.weightService.save();
+		this.machineService.save();
 	}
 
 	public void adminInit() {
