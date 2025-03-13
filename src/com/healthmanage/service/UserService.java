@@ -123,6 +123,7 @@ public class UserService {
 
 	public String withdrawCoin(int coin, User receiver) {
 		User sender = Gym.users.get(((User) Gym.getCurrentUser()).getUserId());
+		
 		return coinService.withdraw(coin, sender, receiver);
 	}
 
