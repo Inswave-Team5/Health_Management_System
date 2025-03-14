@@ -20,7 +20,7 @@ public class MachineService {
     private LogService logger;
     private MachineDAO machineDAO;
     private MachineUsageDAO machineUsageDAO;
-    private int machineIdCounter = 1; // ID를 자동으로 증가시킬 변수
+    private int machineIdCounter; // ID를 자동으로 증가시킬 변수
 
     public static Map<String, List<MachineUsageDTO>> usageMap;
 
@@ -74,7 +74,8 @@ public class MachineService {
 
     // 머신 ID를 자동으로 증가시키는 메서드
     private String generateMachineId() {
-        return String.valueOf(machineIdCounter++); // 현재 ID를 반환하고 1 증가시킴
+    	int number = Gym.machines.size();
+        return String.valueOf(++number); // 현재 ID를 반환하고 1 증가시킴
     }
 
 

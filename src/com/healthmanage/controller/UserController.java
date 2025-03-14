@@ -1,5 +1,7 @@
 package com.healthmanage.controller;
 
+import java.util.regex.Pattern;
+
 import com.healthmanage.dto.UserSignUpDTO;
 import com.healthmanage.model.Gym;
 import com.healthmanage.model.User;
@@ -142,7 +144,7 @@ public class UserController {
 			// ID 유효성 검사
 			if (!userService.isValidId(userId)) {
 				userView.showAlert("ID는 5~12자의 영어 소문자와 숫자만 가능합니다.");
-				continue;
+				return;
 			}
 
 			// 🔹 아이디 중복 검사
@@ -177,12 +179,6 @@ public class UserController {
 	public boolean loginUser() {
 		String userId = userView.getInput("ID 입력: ");
 		String password = userView.getInput("비밀번호 입력: ");
-
-		// 유효성 검사
-		if (!userService.isValidId(userId) || !userService.isValidPw(password)) {
-			userView.showAlert("ID 또는 비밀번호 형식이 올바르지 않습니다.");
-			return false;
-		}
 
 		// 유저 정보 가져오기
 		User user = Gym.users.get(userId);
@@ -222,18 +218,26 @@ public class UserController {
 			userView.showMessage("비밀번호가 올바르지 않습니다.");
 			return;
 		}
+		while(true) {
+			String newPw = userView.getInput("새로운 비밀번호를 입력하세요:");
+			if(!isValidPw(newPw)) {
+				userView.showAlert("8~16자, 대문자,숫자,소문자영문,특수문자 1개 이상 포함하여 입력해주세요");
+				continue;
+			}
+			String newPw2 = userView.getInput("새로운 비밀번호를 다시 한번 입력하세요:");	
+			if(!isValidPw(newPw2)) {
+				userView.showAlert("8~16자, 대문자,숫자,소문자영문,특수문자 1개 이상 포함하여 입력해주세요");
+				continue;
+			}
+			if (!newPw.equals(newPw2)) {
+				userView.showMessage("비밀번호가 일치하지 않습니다. 다시 시도하세요.");
+				return;
+			}
 
-		String newPw = userView.getInput("새로운 비밀번호를 입력하세요:");
-		String newPw2 = userView.getInput("새로운 비밀번호를 다시 한번 입력하세요:");
-
-		if (!newPw.equals(newPw2)) {
-			userView.showMessage("비밀번호가 일치하지 않습니다. 다시 시도하세요.");
-			return;
+			userService.updatePassword(memberNum, newPw);
+			userView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
+			break;
 		}
-
-		userService.updatePassword(memberNum, newPw);
-		userView.showMessage("비밀번호가 성공적으로 변경되었습니다.");
-
 	}
 
 	public void couponUser() {
@@ -309,4 +313,14 @@ public class UserController {
 		}
 		userView.showMessage(userService.withdrawCoin(Integer.parseInt(coin), receiver));
 	}
+	
+	// 영어 소문자+숫자, 5~12자
+		public boolean isValidId(String userId) {
+			return Pattern.matches("^[a-z0-9]{5,12}$", userId);
+		}
+
+		// 8~16자, 대문자,숫자,소문자영문,특수문자 1개 이상 포함
+		public boolean isValidPw(String userPw) {
+			return Pattern.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,16}$", userPw);
+		}
 }

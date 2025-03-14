@@ -18,7 +18,7 @@ public class AdminView extends View {
     public String selectUserManageMenu() {
         return getMenuInput("MEMBER MANAGEMENT",
                 "[1] 전체 조회 (이름순)   [2] 개인 출결 (날짜)   [3] 개인 출결 (전체)\n" +
-                "[4] 전체 출결 (날짜)     [5] 전체 운동 시간     [0] 종료");
+                "[4] 전체 출결 (날짜)     [5] 회원 순위보기    [0] 종료");
     }
 
     public String selectCouponManageMenu() {
@@ -32,11 +32,8 @@ public class AdminView extends View {
     }
 
     public void showRank(int rank, String userId, String workOutTime) {
-        System.out.println("\n====================================");
-        System.out.printf("          🏆 랭킹 %d위%n", rank);
-        System.out.println("====================================");
-        System.out.printf("👤 아이디 : %s%n", userId);
-        System.out.printf("⏳ 누적 운동 시간 : %s%n", workOutTime);
-        System.out.println("====================================\n");
+        System.out.printf("🏆 랭킹 %d위  ", rank);
+        System.out.printf("👤 아이디 : %10s\t", userId);
+        System.out.printf("⏳ 누적 운동 시간 : %s\n", workOutTime);
     }
 }

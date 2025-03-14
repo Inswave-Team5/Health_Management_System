@@ -28,6 +28,10 @@ public class GymService {
 		this.userService.load();
 		this.adminService.load();
 		this.machineService.load();
+		
+		
+		this.attendanceService.load();
+		this.weightService.load();
 	}
 
 	public void save() {
@@ -49,12 +53,20 @@ public class GymService {
 
 		Gym.admins.put(adminId, new Admin(adminName, hashedPassword, adminId, salt));
 	}
-	
+
 	public void UserInfoInit() {
 		MockupCreator.generateMockUsers();
 	}
+
 	public void CouponInit() {
 		MockupCreator.generateMockCoupons();
-		
+	}
+
+	public void AttandanceInit() {
+		MockupCreator.generateMockAttendanceData();
+	}
+
+	public void WeightInit() {
+		MockupCreator.generateMockWeightData();
 	}
 }
