@@ -21,21 +21,22 @@ import com.healthmanage.view.View;
 public class AttendanceService {
 	private View view;
 	private static AttendanceService instance;
-	public static Map<String, List<Attendance>> attendanceList; // user 의 출근시간 기록
+	private static Map<String, List<Attendance>> attendanceList; // user 의 출근시간 기록
 	private Time time;
 	private LogService logger;
 	private AttDAO attDAO;
 
-	public AttendanceService() {
-		this.attendanceList = new HashMap<>();
-		this.view = new View();
-		this.time = Time.getInstance();
-		this.logger = LogService.getInstance();
-		this.attDAO = AttDAO.getInstance();
-		load();
-	}
 
-	public Map<String, List<Attendance>> getAttendanceList() {
+    private AttendanceService() {
+    	this.attendanceList = new HashMap<>();
+    	this.view = new View();
+    	this.time = Time.getInstance();
+    	this.logger = LogService.getInstance();
+        this.attDAO = AttDAO.getInstance();
+        load();
+    }
+    
+    public Map<String, List<Attendance>> getAttendanceList() {
 		return attendanceList;
 	}
 

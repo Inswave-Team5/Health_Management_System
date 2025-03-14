@@ -24,7 +24,7 @@ public class MachineService {
 
     public static Map<String, List<MachineUsageDTO>> usageMap;
 
-    public MachineService() {
+    private MachineService() {
         this.view = new View();
         this.logger = LogService.getInstance();
         this.usageMap = new HashMap<>();

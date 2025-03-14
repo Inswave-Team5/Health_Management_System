@@ -21,21 +21,20 @@ public class WeightService {
 	private LogService logger;
 	private WeightDAO weightDAO;
 
-	public WeightService() {
-		this.weightList = new HashMap<>();
-		this.view = new View();
-		this.time = Time.getInstance();
-		this.logger = LogService.getInstance();
-		weightDAO = new WeightDAO();
-		load();
-	}
-
-	public static WeightService getInstance() {
-		if (instance == null) {
-			instance = new WeightService();
-		}
-		return instance;
-	}
+    private WeightService() {
+        this.weightList = new HashMap<>();
+        this.view = new View();
+        this.time = Time.getInstance();
+        this.logger = LogService.getInstance();
+        weightDAO = new WeightDAO();
+        load();
+    }
+    public static WeightService getInstance() {
+        if (instance == null) {
+            instance = new WeightService();
+        }
+        return instance;
+    }
 
 	// Weight 추가 메서드
 	public void addWeight(String userId, String weight) {
