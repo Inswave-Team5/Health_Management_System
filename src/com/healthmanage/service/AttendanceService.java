@@ -24,7 +24,7 @@ public class AttendanceService {
     private LogService logger;
     private AttDAO attDAO;
 
-    public AttendanceService() {
+    private AttendanceService() {
     	this.attendanceList = new HashMap<>();
     	this.view = new View();
     	this.time = Time.getInstance();

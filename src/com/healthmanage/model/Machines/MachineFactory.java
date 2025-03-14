@@ -26,7 +26,6 @@ class CardioMachineFactory extends MachineFactory {
                 return new StairClimber(machineId, "계단오름");
             case 9:
                 return new StationaryBike(machineId, "실내자전거");
-
             default:
                 return null;
         }
@@ -41,17 +40,17 @@ class StrengthMachineFactory extends MachineFactory {
             case 1:
                 return new BenchPress(machineId, "벤치프레스");
             case 2:
-                return new LatPullDown(machineId, "덤벨");  // 무게, 반복 횟수
+                return new LatPullDown(machineId, "덤벨");
             case 3:
-                return new Dumbbell(machineId, "렛풀다운");  // 무게, 반복 횟수
+                return new Dumbbell(machineId, "렛풀다운");
             case 4:
-                return new LegCurl(machineId, "레그컬");  // 무게, 반복 횟수
+                return new LegCurl(machineId, "레그컬");
             case 10:
-                return new LegPress(machineId, "레그프레스");  // 무게, 반복 횟수
+                return new LegPress(machineId, "레그프레스");
             case 5:
-                return new ShoulderPress(machineId, "숄더프레스");  // 무게, 반복 횟수
+                return new ShoulderPress(machineId, "숄더프레스");
             case 6:
-                return new SmithMachine(machineId, "스미스머신");  // 무게, 반복 횟수
+                return new SmithMachine(machineId, "스미스머신");
             default:
                 return null;
         }

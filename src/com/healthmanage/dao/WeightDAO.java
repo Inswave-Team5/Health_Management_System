@@ -15,7 +15,7 @@ public class WeightDAO {
     }
 
     public Map<String, List<Weight>> loadWeight(String filePath) {
-//        WeightService.weightList = (Map<String, List<Weight>>) FileIO.infoWeightLoad(filePath);
+        //WeightService.weightList = (Map<String, List<Weight>>) FileIO.infoWeightLoad(filePath);
         WeightService.weightList = FileIO.<Weight>infoMapLoad(filePath);
 
         return WeightService.weightList;
