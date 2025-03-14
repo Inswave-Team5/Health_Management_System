@@ -93,8 +93,8 @@ public class WeightService {
 					monthWeightList.add(userWeight);
 				}
 			}
-
 		}
+		monthWeightList.sort(Comparator.comparing(Weight::getDate));
 
 		if (monthWeightList.isEmpty()) {
 			view.showMessage("검색된 몸무게 기록이 없습니다.");
