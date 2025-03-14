@@ -133,7 +133,8 @@ public class AttendanceService {
 
 	// 전체 운동시간 기록 조회(전체 출결 조회)
 	public void listAttendanceAll(String userId) {
-		List<Attendance> userAttendanceList = attendanceList.get(userId);
+		List<Attendance> userAttendanceList = attendanceList.get(userId).stream()
+				.sorted(Comparator.comparing(Attendance::getDate)).collect(Collectors.toList());
 		view.showMessage("====================================");
 		view.showMessage("         [전체 운동시간 기록]");
 		view.showMessage("====================================");
@@ -201,42 +202,40 @@ public class AttendanceService {
 	}
 
 	// 회원 운동시간 누적기준 정렬
-	  public static Map<String, String> getRank() {
-	        Map<String, Duration> userTotalTime = new HashMap<>();
+	public static Map<String, String> getRank() {
+		Map<String, Duration> userTotalTime = new HashMap<>();
 
-	        // 유저별 누적 운동 시간 계산
-	        for (Map.Entry<String, List<Attendance>> entry : attendanceList.entrySet()) {
-	            String userId = entry.getKey();
-	            Duration totalDuration = Duration.ZERO;
+		// 유저별 누적 운동 시간 계산
+		for (Map.Entry<String, List<Attendance>> entry : attendanceList.entrySet()) {
+			String userId = entry.getKey();
+			Duration totalDuration = Duration.ZERO;
 
-	            for (Attendance att : entry.getValue()) {
-	                if (!att.getWorkOutTime().isEmpty()) {
-	                    try {
-	                        totalDuration = totalDuration.plus(Duration.parse("PT" + att.getWorkOutTime().replace(":", "H") + "M"));
-	                    } catch (Exception e) {
-	                        //System.out.println("🚨 오류 발생 (시간 파싱 실패): " + att.getWorkOutTime());
-	                    }
-	                }
-	            }
-	            userTotalTime.put(userId, totalDuration);
-	        }
+			for (Attendance att : entry.getValue()) {
+				if (!att.getWorkOutTime().isEmpty()) {
+					try {
+						totalDuration = totalDuration
+								.plus(Duration.parse("PT" + att.getWorkOutTime().replace(":", "H") + "M"));
+					} catch (Exception e) {
+						// System.out.println("🚨 오류 발생 (시간 파싱 실패): " + att.getWorkOutTime());
+					}
+				}
+			}
+			userTotalTime.put(userId, totalDuration);
+		}
 
-	        // 운동 시간 기준으로 내림차순 정렬 후, <String, String> 형태로 변환
-	        return userTotalTime.entrySet().stream()
-	                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-	                .collect(Collectors.toMap(
-	                        Map.Entry::getKey,
-	                        e -> formatDuration(e.getValue()), // Duration을 String으로 변환
-	                        (e1, e2) -> e1,
-	                        LinkedHashMap::new // 순서 유지
-	                ));
-	    }
+		// 운동 시간 기준으로 내림차순 정렬 후, <String, String> 형태로 변환
+		return userTotalTime.entrySet().stream().sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+				.collect(Collectors.toMap(Map.Entry::getKey, e -> formatDuration(e.getValue()), // Duration을 String으로 변환
+						(e1, e2) -> e1, LinkedHashMap::new // 순서 유지
+				));
+	}
+
 	// Duration을 HH:mm:ss 형태로 변환
-	    private static String formatDuration(Duration duration) {
-	        long hours = duration.toHours();
-	        long minutes = duration.toMinutesPart();
-	        long seconds = duration.toSecondsPart();
-	        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
-	    }
+	private static String formatDuration(Duration duration) {
+		long hours = duration.toHours();
+		long minutes = duration.toMinutesPart();
+		long seconds = duration.toSecondsPart();
+		return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+	}
 
 }
